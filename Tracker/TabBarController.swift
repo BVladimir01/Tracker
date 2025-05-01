@@ -27,7 +27,7 @@ class TabBarController: UITabBarController {
         let trackerVC = TrackerViewController()
         let trackerNavController = UINavigationController(rootViewController: trackerVC)
         trackerNavController.navigationBar.prefersLargeTitles = true
-        trackerNavController.tabBarItem = UITabBarItem(title: "Tracker", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
+        trackerNavController.tabBarItem = UITabBarItem(title: "Трекеры", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
         return trackerNavController
     }
     
@@ -35,7 +35,7 @@ class TabBarController: UITabBarController {
         let statsVC = StatsViewController()
         let statsNavController = UINavigationController(rootViewController: statsVC)
         statsNavController.navigationBar.prefersLargeTitles = true
-        statsNavController.tabBarItem = UITabBarItem(title: "Stats", image: .tabBarStatsItem.withTintColor(.ypBlue), selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
+        statsNavController.tabBarItem = UITabBarItem(title: "Статистика", image: .tabBarStatsItem.withTintColor(.ypBlue), selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
         return statsNavController
     }
     

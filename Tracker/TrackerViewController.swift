@@ -11,7 +11,7 @@ class TrackerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Tracker"
+        title = "Трекеры"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .addTracker.withTintColor(.ypBlack, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(addTrackerTapped))
         addStub()
     }
