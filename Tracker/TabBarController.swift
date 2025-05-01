@@ -1,0 +1,63 @@
+//
+//  ViewController.swift
+//  Tracker
+//
+//  Created by Vladimir on 01.05.2025.
+//
+
+import UIKit
+
+class TabBarController: UITabBarController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        viewControllers = []
+        view.backgroundColor = .ypWhite
+        addViewControllers()
+        setUpTabBar()
+    }
+    
+    private func addViewControllers() {
+        let trackerNavController = setUpAndReturnTrackerNavStack()
+        let statsNavController = setUpAndReturnStatsNavStack()
+        viewControllers = [trackerNavController, statsNavController]
+    }
+    
+    private func setUpAndReturnTrackerNavStack() -> UIViewController {
+        let trackerVC = TrackerViewController()
+        let trackerNavController = UINavigationController(rootViewController: trackerVC)
+        trackerNavController.navigationBar.prefersLargeTitles = true
+        trackerNavController.tabBarItem = UITabBarItem(title: "Tracker", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
+        return trackerNavController
+    }
+    
+    private func setUpAndReturnStatsNavStack() -> UIViewController {
+        let statsVC = StatsViewController()
+        let statsNavController = UINavigationController(rootViewController: statsVC)
+        statsNavController.navigationBar.prefersLargeTitles = true
+        statsNavController.tabBarItem = UITabBarItem(title: "Stats", image: .tabBarStatsItem.withTintColor(.ypBlue), selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
+        return statsNavController
+    }
+    
+    
+
+    private func setUpTabBar() {
+        let separatorHeight: CGFloat = 0.5
+        let separator = UIView()
+        
+        separator.backgroundColor = .ypBackground
+        tabBar.addSubview(separator)
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            separator.topAnchor.constraint(equalTo: tabBar.topAnchor),
+            separator.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor),
+            separator.heightAnchor.constraint(equalToConstant: separatorHeight)
+        ])
+        
+        tabBar.backgroundColor = .ypWhite
+    }
+
+}
+
