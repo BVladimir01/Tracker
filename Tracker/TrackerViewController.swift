@@ -12,6 +12,50 @@ class TrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Tracker"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .addTracker.withTintColor(.ypBlack, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(addTrackerTapped))
+        addStub()
+    }
+    
+    private func addStub() {
+        let stubImageView = UIImageView(image: .trackerStub)
+        stubImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stubImageView)
+        NSLayoutConstraint.activate([
+            stubImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stubImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.stubImageHeight),
+            stubImageView.widthAnchor.constraint(equalTo: stubImageView.heightAnchor, multiplier: LayoutConstants.stubImageAspectRatio),
+            stubImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: LayoutConstants.stubImageTopToSuperViewTop),
+            stubImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -LayoutConstants.stubImageBottomSuperViewBottom)
+        ])
+        
+        let label = UILabel()
+        label.text = "Что будем отслеживать?"
+        label.font = UIFont.systemFont(ofSize: LayoutConstants.stubLabelFontSize, weight: LayoutConstants.stubLabelFontWeight)
+        label.textColor = .ypBlack
+        label.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.topAnchor.constraint(equalTo: stubImageView.bottomAnchor, constant: LayoutConstants.stubLabelTopToStubImageBottom)
+        ])
     }
 
+    @objc private func addTrackerTapped() {
+        // TODO: Implement tracker addition
+    }
+    
+}
+
+
+extension TrackerViewController {
+    private enum LayoutConstants {
+        static let stubImageHeight: CGFloat = 80
+        static let stubImageAspectRatio: CGFloat = 1
+        static let stubImageTopToSuperViewTop: CGFloat = 402
+        static let stubImageBottomSuperViewBottom: CGFloat = 330
+        
+        static let stubLabelFontSize: CGFloat = 12
+        static let stubLabelFontWeight: UIFont.Weight = .medium
+        static let stubLabelTopToStubImageBottom: CGFloat = 8
+    }
 }
