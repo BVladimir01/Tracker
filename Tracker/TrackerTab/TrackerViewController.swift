@@ -12,14 +12,24 @@ final class TrackerViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private static let testTracker = Tracker(id: UUID(),
+    private static let testTracker1 = Tracker(id: UUID(),
                                       title: "TrackerTitle",
-                                      color: RGBColor(red: 1, green: 1, blue: 1),
+                                      color: RGBColor(red: 1, green: 0, blue: 0),
                                       emoji: "😀",
+                                      schedule: .regular(Set<Weekday>([.friday, .monday])))
+    private static let testTracker2 = Tracker(id: UUID(),
+                                      title: "TrackerTitle2",
+                                      color: RGBColor(red: 0, green: 1, blue: 0),
+                                      emoji: "🥹",
+                                      schedule: .regular(Set<Weekday>([.friday, .monday])))
+    private static let testTracker3 = Tracker(id: UUID(),
+                                      title: "TrackerTitle3",
+                                      color: RGBColor(red: 0, green: 0, blue: 1),
+                                      emoji: "🥹",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     
     private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "TrackerCategoryTitle",
-                                                                        trackers: Array<Tracker>(repeating: testTracker , count: 10))]
+                                                                        trackers: [testTracker1, testTracker2, testTracker3])]
     private var completedTrackers: [TrackerRecord] = []
 
     private let collectionView = UICollectionView(frame: .zero,
@@ -111,6 +121,7 @@ extension TrackerViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue cell")
             return UICollectionViewCell()
         }
+        cell.configure(tracker: trackerCategories[indexPath.section].trackers[indexPath.item])
         return cell
     }
     

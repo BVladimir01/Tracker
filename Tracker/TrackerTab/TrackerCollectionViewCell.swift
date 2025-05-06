@@ -7,9 +7,15 @@
 
 import UIKit
 
+
+// MARK: - TrackerCollectionViewCell
 class TrackerCollectionViewCell: UICollectionViewCell {
     
+    // MARK: - Internal Properties
+    
     static let reuseId = "TrackerCell"
+    
+    // MARK: - Private Properties
     
     private let trackerMainView = UIView()
     private let trackerRecordView = UIView()
@@ -18,8 +24,16 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     private let recordLabel = UILabel()
     private let recordButton = UIButton()
     
-    private var themeColor: UIColor = .red
+    private var themeColor: UIColor = .red {
+        didSet {
+            trackerMainView.backgroundColor = themeColor
+            if let image = recordButton.image(for: .normal) {
+                recordButton.setImage(image.withTintColor(themeColor), for: .normal)
+            }
+        }
+    }
     
+    // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUp()
@@ -28,6 +42,16 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
+    
+    // MARK: - InternalMethods
+    
+    func configure(tracker: Tracker) {
+        emojiLabel.text = String(tracker.emoji)
+        titleLabel.text = tracker.title
+        themeColor = UIColor.from(RGBColor: tracker.color)
+    }
+    
+    // MARK: - Private Methods - Setup
     
     private func setUp() {
         setUpTrackerMainView()
@@ -142,10 +166,15 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
     }
     
+    // MARK: - Private Methods - Intentions
+    
     @objc
     private func recordButtonTapped() {
         // TODO: - Implement button tap
     }
+    
+    
+    
 }
 
 
