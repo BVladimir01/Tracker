@@ -17,6 +17,7 @@ class TrackerViewController: UIViewController {
         title = "Трекеры"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .addTracker.withTintColor(.ypBlack, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(addTrackerTapped))
         addStub()
+        addDatePicker()
     }
     
     private func addStub() {
@@ -42,10 +43,27 @@ class TrackerViewController: UIViewController {
             label.topAnchor.constraint(equalTo: stubImageView.bottomAnchor, constant: LayoutConstants.stubLabelTopToStubImageBottom)
         ])
     }
+    
+    private func addDatePicker() {
+        let datePicker = UIDatePicker()
+        datePicker.preferredDatePickerStyle = .compact
+        datePicker.datePickerMode = .date
+        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
+    }
 
     @objc private func addTrackerTapped() {
         // TODO: Implement tracker addition
     }
+    
+    @objc private func dateChanged(_ sender: UIDatePicker) {
+        let date = sender.date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        let formattedDate = formatter.string(from: date)
+        print("today is \(formattedDate)")
+    }
+    
     
 }
 
