@@ -31,6 +31,7 @@ final class TrackerViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .addTracker.withTintColor(.ypBlack, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(addTrackerTapped))
         setUpStub()
         setUpDatePicker()
+        setUpCollectionView()
     }
     
     // MARK: - Private Methods - View Configuration
@@ -68,7 +69,17 @@ final class TrackerViewController: UIViewController {
     }
     
     private func setUpCollectionView() {
-        collectionView
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseId)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
     
     // MARK: - Private Methods - User Intentions
@@ -88,6 +99,48 @@ final class TrackerViewController: UIViewController {
 }
 
 
+extension TrackerViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        trackerCategories[section].trackers.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.reuseId, for: indexPath) as? TrackerCollectionViewCell else {
+            assertionFailure("TrackerViewController.collectionView: Failed to dequeue cell")
+            return UICollectionViewCell()
+        }
+        return cell
+    }
+    
+    
+}
+
+
+extension TrackerViewController: UICollectionViewDelegate {
+    
+    
+}
+
+extension TrackerViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        LayoutConstants.CollectionView.itemSize
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        LayoutConstants.CollectionView.interItemSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        LayoutConstants.CollectionView.lineSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        LayoutConstants.CollectionView.insets
+    }
+}
+
+
 // MARK: - LayoutConstants
 extension TrackerViewController {
     private enum LayoutConstants {
@@ -101,20 +154,11 @@ extension TrackerViewController {
             static let labelFontWeight: UIFont.Weight = .medium
             static let labelTopToStubImageBottom: CGFloat = 8
         }
+        enum CollectionView {
+            static let itemSize = CGSize(width: 167, height: 148)
+            static let interItemSpacing: CGFloat = 9
+            static let lineSpacing: CGFloat = 0
+            static let insets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
+        }
     }
-}
-
-
-extension TrackerViewController: UICollectionViewDataSource {
-    
-}
-
-
-extension TrackerViewController: UICollectionViewDelegate {
-    
-    
-}
-
-extension TrackerViewController: UICollectionViewDelegateFlowLayout {
-    
 }

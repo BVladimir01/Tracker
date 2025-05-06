@@ -9,6 +9,8 @@ import UIKit
 
 class TrackerCollectionViewCell: UICollectionViewCell {
     
+    static let reuseId = "TrackerCell"
+    
     private let trackerMainView = UIView()
     private let trackerRecordView = UIView()
     private let emojiLabel = UILabel()
