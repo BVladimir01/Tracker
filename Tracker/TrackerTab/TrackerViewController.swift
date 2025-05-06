@@ -7,18 +7,19 @@
 
 import UIKit
 
-
 // MARK: - TrackerViewController
 final class TrackerViewController: UIViewController {
     
     // MARK: - Private Properties
     
+    private static let testTracker = Tracker(id: UUID(),
+                                      title: "TrackerTitle",
+                                      color: RGBColor(red: 1, green: 1, blue: 1),
+                                      emoji: "😀",
+                                      schedule: .regular(Set<Weekday>([.friday, .monday])))
+    
     private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "TrackerCategoryTitle",
-                                                                        trackers: [Tracker(id: UUID(),
-                                                                                           title: "TrackerTitle",
-                                                                                           color: RGBColor(red: 1, green: 1, blue: 1),
-                                                                                           emoji: "😀",
-                                                                                           schedule: .regular(Set<Weekday>([.friday, .monday])))])]
+                                                                        trackers: Array<Tracker>(repeating: testTracker , count: 10))]
     private var completedTrackers: [TrackerRecord] = []
 
     private let collectionView = UICollectionView(frame: .zero,

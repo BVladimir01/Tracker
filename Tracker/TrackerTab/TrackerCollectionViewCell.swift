@@ -87,6 +87,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     private func setUpEmoji() {
         emojiLabel.backgroundColor = LayoutConstants.Emoji.backgroundColor
         emojiLabel.layer.cornerRadius = LayoutConstants.Emoji.viewSize/2
+        emojiLabel.layer.masksToBounds = true
         emojiLabel.text = "😀"
         emojiLabel.textAlignment = .center
         emojiLabel.font = UIFont.systemFont(ofSize: LayoutConstants.Emoji.fontSize,
@@ -95,6 +96,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     private func setUpTitle() {
         titleLabel.textAlignment = .left
+        titleLabel.text = "Title"
         titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: LayoutConstants.Title.fontSize,
                                             weight: LayoutConstants.Title.fontWeight)
@@ -172,7 +174,7 @@ extension TrackerCollectionViewCell {
             static let leftPadding: CGFloat = 12
             static let topPadding: CGFloat = 16
             static let height: CGFloat = 18
-            static let textColor: UIColor = .ypWhite
+            static let textColor: UIColor = .ypBlack
         }
         enum Button {
             static let width: CGFloat = 44
