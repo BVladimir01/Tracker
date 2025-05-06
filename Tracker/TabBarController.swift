@@ -7,15 +7,19 @@
 
 import UIKit
 
+
 class TabBarController: UITabBarController {
+    
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewControllers = []
         view.backgroundColor = .ypWhite
         addViewControllers()
         setUpTabBar()
     }
+    
+    // MARK: - Private Methods
     
     private func addViewControllers() {
         let trackerNavController = setUpAndReturnTrackerNavStack()
@@ -38,8 +42,6 @@ class TabBarController: UITabBarController {
         statsNavController.tabBarItem = UITabBarItem(title: "Статистика", image: .tabBarStatsItem.withTintColor(.ypBlue), selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
         return statsNavController
     }
-    
-    
 
     private func setUpTabBar() {
         let separatorHeight: CGFloat = 0.5

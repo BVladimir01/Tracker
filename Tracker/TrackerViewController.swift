@@ -7,11 +7,17 @@
 
 import UIKit
 
+
+// MARK: - TrackerViewController
 class TrackerViewController: UIViewController {
+    
+    // MARK: - Private Properties
     
     private var trackerCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
 
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Трекеры"
@@ -19,6 +25,8 @@ class TrackerViewController: UIViewController {
         addStub()
         addDatePicker()
     }
+    
+    // MARK: - Private Methods - View Configuration
     
     private func addStub() {
         let stubImageView = UIImageView(image: .trackerStub)
@@ -51,6 +59,8 @@ class TrackerViewController: UIViewController {
         datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
+    
+    // MARK: - Private Methods - User Intentions
 
     @objc private func addTrackerTapped() {
         // TODO: Implement tracker addition
@@ -64,10 +74,10 @@ class TrackerViewController: UIViewController {
         print("today is \(formattedDate)")
     }
     
-    
 }
 
 
+// MARK: - LayoutConstants
 extension TrackerViewController {
     private enum LayoutConstants {
         static let stubImageHeight: CGFloat = 80

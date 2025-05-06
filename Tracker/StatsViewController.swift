@@ -7,13 +7,18 @@
 
 import UIKit
 
+
 class StatsViewController: UIViewController {
 
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Статистика"
         addStub()
     }
+    
+    // MARK: - Private Methods
     
     private func addStub() {
         let stubImageView = UIImageView(image: .statsStub)
@@ -42,6 +47,7 @@ class StatsViewController: UIViewController {
 }
 
 
+// MARK: - LayoutConstants
 extension StatsViewController {
     private enum LayoutConstants {
         static let stubImageHeight: CGFloat = 80
