@@ -14,17 +14,17 @@ final class TrackerViewController: UIViewController {
     
     private static let testTracker1 = Tracker(id: UUID(),
                                       title: "TrackerTitle",
-                                      color: RGBColor(red: 1, green: 0, blue: 0),
+                                              color: UIColor.ypColorSelection1.rgbColor ?? RGBColor(red: 1, green: 0, blue: 0),
                                       emoji: "😀",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     private static let testTracker2 = Tracker(id: UUID(),
                                       title: "TrackerTitle2",
-                                      color: RGBColor(red: 0, green: 1, blue: 0),
+                                              color: UIColor.ypColorSelection2.rgbColor ?? RGBColor(red: 0, green: 1, blue: 0),
                                       emoji: "🥹",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     private static let testTracker3 = Tracker(id: UUID(),
                                       title: "TrackerTitle3",
-                                      color: RGBColor(red: 0, green: 0, blue: 1),
+                                              color: UIColor.ypColorSelection3.rgbColor ?? RGBColor(red: 0, green: 0, blue: 1),
                                       emoji: "🥹",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     
@@ -84,6 +84,7 @@ final class TrackerViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseId)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .ypWhite
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
