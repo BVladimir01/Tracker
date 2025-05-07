@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 // MARK: - TrackerViewController
 final class TrackerViewController: UIViewController {
     
@@ -111,6 +112,7 @@ final class TrackerViewController: UIViewController {
 }
 
 
+// MARK: - UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -130,11 +132,14 @@ extension TrackerViewController: UICollectionViewDataSource {
 }
 
 
+// MARK: - UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegate {
     
     
 }
 
+
+// MARK: - UICollectionViewDelegateFlowLayout
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         LayoutConstants.CollectionView.itemSize

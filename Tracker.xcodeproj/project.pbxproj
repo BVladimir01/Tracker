@@ -22,6 +22,7 @@
 		E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D0379F2DC8B0F7007819A8 /* Schedule.swift */; };
 		E7D037A22DC8B2C9007819A8 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A12DC8B2C9007819A8 /* TrackerRecord.swift */; };
 		E7D037A42DCA6DA8007819A8 /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */; };
+		E7D037A82DCB4B87007819A8 /* CategoryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		E7D0379F2DC8B0F7007819A8 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		E7D037A12DC8B2C9007819A8 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
+		E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTitleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 			children = (
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackerViewController.swift */,
+				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
 			);
 			path = TrackerTab;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				E7D0379E2DC8B082007819A8 /* TrackerCategory.swift in Sources */,
 				E7D037262DC3D3B5007819A8 /* TrackerViewController.swift in Sources */,
 				E7D0379C2DC8AECB007819A8 /* Weekday.swift in Sources */,
+				E7D037A82DCB4B87007819A8 /* CategoryTitleView.swift in Sources */,
 				E7D0370F2DC3B80E007819A8 /* AppDelegate.swift in Sources */,
 				E7D037282DC3D3CD007819A8 /* StatsViewController.swift in Sources */,
 				E7D037A42DCA6DA8007819A8 /* TrackerCollectionViewCell.swift in Sources */,
