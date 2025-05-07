@@ -36,7 +36,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setUp()
+        setUpViews()
     }
     
     required init?(coder: NSCoder) {
@@ -53,8 +53,18 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Private Methods - Setup
     
-    private func setUp() {
+    private func setUpViews() {
         setUpTrackerMainView()
+        setupTrackerRecordView()
+    }
+    
+    private func setUpTrackerMainView() {
+        trackerMainView.backgroundColor = themeColor
+        trackerMainView.layer.cornerRadius = LayoutConstants.trackerMainViewCornerRadius
+        trackerMainView.layer.masksToBounds = true
+        setUpEmoji()
+        setUpTitle()
+        
         trackerMainView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(trackerMainView)
         NSLayoutConstraint.activate([
@@ -63,26 +73,16 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             trackerMainView.topAnchor.constraint(equalTo: contentView.topAnchor),
             trackerMainView.heightAnchor.constraint(equalToConstant: LayoutConstants.trackerMainViewHeight)
         ])
-        
-        setupTrackerRecordView()
-        trackerRecordView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(trackerRecordView)
-        NSLayoutConstraint.activate([
-            trackerRecordView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            trackerRecordView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            trackerRecordView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            trackerRecordView.topAnchor.constraint(equalTo: trackerMainView.bottomAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([contentView.widthAnchor.constraint(equalToConstant: LayoutConstants.contentViewWidth)])
     }
     
-    private func setUpTrackerMainView() {
-        trackerMainView.backgroundColor = themeColor
-        trackerMainView.layer.cornerRadius = LayoutConstants.trackerMainViewCornerRadius
-        trackerMainView.layer.masksToBounds = true
+    private func setUpEmoji() {
+        emojiLabel.backgroundColor = LayoutConstants.Emoji.backgroundColor
+        emojiLabel.layer.cornerRadius = LayoutConstants.Emoji.viewSize/2
+        emojiLabel.layer.masksToBounds = true
+        emojiLabel.text = "😀"
+        emojiLabel.textAlignment = .center
+        emojiLabel.font = LayoutConstants.Emoji.font
         
-        setUpEmoji()
         trackerMainView.addSubview(emojiLabel)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -93,8 +93,15 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             emojiLabel.topAnchor.constraint(equalTo: trackerMainView.topAnchor,
                                             constant: LayoutConstants.Emoji.leftPadding)
         ])
+    }
+    
+    private func setUpTitle() {
+        titleLabel.textAlignment = .left
+        titleLabel.text = "Title"
+        titleLabel.textColor = .white
+        titleLabel.font = LayoutConstants.Title.font
+        titleLabel.numberOfLines = 0
         
-        setUpTitle()
         trackerMainView.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -106,29 +113,30 @@ class TrackerCollectionViewCell: UICollectionViewCell {
                                                constant: -LayoutConstants.Title.bottomPadding),
             titleLabel.centerXAnchor.constraint(equalTo: trackerMainView.centerXAnchor)
         ])
-    }
-    
-    private func setUpEmoji() {
-        emojiLabel.backgroundColor = LayoutConstants.Emoji.backgroundColor
-        emojiLabel.layer.cornerRadius = LayoutConstants.Emoji.viewSize/2
-        emojiLabel.layer.masksToBounds = true
-        emojiLabel.text = "😀"
-        emojiLabel.textAlignment = .center
-        emojiLabel.font = UIFont.systemFont(ofSize: LayoutConstants.Emoji.fontSize,
-                                            weight: LayoutConstants.Emoji.fontWeight)
-    }
-    
-    private func setUpTitle() {
-        titleLabel.textAlignment = .left
-        titleLabel.text = "Title"
-        titleLabel.textColor = .white
-        titleLabel.font = UIFont.systemFont(ofSize: LayoutConstants.Title.fontSize,
-                                            weight: LayoutConstants.Title.fontWeight)
-        titleLabel.numberOfLines = 0
+
     }
     
     private func setupTrackerRecordView() {
         setUpRecordLabel()
+        setupRecordButton()
+        
+        trackerRecordView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(trackerRecordView)
+        NSLayoutConstraint.activate([
+            trackerRecordView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            trackerRecordView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            trackerRecordView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            trackerRecordView.topAnchor.constraint(equalTo: trackerMainView.bottomAnchor)
+        ])
+    }
+    
+    private func setUpRecordLabel() {
+        recordLabel.backgroundColor = .clear
+        recordLabel.text = "n days"
+        recordLabel.textAlignment = .left
+        recordLabel.font = LayoutConstants.Record.font
+        recordLabel.textColor = LayoutConstants.Record.textColor
+        
         recordLabel.translatesAutoresizingMaskIntoConstraints = false
         trackerRecordView.addSubview(recordLabel)
         NSLayoutConstraint.activate([
@@ -138,8 +146,12 @@ class TrackerCollectionViewCell: UICollectionViewCell {
                                              constant: LayoutConstants.Record.topPadding),
             recordLabel.heightAnchor.constraint(equalToConstant: LayoutConstants.Record.height)
         ])
+    }
+    
+    private func setupRecordButton() {
+        recordButton.addTarget(self, action: #selector(recordButtonTapped), for: .touchUpInside)
+        recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
         
-        setupRecordButton()
         recordButton.translatesAutoresizingMaskIntoConstraints = false
         trackerRecordView.addSubview(recordButton)
         NSLayoutConstraint.activate([
@@ -150,20 +162,6 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             recordButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Button.width),
             recordButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Button.height)
         ])
-    }
-    
-    private func setUpRecordLabel() {
-        recordLabel.backgroundColor = .clear
-        recordLabel.text = "n days"
-        recordLabel.textAlignment = .left
-        recordLabel.font = UIFont.systemFont(ofSize: LayoutConstants.Record.fontSize,
-                                            weight: LayoutConstants.Record.fontWeight)
-        recordLabel.textColor = LayoutConstants.Record.textColor
-    }
-    
-    private func setupRecordButton() {
-        recordButton.addTarget(self, action: #selector(recordButtonTapped), for: .touchUpInside)
-        recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
     }
     
     // MARK: - Private Methods - Intentions
@@ -182,24 +180,20 @@ extension TrackerCollectionViewCell {
     private enum LayoutConstants {
         static let trackerMainViewCornerRadius: CGFloat = 16
         static let trackerMainViewHeight: CGFloat = 90
-        static let contentViewWidth: CGFloat = 167
         enum Emoji {
             static let backgroundColor = UIColor.white.withAlphaComponent(0.3)
             static let viewSize: CGFloat = 24
-            static let fontSize: CGFloat = 16
-            static let fontWeight: UIFont.Weight = .medium
+            static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let topPadding: CGFloat = 12
             static let leftPadding: CGFloat = 12
         }
         enum Title {
-            static let fontSize: CGFloat = 12
-            static let fontWeight: UIFont.Weight = .medium
+            static let font: UIFont = .systemFont(ofSize: 12, weight: .medium)
             static let lateralPadding: CGFloat = 12
             static let bottomPadding: CGFloat = 12
         }
         enum Record {
-            static let fontSize: CGFloat = 12
-            static let fontWeight: UIFont.Weight = .medium
+            static let font: UIFont = .systemFont(ofSize: 12, weight: .medium)
             static let leftPadding: CGFloat = 12
             static let topPadding: CGFloat = 16
             static let height: CGFloat = 18
