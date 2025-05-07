@@ -29,8 +29,15 @@ final class TrackerViewController: UIViewController {
                                       emoji: "🥹",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     
-    private var trackerCategories: [TrackerCategory] = [TrackerCategory(title: "TrackerCategoryTitle",
-                                                                        trackers: [testTracker1, testTracker2, testTracker3])]
+    private var trackerCategories: [TrackerCategory] = [
+        TrackerCategory(title: "TrackerCategoryTitle1",
+                        trackers: [testTracker1, testTracker2, testTracker3]),
+        TrackerCategory(title: "TrackerCategoryTitle2",
+                        trackers: [testTracker3, testTracker1, testTracker2]),
+        TrackerCategory(title: "TrackerCategoryTitle3",
+                        trackers: [testTracker2, testTracker3, testTracker1])
+    ]
+    
     private var completedTrackers: [TrackerRecord] = []
 
     private let collectionView = UICollectionView(frame: .zero,
@@ -57,7 +64,7 @@ final class TrackerViewController: UIViewController {
             stubImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.Stub.imageHeight),
             stubImageView.widthAnchor.constraint(equalTo: stubImageView.heightAnchor, multiplier: LayoutConstants.Stub.imageAspectRatio),
             stubImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: LayoutConstants.Stub.imageTopToSuperViewTop),
-            stubImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -LayoutConstants.Stub.imageBottomSuperViewBottom)
+//            stubImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -LayoutConstants.Stub.imageBottomSuperViewBottom)
         ])
         
         let label = UILabel()
@@ -84,6 +91,9 @@ final class TrackerViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseId)
+        collectionView.register(CategoryTitleView.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: CategoryTitleView.reuseId)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .ypWhite
         view.addSubview(collectionView)
@@ -115,6 +125,10 @@ final class TrackerViewController: UIViewController {
 // MARK: - UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        trackerCategories.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         trackerCategories[section].trackers.count
     }
@@ -128,6 +142,14 @@ extension TrackerViewController: UICollectionViewDataSource {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategoryTitleView.reuseId, for: indexPath) as? CategoryTitleView else {
+            assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
+            return   UICollectionReusableView()
+        }
+        view.changeTitleText(trackerCategories[indexPath.section].title)
+        return view
+    }
     
 }
 
@@ -141,6 +163,7 @@ extension TrackerViewController: UICollectionViewDelegate {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         LayoutConstants.CollectionView.itemSize
     }
@@ -155,6 +178,13 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         LayoutConstants.CollectionView.insets
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let indexPath = IndexPath(row: 0, section: section)
+        let view = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+        let width = collectionView.frame.width - 2*LayoutConstants.CollectionView.headerLateralPadding
+        return view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
     }
 }
 
@@ -177,6 +207,7 @@ extension TrackerViewController {
             static let interItemSpacing: CGFloat = 9
             static let lineSpacing: CGFloat = 0
             static let insets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
+            static let headerLateralPadding: CGFloat = 28
         }
     }
 }

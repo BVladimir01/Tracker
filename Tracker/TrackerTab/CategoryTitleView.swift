@@ -34,6 +34,7 @@ class CategoryTitleView: UICollectionReusableView {
     
     private func setUpLabel() {
         titleLabel.text = "CategoryTitle"
+        titleLabel.numberOfLines = 0
         titleLabel.textAlignment = LayoutConstants.textAlignment
         titleLabel.font = LayoutConstants.font
         titleLabel.textColor = LayoutConstants.textColor
