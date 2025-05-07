@@ -53,7 +53,7 @@ final class TrackerViewController: UIViewController {
         setUpStubView()
         setUpDatePicker()
         setUpCollectionView()
-        stubView.layer.zPosition = 1
+//        stubView.layer.zPosition = 1
     }
     
     // MARK: - Private Methods - View Configuration

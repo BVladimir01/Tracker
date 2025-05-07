@@ -24,6 +24,17 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     private let recordLabel = UILabel()
     private let recordButton = UIButton()
     
+    private var isDone = false {
+        didSet {
+            if isDone {
+                // setting to minus since check mark image is poorly implemented
+                recordButton.setImage(UIImage(resource: .minus).withTintColor(themeColor), for: .normal)
+            } else {
+                recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
+            }
+        }
+    }
+    
     private var themeColor: UIColor = .red {
         didSet {
             trackerMainView.backgroundColor = themeColor
@@ -168,7 +179,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     @objc
     private func recordButtonTapped() {
-        // TODO: - Implement button tap
+        isDone.toggle()
     }
     
     
