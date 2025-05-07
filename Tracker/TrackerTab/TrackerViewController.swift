@@ -42,40 +42,52 @@ final class TrackerViewController: UIViewController {
 
     private let collectionView = UICollectionView(frame: .zero,
                                                   collectionViewLayout: UICollectionViewFlowLayout())
+    private let stubView = UIView()
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Трекеры"
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: .addTracker.withTintColor(.ypBlack, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(addTrackerTapped))
-        setUpStub()
+        setUpStubView()
         setUpDatePicker()
         setUpCollectionView()
+        stubView.layer.zPosition = 1
     }
     
     // MARK: - Private Methods - View Configuration
     
-    private func setUpStub() {
+    private func setUpStubView() {
         let stubImageView = UIImageView(image: .trackerStub)
         stubImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(stubImageView)
+        stubView.addSubview(stubImageView)
         NSLayoutConstraint.activate([
-            stubImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stubImageView.centerXAnchor.constraint(equalTo: stubView.centerXAnchor),
             stubImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.Stub.imageHeight),
             stubImageView.widthAnchor.constraint(equalTo: stubImageView.heightAnchor, multiplier: LayoutConstants.Stub.imageAspectRatio),
-            stubImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: LayoutConstants.Stub.imageTopToSuperViewTop),
-//            stubImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -LayoutConstants.Stub.imageBottomSuperViewBottom)
+            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor, constant: LayoutConstants.Stub.imageTopPadding),
         ])
         
         let label = UILabel()
         label.text = "Что будем отслеживать?"
-        label.font = UIFont.systemFont(ofSize: LayoutConstants.Stub.labelFontSize, weight: LayoutConstants.Stub.labelFontWeight)
-        label.textColor = .ypBlack
+        label.font = LayoutConstants.Stub.labelFont
+        label.textColor = LayoutConstants.Stub.textColor
         label.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(label)
+        stubView.addSubview(label)
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerXAnchor.constraint(equalTo: stubView.centerXAnchor),
             label.topAnchor.constraint(equalTo: stubImageView.bottomAnchor, constant: LayoutConstants.Stub.labelTopToStubImageBottom)
+        ])
+        
+        stubView.backgroundColor = .ypWhite
+        stubView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stubView)
+        NSLayoutConstraint.activate([
+            stubView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stubView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            stubView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            stubView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -157,7 +169,6 @@ extension TrackerViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegate {
     
-    
 }
 
 
@@ -195,12 +206,13 @@ extension TrackerViewController {
         enum Stub {
             static let imageHeight: CGFloat = 80
             static let imageAspectRatio: CGFloat = 1
-            static let imageTopToSuperViewTop: CGFloat = 402
-            static let imageBottomSuperViewBottom: CGFloat = 330
+            static let imageTopPadding: CGFloat = 220
             
-            static let labelFontSize: CGFloat = 12
-            static let labelFontWeight: UIFont.Weight = .medium
+            static let labelFont: UIFont = .systemFont(ofSize: 12, weight: .medium)
+            static let textColor: UIColor = .ypBlack
             static let labelTopToStubImageBottom: CGFloat = 8
+            
+            static let backgroundColor: UIColor = .ypWhite
         }
         enum CollectionView {
             static let itemSize = CGSize(width: 167, height: 148)
