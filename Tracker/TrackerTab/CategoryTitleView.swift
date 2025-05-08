@@ -13,7 +13,7 @@ class CategoryTitleView: UICollectionReusableView {
     
     // MARK: - Internal Properties
     
-    static let reuseId = "CategoryTitleView"
+    static let reuseID = "CategoryTitleView"
     
     // MARK: - Private Properties
     

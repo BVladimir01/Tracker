@@ -8,12 +8,33 @@
 import UIKit
 
 
+// MARK: - TrackerCollectionViewCellDelegate
+protocol TrackerCollectionViewCellDelegate: AnyObject {
+    func trackerCellDidTapRecord(cell: TrackerCollectionViewCell)
+}
+
+
 // MARK: - TrackerCollectionViewCell
 class TrackerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Internal Properties
     
-    static let reuseId = "TrackerCell"
+    static let reuseID = "TrackerCell"
+    
+    weak var delegate: TrackerCollectionViewCellDelegate?
+    
+    private(set) var trackerIsDone = false {
+        didSet {
+            if trackerIsDone {
+                // setting to minus since check mark image is poorly implemented
+                recordButton.setImage(UIImage(resource: .minus).withTintColor(themeColor), for: .normal)
+            } else {
+                recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
+            }
+        }
+    }
+    
+    private(set) var trackerID: UUID?
     
     // MARK: - Private Properties
     
@@ -23,17 +44,6 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     private let titleLabel = UILabel()
     private let recordLabel = UILabel()
     private let recordButton = UIButton()
-    
-    private var isDone = false {
-        didSet {
-            if isDone {
-                // setting to minus since check mark image is poorly implemented
-                recordButton.setImage(UIImage(resource: .minus).withTintColor(themeColor), for: .normal)
-            } else {
-                recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
-            }
-        }
-    }
     
     private var themeColor: UIColor = .red {
         didSet {
@@ -60,6 +70,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         emojiLabel.text = String(tracker.emoji)
         titleLabel.text = tracker.title
         themeColor = UIColor.from(RGBColor: tracker.color)
+        trackerID = tracker.id
     }
     
     // MARK: - Private Methods - Setup
@@ -179,10 +190,8 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     @objc
     private func recordButtonTapped() {
-        isDone.toggle()
+        delegate?.trackerCellDidTapRecord(cell: self)
     }
-    
-    
     
 }
 

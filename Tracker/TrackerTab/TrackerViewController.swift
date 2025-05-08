@@ -43,6 +43,7 @@ final class TrackerViewController: UIViewController {
     private let collectionView = UICollectionView(frame: .zero,
                                                   collectionViewLayout: UICollectionViewFlowLayout())
     private let stubView = UIView()
+    let datePicker = UIDatePicker()
     
     // MARK: - Lifecycle
     
@@ -92,7 +93,6 @@ final class TrackerViewController: UIViewController {
     }
     
     private func setUpDatePicker() {
-        let datePicker = UIDatePicker()
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
@@ -102,10 +102,10 @@ final class TrackerViewController: UIViewController {
     private func setUpCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseId)
+        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseID)
         collectionView.register(CategoryTitleView.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                withReuseIdentifier: CategoryTitleView.reuseId)
+                                withReuseIdentifier: CategoryTitleView.reuseID)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .ypWhite
         view.addSubview(collectionView)
@@ -146,16 +146,17 @@ extension TrackerViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.reuseId, for: indexPath) as? TrackerCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.reuseID, for: indexPath) as? TrackerCollectionViewCell else {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue cell")
             return UICollectionViewCell()
         }
         cell.configure(tracker: trackerCategories[indexPath.section].trackers[indexPath.item])
+        cell.delegate = self
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategoryTitleView.reuseId, for: indexPath) as? CategoryTitleView else {
+        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategoryTitleView.reuseID, for: indexPath) as? CategoryTitleView else {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return   UICollectionReusableView()
         }
@@ -196,6 +197,14 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
         let view = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
         let width = collectionView.frame.width - 2*LayoutConstants.CollectionView.headerLateralPadding
         return view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+    }
+}
+
+
+// MARK: -
+extension TrackerViewController: TrackerCollectionViewCellDelegate {
+    func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
+        // TODO: process cell tap
     }
 }
 
