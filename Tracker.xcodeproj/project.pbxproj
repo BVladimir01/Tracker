@@ -23,6 +23,8 @@
 		E7D037A22DC8B2C9007819A8 /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A12DC8B2C9007819A8 /* TrackerRecord.swift */; };
 		E7D037A42DCA6DA8007819A8 /* TrackerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */; };
 		E7D037A82DCB4B87007819A8 /* CategoryTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */; };
+		E7D037AA2DCD3292007819A8 /* TrackerDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037A92DCD3292007819A8 /* TrackerDataStore.swift */; };
+		E7D037AC2DCD32AC007819A8 /* TrackerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		E7D037A12DC8B2C9007819A8 /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTitleView.swift; sourceTree = "<group>"; };
+		E7D037A92DCD3292007819A8 /* TrackerDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataStore.swift; sourceTree = "<group>"; };
+		E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +129,8 @@
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackerViewController.swift */,
 				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
+				E7D037A92DCD3292007819A8 /* TrackerDataStore.swift */,
+				E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */,
 			);
 			path = TrackerTab;
 			sourceTree = "<group>";
@@ -210,11 +216,13 @@
 				E7D037962DC8AADA007819A8 /* UIColor+RGBColor.swift in Sources */,
 				E7D037932DC8A9BB007819A8 /* Tracker.swift in Sources */,
 				E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */,
+				E7D037AA2DCD3292007819A8 /* TrackerDataStore.swift in Sources */,
 				E7D037132DC3B80E007819A8 /* TabBarController.swift in Sources */,
 				E7D037982DC8AD80007819A8 /* RGBColor.swift in Sources */,
 				E7D037A22DC8B2C9007819A8 /* TrackerRecord.swift in Sources */,
 				E7D0379E2DC8B082007819A8 /* TrackerCategory.swift in Sources */,
 				E7D037262DC3D3B5007819A8 /* TrackerViewController.swift in Sources */,
+				E7D037AC2DCD32AC007819A8 /* TrackerDataSource.swift in Sources */,
 				E7D0379C2DC8AECB007819A8 /* Weekday.swift in Sources */,
 				E7D037A82DCB4B87007819A8 /* CategoryTitleView.swift in Sources */,
 				E7D0370F2DC3B80E007819A8 /* AppDelegate.swift in Sources */,

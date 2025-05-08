@@ -13,32 +13,7 @@ final class TrackerViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private static let testTracker1 = Tracker(id: UUID(),
-                                      title: "TrackerTitle",
-                                              color: UIColor.ypColorSelection1.rgbColor ?? RGBColor(red: 1, green: 0, blue: 0),
-                                      emoji: "😀",
-                                      schedule: .regular(Set<Weekday>([.friday, .monday])))
-    private static let testTracker2 = Tracker(id: UUID(),
-                                      title: "TrackerTitle2",
-                                              color: UIColor.ypColorSelection2.rgbColor ?? RGBColor(red: 0, green: 1, blue: 0),
-                                      emoji: "🥹",
-                                      schedule: .regular(Set<Weekday>([.friday, .monday])))
-    private static let testTracker3 = Tracker(id: UUID(),
-                                      title: "TrackerTitle3",
-                                              color: UIColor.ypColorSelection3.rgbColor ?? RGBColor(red: 0, green: 0, blue: 1),
-                                      emoji: "🥹",
-                                      schedule: .regular(Set<Weekday>([.friday, .monday])))
-    
-    private var trackerCategories: [TrackerCategory] = [
-        TrackerCategory(title: "TrackerCategoryTitle1",
-                        trackers: [testTracker1, testTracker2, testTracker3]),
-        TrackerCategory(title: "TrackerCategoryTitle2",
-                        trackers: [testTracker3, testTracker1, testTracker2]),
-        TrackerCategory(title: "TrackerCategoryTitle3",
-                        trackers: [testTracker2, testTracker3, testTracker1])
-    ]
-    
-    private var completedTrackers: [TrackerRecord] = []
+    private let trackerDataStorage: TrackerDataSource = TrackerDataStore.shared
 
     private let collectionView = UICollectionView(frame: .zero,
                                                   collectionViewLayout: UICollectionViewFlowLayout())
@@ -128,7 +103,7 @@ final class TrackerViewController: UIViewController {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
         let formattedDate = formatter.string(from: date)
-        print("today is \(formattedDate)")
+        // TODO: Process change of date
     }
     
 }
@@ -138,11 +113,11 @@ final class TrackerViewController: UIViewController {
 extension TrackerViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerCategories.count
+        trackerDataStorage.trackerCategories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        trackerCategories[section].trackers.count
+        trackerDataStorage.trackerCategories[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -150,7 +125,7 @@ extension TrackerViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue cell")
             return UICollectionViewCell()
         }
-        cell.configure(tracker: trackerCategories[indexPath.section].trackers[indexPath.item])
+        cell.configure(tracker: trackerDataStorage.trackerCategories[indexPath.section].trackers[indexPath.item])
         cell.delegate = self
         return cell
     }
@@ -160,7 +135,7 @@ extension TrackerViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return   UICollectionReusableView()
         }
-        view.changeTitleText(trackerCategories[indexPath.section].title)
+        view.changeTitleText(trackerDataStorage.trackerCategories[indexPath.section].title)
         return view
     }
     
