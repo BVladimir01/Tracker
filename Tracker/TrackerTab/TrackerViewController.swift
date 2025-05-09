@@ -29,7 +29,6 @@ final class TrackerViewController: UIViewController {
         setUpStubView()
         setUpDatePicker()
         setUpCollectionView()
-//        stubView.layer.zPosition = 1
     }
     
     // MARK: - Private Methods - View Configuration
@@ -70,7 +69,7 @@ final class TrackerViewController: UIViewController {
     private func setUpDatePicker() {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
-        datePicker.addTarget(self, action: #selector(dateChanged(_:)), for: .valueChanged)
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
@@ -98,12 +97,17 @@ final class TrackerViewController: UIViewController {
         // TODO: Implement tracker addition
     }
     
-    @objc private func dateChanged(_ sender: UIDatePicker) {
-        let date = sender.date
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        let formattedDate = formatter.string(from: date)
-        // TODO: Process change of date
+    @objc private func dateChanged() {
+        // I do not think, new page should be shown
+        // with batch updates, since there are too many changes.
+        // Some categories may even disappear, since their trackers
+        // should not be shown on this day. Thus reloading whole view
+        collectionView.reloadData()
+        if numberOfSections(in: collectionView) == 0 {
+            collectionView.isHidden = true
+        } else {
+            collectionView.isHidden = false
+        }
     }
     
 }
