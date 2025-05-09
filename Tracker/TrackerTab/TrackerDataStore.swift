@@ -18,6 +18,8 @@ class TrackerDataStore: TrackerDataSource {
     
     // MARK: - Private Properties
     
+    private let calendar = Calendar.current
+    
     private static let testTracker1 = Tracker(id: UUID(),
                                       title: "TrackerTitle",
                                               color: UIColor.ypColorSelection1.rgbColor ?? RGBColor(red: 1, green: 0, blue: 0),
@@ -51,7 +53,7 @@ class TrackerDataStore: TrackerDataSource {
     ]
     
     private var completedTrackers: [TrackerRecord] = []
-    private var completedTrackersDict: [Tracker: [Date]] = [:]
+    private var completedTrackersDict: [UUID: [Date]] = [:]
     
     // MARK: - Initializers
     
@@ -73,14 +75,41 @@ class TrackerDataStore: TrackerDataSource {
         return result
     }
     
-    func daysDone(tracker: Tracker) -> Int {
-        return completedTrackersDict[tracker]?.count ?? 0
+    func daysDone(trackerID: UUID) -> Int {
+        return completedTrackersDict[trackerID]?.count ?? 0
+    }
+    
+    func isCompleted(trackerID id: UUID, on date: Date) -> Bool {
+        guard let dates = completedTrackersDict[id] else { return false }
+        for completedDate in dates {
+            if calendar.isDate(completedDate, inSameDayAs: date) { return true }
+        }
+        return false
+    }
+    
+    func addRecord(for trackerID: UUID, on date: Date) {
+        // alter completedTrackers
+        completedTrackers.append(TrackerRecord(id: trackerID, date: date))
+        // alter completedTrackersDict
+        if completedTrackersDict[trackerID] == nil {
+            completedTrackersDict[trackerID] = [date]
+        } else {
+            completedTrackersDict[trackerID]?.append(date)
+        }
+    }
+    
+    func removeRecord(for trackerID: UUID, on date: Date) {
+        // alter completedTrackers
+        completedTrackers.removeAll(where: { record in
+            record.id == trackerID && calendar.isDate(record.date, inSameDayAs: date)
+        })
+        // alter completedTrackersDict
+        completedTrackersDict[trackerID]?.removeAll(where: { calendar.isDate($0, inSameDayAs: date) })
     }
     
     // MARK: - Private Methods
     
     private func shouldShow(tracker: Tracker, on date: Date) -> Bool {
-        let calendar = Calendar.current
         guard let targetWeekday = Weekday(rawValue: calendar.component(.weekday, from: date)) else {
             assertionFailure("TrackerDataStore.shouldShow: Failed to create weekday from calendar")
             return false

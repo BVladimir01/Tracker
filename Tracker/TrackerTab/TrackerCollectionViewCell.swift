@@ -23,17 +23,6 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     weak var delegate: TrackerCollectionViewCellDelegate?
     
-    private(set) var trackerIsDone = false {
-        didSet {
-            if trackerIsDone {
-                // setting to minus since check mark image is poorly implemented
-                recordButton.setImage(UIImage(resource: .minus).withTintColor(themeColor), for: .normal)
-            } else {
-                recordButton.setImage(UIImage(resource: .plus).withTintColor(themeColor), for: .normal)
-            }
-        }
-    }
-    
     private(set) var trackerID: UUID?
     
     // MARK: - Private Properties
@@ -75,6 +64,11 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     func setRecordText(_ text: String) {
         recordLabel.text = text
+    }
+    
+    func setIsCompleted(_ isCompleted: Bool) {
+        let newImage = UIImage(resource: isCompleted ? .minus : .plus).withTintColor(themeColor)
+        recordButton.setImage(newImage, for: .normal)
     }
     
     // MARK: - Private Methods - Setup

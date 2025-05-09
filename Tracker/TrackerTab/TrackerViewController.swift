@@ -113,7 +113,7 @@ final class TrackerViewController: UIViewController {
     private func recordText(for tracker: Tracker) -> String {
         let daysEnding = ["дней", "день", "дня", "дня", "дня",
                           "дней", "дней", "дней", "дней", "дней"]
-        let daysDone = trackerDataStorage.daysDone(tracker: tracker)
+        let daysDone = trackerDataStorage.daysDone(trackerID: tracker.id)
         switch tracker.schedule {
         case .regular:
             let lastDigit = daysDone % 10
@@ -150,6 +150,7 @@ extension TrackerViewController: UICollectionViewDataSource {
         let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
         cell.configure(tracker: trackerToShow)
         cell.setRecordText(recordText(for: trackerToShow))
+        cell.setIsCompleted(trackerDataStorage.isCompleted(trackerID: trackerToShow.id, on: datePicker.date))
         cell.delegate = self
         return cell
     }
@@ -205,6 +206,21 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 extension TrackerViewController: TrackerCollectionViewCellDelegate {
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
         // TODO: process cell tap
+        guard let trackerID = cell.trackerID else {
+            assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get tracker id of the cell")
+            return
+        }
+        guard let indexPath = collectionView.indexPath(for: cell) else {
+            assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
+            return
+        }
+        let date = datePicker.date
+        if trackerDataStorage.isCompleted(trackerID: trackerID, on: date) {
+            trackerDataStorage.removeRecord(for: trackerID, on: date)
+        } else {
+            trackerDataStorage.addRecord(for: trackerID, on: date)
+        }
+        collectionView.reloadItems(at: [indexPath])
     }
 }
 
