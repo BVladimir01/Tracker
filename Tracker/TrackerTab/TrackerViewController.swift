@@ -110,6 +110,23 @@ final class TrackerViewController: UIViewController {
         }
     }
     
+    private func recordText(for tracker: Tracker) -> String {
+        let daysEnding = ["дней", "день", "дня", "дня", "дня",
+                          "дней", "дней", "дней", "дней", "дней"]
+        let daysDone = trackerDataStorage.daysDone(tracker: tracker)
+        switch tracker.schedule {
+        case .regular:
+            let lastDigit = daysDone % 10
+            return "\(daysDone) \(daysEnding[lastDigit])"
+        case .irregular:
+            if daysDone == 0 {
+                return "Не выполнен"
+            } else {
+                return "Выполнен"
+            }
+        }
+    }
+    
 }
 
 
@@ -132,6 +149,7 @@ extension TrackerViewController: UICollectionViewDataSource {
         let categories = trackerDataStorage.trackerCategories(on: datePicker.date)
         let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
         cell.configure(tracker: trackerToShow)
+        cell.setRecordText(recordText(for: trackerToShow))
         cell.delegate = self
         return cell
     }

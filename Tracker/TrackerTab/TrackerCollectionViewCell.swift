@@ -73,6 +73,10 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         trackerID = tracker.id
     }
     
+    func setRecordText(_ text: String) {
+        recordLabel.text = text
+    }
+    
     // MARK: - Private Methods - Setup
     
     private func setUpViews() {

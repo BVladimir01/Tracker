@@ -34,13 +34,20 @@ class TrackerDataStore: TrackerDataSource {
                                       emoji: "😎",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     
+    private static let irregularTracker = Tracker(id: UUID(),
+                                                  title: "irregularTracker",
+                                                  color: UIColor.ypColorSelection4.rgbColor ?? RGBColor(red: 0.5, green: 0.5, blue: 0.5), 
+                                                  emoji: "🥶",
+                                                  schedule: .irregular(Date()))
+    
     private var trackerCategories: [TrackerCategory] = [
         TrackerCategory(title: "TrackerCategoryTitle1",
                         trackers: [testTracker1, testTracker2, testTracker3]),
         TrackerCategory(title: "TrackerCategoryTitle2",
                         trackers: [testTracker3, testTracker1, testTracker2]),
         TrackerCategory(title: "TrackerCategoryTitle3",
-                        trackers: [testTracker2, testTracker3, testTracker1])
+                        trackers: [testTracker2, testTracker3, testTracker1]),
+        TrackerCategory(title: "Irregular title", trackers: [irregularTracker])
     ]
     
     private var completedTrackers: [TrackerRecord] = []
@@ -66,6 +73,10 @@ class TrackerDataStore: TrackerDataSource {
         return result
     }
     
+    func daysDone(tracker: Tracker) -> Int {
+        return completedTrackersDict[tracker]?.count ?? 0
+    }
+    
     // MARK: - Private Methods
     
     private func shouldShow(tracker: Tracker, on date: Date) -> Bool {
@@ -78,7 +89,7 @@ class TrackerDataStore: TrackerDataSource {
         case .regular(let trackerWeekdays):
             if trackerWeekdays.contains(targetWeekday) { return true }
         case .irregular(let trackerDate):
-            if trackerDate == date { return true }
+            if calendar.isDate(trackerDate, inSameDayAs: date) { return true }
         }
         return false
     }
