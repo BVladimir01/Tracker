@@ -113,11 +113,11 @@ final class TrackerViewController: UIViewController {
 extension TrackerViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerDataStorage.trackerCategories.count
+        trackerDataStorage.trackerCategories(on: datePicker.date).count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        trackerDataStorage.trackerCategories[section].trackers.count
+        trackerDataStorage.trackerCategories(on: datePicker.date)[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -125,7 +125,9 @@ extension TrackerViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue cell")
             return UICollectionViewCell()
         }
-        cell.configure(tracker: trackerDataStorage.trackerCategories[indexPath.section].trackers[indexPath.item])
+        let categories = trackerDataStorage.trackerCategories(on: datePicker.date)
+        let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
+        cell.configure(tracker: trackerToShow)
         cell.delegate = self
         return cell
     }
@@ -135,7 +137,8 @@ extension TrackerViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return   UICollectionReusableView()
         }
-        view.changeTitleText(trackerDataStorage.trackerCategories[indexPath.section].title)
+        let categories = trackerDataStorage.trackerCategories(on: datePicker.date)
+        view.changeTitleText(categories[indexPath.section].title)
         return view
     }
     

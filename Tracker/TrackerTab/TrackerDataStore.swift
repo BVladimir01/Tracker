@@ -14,15 +14,6 @@ class TrackerDataStore: TrackerDataSource {
     
     // MARK: - Internal Properties
     
-    private(set) var trackerCategories: [TrackerCategory] = [
-        TrackerCategory(title: "TrackerCategoryTitle1",
-                        trackers: [testTracker1, testTracker2, testTracker3]),
-        TrackerCategory(title: "TrackerCategoryTitle2",
-                        trackers: [testTracker3, testTracker1, testTracker2]),
-        TrackerCategory(title: "TrackerCategoryTitle3",
-                        trackers: [testTracker2, testTracker3, testTracker1])
-    ]
-    
     static let shared = TrackerDataStore()
     
     // MARK: - Private Properties
@@ -43,11 +34,53 @@ class TrackerDataStore: TrackerDataSource {
                                       emoji: "😎",
                                       schedule: .regular(Set<Weekday>([.friday, .monday])))
     
+    private var trackerCategories: [TrackerCategory] = [
+        TrackerCategory(title: "TrackerCategoryTitle1",
+                        trackers: [testTracker1, testTracker2, testTracker3]),
+        TrackerCategory(title: "TrackerCategoryTitle2",
+                        trackers: [testTracker3, testTracker1, testTracker2]),
+        TrackerCategory(title: "TrackerCategoryTitle3",
+                        trackers: [testTracker2, testTracker3, testTracker1])
+    ]
+    
     private var completedTrackers: [TrackerRecord] = []
     private var completedTrackersDict: [Tracker: [Date]] = [:]
     
     // MARK: - Initializers
     
     private init() { }
+    
+    // MARK: - Internal Methods
+    
+    func trackerCategories(on date: Date) -> [TrackerCategory] {
+        var result: [TrackerCategory] = []
+        for trackerCategory in trackerCategories {
+            let categoryType = type(of: trackerCategory)
+            let trackersToShow = trackerCategory.trackers.filter { shouldShow(tracker: $0, on: date) }
+            if !trackersToShow.isEmpty {
+                let newCategory = categoryType.init(title: trackerCategory.title,
+                                                    trackers: trackersToShow)
+                result.append(newCategory)
+            }
+        }
+        return result
+    }
+    
+    // MARK: - Private Methods
+    
+    private func shouldShow(tracker: Tracker, on date: Date) -> Bool {
+        let calendar = Calendar.current
+        guard let targetWeekday = Weekday(rawValue: calendar.component(.weekday, from: date)) else {
+            assertionFailure("TrackerDataStore.shouldShow: Failed to create weekday from calendar")
+            return false
+        }
+        switch tracker.schedule {
+        case .regular(let trackerWeekdays):
+            if trackerWeekdays.contains(targetWeekday) { return true }
+        case .irregular(let trackerDate):
+            if trackerDate == date { return true }
+        }
+        return false
+    }
     
 }

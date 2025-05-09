@@ -9,5 +9,6 @@ import Foundation
 
 
 protocol TrackerDataSource {
-    var trackerCategories: [TrackerCategory] { get }
+//    var trackerCategories: [TrackerCategory] { get }
+    func trackerCategories(on date: Date) -> [TrackerCategory]
 }
