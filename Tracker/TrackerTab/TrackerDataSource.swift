@@ -9,6 +9,7 @@ import Foundation
 
 
 protocol TrackerDataSource {
+    var trackerCategories: [TrackerCategory] { get }
     func trackerCategories(on date: Date) -> [TrackerCategory]
     func daysDone(trackerID: UUID) -> Int
     func isCompleted(trackerID: UUID, on date: Date) -> Bool

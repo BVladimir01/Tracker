@@ -16,6 +16,16 @@ class TrackerDataStore: TrackerDataSource {
     
     static let shared = TrackerDataStore()
     
+    private(set) var trackerCategories: [TrackerCategory] = [
+        TrackerCategory(title: "TrackerCategoryTitle1",
+                        trackers: [testTracker1, testTracker2, testTracker3]),
+        TrackerCategory(title: "TrackerCategoryTitle2",
+                        trackers: [testTracker3, testTracker1, testTracker2]),
+        TrackerCategory(title: "TrackerCategoryTitle3",
+                        trackers: [testTracker2, testTracker3, testTracker1]),
+        TrackerCategory(title: "Irregular title", trackers: [irregularTracker])
+    ]
+    
     // MARK: - Private Properties
     
     private let calendar = Calendar.current
@@ -41,16 +51,6 @@ class TrackerDataStore: TrackerDataSource {
                                                   color: UIColor.ypColorSelection4.rgbColor ?? RGBColor(red: 0.5, green: 0.5, blue: 0.5), 
                                                   emoji: "🥶",
                                                   schedule: .irregular(Date()))
-    
-    private var trackerCategories: [TrackerCategory] = [
-        TrackerCategory(title: "TrackerCategoryTitle1",
-                        trackers: [testTracker1, testTracker2, testTracker3]),
-        TrackerCategory(title: "TrackerCategoryTitle2",
-                        trackers: [testTracker3, testTracker1, testTracker2]),
-        TrackerCategory(title: "TrackerCategoryTitle3",
-                        trackers: [testTracker2, testTracker3, testTracker1]),
-        TrackerCategory(title: "Irregular title", trackers: [irregularTracker])
-    ]
     
     private var completedTrackers: [TrackerRecord] = []
     private var completedTrackersDict: [UUID: [Date]] = [:]
