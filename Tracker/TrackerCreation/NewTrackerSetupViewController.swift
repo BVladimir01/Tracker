@@ -18,11 +18,27 @@ final class NewTrackerSetupViewController: UIViewController {
     private let createButton = UIButton(type: .system)
     private let table = UITableView()
     
+    private var createButtonEnabled = false {
+        didSet {
+            if createButtonEnabled {
+                createButton.isEnabled = true
+                createButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
+                createButton.titleLabel?.textColor = LayoutConstants.Buttons.createButtonTextColor
+            } else {
+                createButton.isEnabled = false
+                createButton.backgroundColor = LayoutConstants.Buttons.createButtonDisabledColor
+                createButton.titleLabel?.textColor = LayoutConstants.Buttons.createButtonDisabledTextColor
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         setUpTitle()
         setUpNameTextField()
+        setUpCancelButton()
+        setUpCreateButton()
     }
     
     private func setUpTitle() {
@@ -59,6 +75,59 @@ final class NewTrackerSetupViewController: UIViewController {
             nameTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.height)
         ])
     }
+    
+    private func setUpCancelButton() {
+        cancelButton.setTitle("Отменить", for: .normal)
+        cancelButton.setTitleColor(LayoutConstants.Buttons.cancelButtonColor, for: .normal)
+        cancelButton.titleLabel?.font = LayoutConstants.Buttons.font
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        cancelButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
+        cancelButton.layer.borderWidth = LayoutConstants.Buttons.cancelButtonBorderWidth
+        cancelButton.layer.borderColor = LayoutConstants.Buttons.cancelButtonColor.cgColor
+        
+        view.addSubview(cancelButton)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cancelButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                                                  constant: LayoutConstants.Buttons.lateralPadding),
+            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                 constant: LayoutConstants.Buttons.bottomPadding),
+            cancelButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Buttons.cancelButtonWidth),
+            cancelButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Buttons.height)
+        ])
+    }
+    
+    private func setUpCreateButton() {
+        createButton.setTitle("Создать", for: .normal)
+        createButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
+        createButton.setTitleColor(LayoutConstants.Buttons.createButtonTextColor, for: .normal)
+        createButton.titleLabel?.font = LayoutConstants.Buttons.font
+        createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+        createButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
+        createButtonEnabled = false
+        
+        view.addSubview(createButton)
+        createButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            createButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                                                  constant: -LayoutConstants.Buttons.lateralPadding),
+            createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                 constant: LayoutConstants.Buttons.bottomPadding),
+            createButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Buttons.createButtonWidth),
+            createButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Buttons.height)
+        ])
+    }
+    
+    
+    @objc
+    private func cancelButtonTapped() {
+        // TODO: implement cancel button tap
+    }
+    
+    @objc
+    private func createButtonTapped() {
+        // TODO: implement create button tap
+    }
 }
 
 
@@ -79,6 +148,24 @@ extension NewTrackerSetupViewController {
             static let topPadding: CGFloat = 87
             static let width: CGFloat = 343
             static let height: CGFloat = 75
+        }
+        enum Buttons {
+            static let cancelButtonColor: UIColor = .ypRed
+            static let cancelButtonBackgroundColor: UIColor = .ypWhite
+            static let cancelButtonBorderWidth: CGFloat = 1
+            static let cancelButtonWidth: CGFloat = 166
+            
+            static let createButtonBackgroundColor: UIColor = .ypBlack
+            static let createButtonTextColor: UIColor = .ypWhite
+            static let createButtonDisabledColor: UIColor = .ypGray
+            static let createButtonDisabledTextColor: UIColor = .white
+            static let createButtonWidth: CGFloat = 161
+            
+            static let bottomPadding: CGFloat = 0
+            static let lateralPadding: CGFloat = 20
+            static let height: CGFloat = 60
+            static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
+            static let cornerRadius: CGFloat = 16
         }
     }
 }
