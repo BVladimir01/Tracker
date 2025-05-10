@@ -8,20 +8,31 @@
 import UIKit
 
 
+// MARK: - CategoryChoiceViewControllerDelegate
+protocol CategoryChoiceViewControllerDelegate: AnyObject {
+    func categoryChoiceViewController(_ vc: UIViewController, didDismissWithCategory category: TrackerCategory?)
+}
+
+
 // MARK: - CategoryChoiceViewController
 final class CategoryChoiceViewController: UIViewController {
+    
+    // MARK: - Internal Properties
+    weak var delegate: CategoryChoiceViewControllerDelegate?
     
     // MARK: - Private Properties
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
     private let table = UITableView()
     
-    private let cellReuseID = "checkMarkCell"
+    private let cellReuseID = "checkmarkCell"
     private let dataStorage: TrackerDataStore = TrackerDataStore.shared
     
     private var shouldDisplayStub: Bool {
         dataStorage.trackerCategories.isEmpty
     }
+    private var chosenCategory: TrackerCategory?
+    private var selectedRow: Int?
     
     // MARK: - Lifecycle
     
@@ -37,6 +48,14 @@ final class CategoryChoiceViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         table.isScrollEnabled = table.contentSize.height > LayoutConstants.Table.maxHeight
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if let selectedRow {
+            delegate?.categoryChoiceViewController(self, didDismissWithCategory: dataStorage.trackerCategories[selectedRow])
+        } else {
+            delegate?.categoryChoiceViewController(self, didDismissWithCategory: nil)
+        }
     }
     
     // MARK: - Private Methods - Setup
@@ -115,9 +134,8 @@ final class CategoryChoiceViewController: UIViewController {
     }
     
     private func setUpTable() {
-        
-        
         table.dataSource = self
+        table.delegate = self
         table.isScrollEnabled = false
         table.backgroundColor = .clear
         table.rowHeight = LayoutConstants.Table.rowHeight
@@ -167,22 +185,26 @@ extension CategoryChoiceViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let category = dataStorage.trackerCategories[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
         cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
-        cell.textLabel?.text = dataStorage.trackerCategories[indexPath.row].title
+        cell.textLabel?.text = category.title
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        cell.layer.masksToBounds = true
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-            cell.layer.masksToBounds = true
             cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
             cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        }
-        if indexPath.row == 0 {
-            cell.layer.masksToBounds = true
+        } else if indexPath.row == 0 {
             cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        } else {
+            cell.layer.cornerRadius = .zero
         }
+        cell.accessoryType = (indexPath.row == selectedRow) ? .checkmark : .none
+        cell.selectedBackgroundView?.layer.masksToBounds = true
+        cell.selectedBackgroundView?.layer.cornerRadius = LayoutConstants.Table.cornerRadius
         return cell
     }
     
@@ -193,6 +215,19 @@ extension CategoryChoiceViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 extension CategoryChoiceViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let oldSelectedRow = selectedRow
+        if indexPath.row == selectedRow {
+            selectedRow = nil
+        } else {
+            selectedRow = indexPath.row
+        }
+        if let oldSelectedRow {
+            tableView.reloadRows(at: [IndexPath(row: oldSelectedRow, section: 0)], with: .none)
+        }
+        tableView.reloadRows(at: [indexPath], with: .none)
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
 }
 
 

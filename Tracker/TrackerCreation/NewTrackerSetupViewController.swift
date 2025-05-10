@@ -9,13 +9,17 @@ import UIKit
 
 
 // MARK: - NewTrackerSetupViewController
-final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewControllerDelegate {
+final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewControllerDelegate, CategoryChoiceViewControllerDelegate {
     
     // MARK: - Internal Properties
     
     var trackerIsRegular = true
     
-    var trackerCategory: TrackerCategory?
+    var trackerCategory: TrackerCategory? {
+        didSet {
+            table.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+        }
+    }
     var weekdays: Set<Weekday> = [] {
         didSet {
             table.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
@@ -62,6 +66,10 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     func scheduleChoiceViewController(_ vc: UIViewController, didChooseWeekdays weekdays: Set<Weekday>) {
         self.weekdays = weekdays
         vc.dismiss(animated: true)
+    }
+    
+    func categoryChoiceViewController(_ vc: UIViewController, didDismissWithCategory category: TrackerCategory?) {
+        self.trackerCategory = category
     }
     
     // MARK: - Private Methods - Setup
@@ -198,6 +206,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     private func chooseCategoryTapped() {
         // TODO: implement choosing category
         let vc = CategoryChoiceViewController()
+        vc.delegate = self
         present(vc, animated: true)
     }
     
