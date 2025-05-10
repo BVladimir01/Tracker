@@ -9,14 +9,18 @@ import UIKit
 
 
 // MARK: - NewTrackerSetupViewController
-final class NewTrackerSetupViewController: UIViewController {
+final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewControllerDelegate {
     
     // MARK: - Internal Properties
     
     var trackerIsRegular = true
     
     var trackerCategory: TrackerCategory?
-    var schedule: Set<Weekday> = [.monday, .tuesday]
+    var weekdays: Set<Weekday> = [] {
+        didSet {
+            table.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
+        }
+    }
     
     // MARK: - Private Properties
     
@@ -51,6 +55,13 @@ final class NewTrackerSetupViewController: UIViewController {
         setUpCancelButton()
         setUpCreateButton()
         setUpTable()
+    }
+    
+    // MARK: - Interntal Methods
+    
+    func scheduleChoiceViewController(_ vc: UIViewController, didChooseWeekdays weekdays: Set<Weekday>) {
+        self.weekdays = weekdays
+        vc.dismiss(animated: true)
     }
     
     // MARK: - Private Methods - Setup
@@ -191,6 +202,8 @@ final class NewTrackerSetupViewController: UIViewController {
     private func chooseScheduleTapped() {
         // TODO: implement choosing Schedule
         let vc = ScheduleChoiceViewController()
+        vc.delegate = self
+        vc.startingWeekdays = weekdays
         present(vc, animated: true)
     }
 }
@@ -220,9 +233,9 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
         
-        let weekdaysAsStrings = schedule.sorted().map { $0.asString(short: true) }
+        let weekdaysAsStrings = weekdays.sorted().map { $0.asString(short: true) }
         cell.detailTextLabel?.text = weekdaysAsStrings.joined(separator: ", ")
-        if schedule.count == Weekday.allCases.count {
+        if weekdays.count == Weekday.allCases.count {
             cell.detailTextLabel?.text = "Каждый день"
         }
         cell.detailTextLabel?.font = LayoutConstants.Table.cellTextFont

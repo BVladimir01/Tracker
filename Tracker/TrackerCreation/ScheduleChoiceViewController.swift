@@ -8,8 +8,19 @@
 import UIKit
 
 
+// MARK: - ScheduleChoiceViewControllerDelegate
+protocol ScheduleChoiceViewControllerDelegate: AnyObject {
+    func scheduleChoiceViewController(_ vc: UIViewController, didChooseWeekdays weekdays: Set<Weekday>)
+}
+
+
 // MARK: - ScheduleChoiceViewController
 final class ScheduleChoiceViewController: UIViewController {
+    
+    // MARK: - Internal Properties
+    
+    weak var delegate: ScheduleChoiceViewControllerDelegate?
+    var startingWeekdays: Set<Weekday> = []
     
     // MARK: - Private Properties
     
@@ -53,6 +64,7 @@ final class ScheduleChoiceViewController: UIViewController {
         doneButton.backgroundColor = LayoutConstants.Button.backgroundColor
         doneButton.layer.cornerRadius = LayoutConstants.Button.cornerRadius
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+        if !startingWeekdays.isEmpty { setDoneButton(enabled: true) }
         
         view.addSubview(doneButton)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +81,6 @@ final class ScheduleChoiceViewController: UIViewController {
         table.layer.masksToBounds = true
         table.layer.cornerRadius = LayoutConstants.Table.cornerRadius
         
-        table.delegate = self
         table.dataSource = self
         table.rowHeight = LayoutConstants.Table.rowHeight
         table.isScrollEnabled = false
@@ -77,6 +88,7 @@ final class ScheduleChoiceViewController: UIViewController {
         table.separatorInset = LayoutConstants.Table.separatorInset
         table.separatorColor = LayoutConstants.Table.separatorColor
         table.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseID)
+        table.allowsSelection = false
         
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -90,11 +102,49 @@ final class ScheduleChoiceViewController: UIViewController {
         ])
     }
     
+    // MARK: - Private Methods - Helpers
+    
+    private func shouldDoneButtonBeEnabled() -> Bool {
+        for i in 0..<Weekday.allCases.count {
+            let indexPath = IndexPath(row: i, section: 0)
+            if let cell = table.cellForRow(at: indexPath), 
+                let switcher = cell.accessoryView as? UISwitch,
+                switcher.isOn {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func setDoneButton(enabled: Bool) {
+        doneButton.isEnabled = enabled
+        doneButton.backgroundColor = enabled ? .ypBlack : .ypGray
+    }
+    
     // MARK: - Private Methods - Intentions
     
     @objc
     private func doneButtonTapped() {
-        // TODO: implement button tap
+        var chosenDays: Set<Weekday> = []
+        for i in 0..<Weekday.allCases.count {
+            let indexPath = IndexPath(row: i, section: 0)
+            let cell = table.cellForRow(at: indexPath)
+            if let switcher = cell?.accessoryView as? UISwitch, switcher.isOn, let weekday = Weekday(rawValue: i) {
+                chosenDays.insert(weekday)
+            }
+        }
+        delegate?.scheduleChoiceViewController(self, didChooseWeekdays: chosenDays)
+    }
+    
+    @objc
+    private func switcherToggled(_ sender: UISwitch) {
+        if sender.isOn {
+            setDoneButton(enabled: true)
+            return
+        }
+        if !shouldDoneButtonBeEnabled() {
+            setDoneButton(enabled: false)
+        }
     }
 
 }
@@ -109,22 +159,25 @@ extension ScheduleChoiceViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
+        guard let weekday = Weekday(rawValue: indexPath.row) else {
+            assertionFailure("ScheduleChoiceViewController.tableView: Failed to create weekday from indexPath")
+            return cell
+        }
         cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
-        cell.textLabel?.text = Weekday.week[indexPath.row].asString(short: false)
+        if let weekday = Weekday(rawValue: indexPath.row) {
+            cell.textLabel?.text = weekday.asString(short: false)
+        }
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
         let switcher = UISwitch()
         switcher.onTintColor = .ypBlue
+        if startingWeekdays.contains(weekday) {
+            switcher.isOn = true
+        }
+        switcher.addTarget(self, action: #selector(switcherToggled(_:)), for: .valueChanged)
         cell.accessoryView = switcher
         return cell
     }
-    
-    
-}
-
-
-// MARK: - UITableViewDelegate
-extension ScheduleChoiceViewController: UITableViewDelegate {
     
 }
 
@@ -139,6 +192,7 @@ extension ScheduleChoiceViewController {
         }
         enum Button {
             static let backgroundColor: UIColor = .ypBlack
+            static let disabledBackgroundColor: UIColor = .ypGray
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypWhite
             static let cornerRadius: CGFloat = 16
