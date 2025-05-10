@@ -9,7 +9,7 @@ import UIKit
 
 
 // MARK: - TrackerViewController
-final class TrackerViewController: UIViewController {
+final class TrackerViewController: UIViewController, NewTrackerViewControllerDelegate {
     
     // MARK: - Private Properties
     
@@ -29,6 +29,16 @@ final class TrackerViewController: UIViewController {
         setUpStubView()
         setUpDatePicker()
         setUpCollectionView()
+    }
+    
+    // MARK: - Internal Methods
+    
+    func newTrackerViewControllerDelegate(_ vc: UIViewController, 
+                                          didCreateTracker tracker: Tracker,
+                                          for category: TrackerCategory) {
+        vc.dismiss(animated: true)
+        trackerDataStorage.add(tracker: tracker, for: category)
+        collectionView.reloadData()
     }
     
     // MARK: - Private Methods - View Configuration
@@ -96,6 +106,7 @@ final class TrackerViewController: UIViewController {
     @objc private func addTrackerTapped() {
         // TODO: Implement tracker addition
         let creatorVC = NewTrackerViewController()
+        creatorVC.delegate = self
         present(creatorVC, animated: true)
     }
     

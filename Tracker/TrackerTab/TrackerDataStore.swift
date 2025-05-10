@@ -111,6 +111,17 @@ class TrackerDataStore: TrackerDataSource {
         trackerCategories.append(category)
     }
     
+    func add(tracker: Tracker, for category: TrackerCategory) {
+        var newTrackers = category.trackers
+        newTrackers.append(tracker)
+        let newTrackerCategory = TrackerCategory(title: category.title, trackers: newTrackers)
+        var newTrackerCategories: [TrackerCategory] = []
+        for (i, trackerCategory) in trackerCategories.enumerated() {
+            newTrackerCategories.append(trackerCategory == newTrackerCategory ? newTrackerCategory : trackerCategory)
+        }
+        trackerCategories = newTrackerCategories
+    }
+    
     // MARK: - Private Methods
     
     private func shouldShow(tracker: Tracker, on date: Date) -> Bool {

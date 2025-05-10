@@ -8,19 +8,26 @@
 import UIKit
 
 
+// MARK: NewTrackerSetupViewControllerDelegate
+protocol NewTrackerSetupViewControllerDelegate: AnyObject {
+    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory)
+}
+
+
 // MARK: - NewTrackerSetupViewController
 final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewControllerDelegate, CategoryChoiceViewControllerDelegate {
     
     // MARK: - Internal Properties
     
     var trackerIsRegular = true
+    weak var delegate: NewTrackerSetupViewControllerDelegate?
     
-    var trackerCategory: TrackerCategory? {
+    private var trackerCategory: TrackerCategory? {
         didSet {
             table.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
     }
-    var weekdays: Set<Weekday> = [] {
+    private var weekdays: Set<Weekday> = [] {
         didSet {
             table.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
         }
@@ -48,6 +55,15 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
             }
         }
     }
+    private var shouldEnableCreateButton: Bool {
+        if let trackerName = nameTextField.text, !trackerName.isEmpty,
+           trackerCategory != nil,
+           !weekdays.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
     
     // MARK: - Lifecycle
     
@@ -65,11 +81,13 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     func scheduleChoiceViewController(_ vc: UIViewController, didChooseWeekdays weekdays: Set<Weekday>) {
         self.weekdays = weekdays
+        createButtonEnabled = shouldEnableCreateButton
         vc.dismiss(animated: true)
     }
     
     func categoryChoiceViewController(_ vc: UIViewController, didDismissWithCategory category: TrackerCategory?) {
         self.trackerCategory = category
+        createButtonEnabled = shouldEnableCreateButton
     }
     
     // MARK: - Private Methods - Setup
@@ -97,6 +115,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         nameTextField.layer.masksToBounds = true
         nameTextField.textColor = LayoutConstants.TextField.textColor
         nameTextField.backgroundColor = LayoutConstants.TextField.backgroundColor
+        nameTextField.addTarget(self, action: #selector(nameTextFieldEditingChange(_:)), for: .editingChanged)
         
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0,
                                                    width: LayoutConstants.TextField.innerLeftPadding,
@@ -200,22 +219,35 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     @objc
     private func createButtonTapped() {
-        // TODO: implement create button tap
+        guard let trackerTitle = nameTextField.text else {
+            assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get category title")
+            return
+        }
+        guard let trackerCategory else {
+            assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get tracker category")
+            return
+        }
+        let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(Date())
+        let tracker = Tracker(id: UUID(), title: trackerTitle, color: .init(red: 1, green: 1, blue: 1), emoji: "🫥", schedule: schedule)
+        delegate?.newTrackerSetupViewController(self, didCreateTracker: tracker, for: trackerCategory)
     }
     
     private func chooseCategoryTapped() {
-        // TODO: implement choosing category
         let vc = CategoryChoiceViewController()
         vc.delegate = self
         present(vc, animated: true)
     }
     
     private func chooseScheduleTapped() {
-        // TODO: implement choosing Schedule
         let vc = ScheduleChoiceViewController()
         vc.delegate = self
         vc.startingWeekdays = weekdays
         present(vc, animated: true)
+    }
+    
+    @objc
+    private func nameTextFieldEditingChange(_ sender: UITextField) {
+        createButtonEnabled = shouldEnableCreateButton
     }
 }
 

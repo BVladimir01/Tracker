@@ -16,5 +16,6 @@ protocol TrackerDataSource {
     func removeRecord(for trackerID: UUID, on date: Date)
     func addRecord(for trackerID: UUID, on date: Date)
     func add(category: TrackerCategory)
+    func add(tracker: Tracker, for category: TrackerCategory)
 }
 

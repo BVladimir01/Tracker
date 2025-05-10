@@ -7,11 +7,21 @@
 
 import UIKit
 
+// MARK: NewTrackerViewControllerDelegate
+protocol NewTrackerViewControllerDelegate: AnyObject {
+    func newTrackerViewControllerDelegate(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory)
+}
+
 
 // MARK: - NewTracerViewController
-final class NewTrackerViewController: UIViewController {
+final class NewTrackerViewController: UIViewController, NewTrackerSetupViewControllerDelegate {
+    
+    // MARK: - Internal Properties
+    
+    weak var delegate: NewTrackerViewControllerDelegate?
     
     // MARK: - Private Properties
+    
     private let regularTrackerButton = UIButton(type: .system)
     private let irregularTrackerButton = UIButton(type: .system)
     
@@ -19,12 +29,20 @@ final class NewTrackerViewController: UIViewController {
     private let regularTrackerTitle = "Привычка"
     
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         setUpTitle()
         setUpRegularTrackerButton()
         setUpIrregularTrackerButton()
+    }
+    
+    // MARK: - Internal Methods
+    
+    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory) {
+        vc.dismiss(animated: true)
+        delegate?.newTrackerViewControllerDelegate(self, didCreateTracker: tracker, for: category)
     }
     
     // MARK: - Private Methods - Setup
@@ -103,6 +121,7 @@ final class NewTrackerViewController: UIViewController {
         }
         let newTrackerSetupVC = NewTrackerSetupViewController()
         newTrackerSetupVC.trackerIsRegular = createRegularTracker
+        newTrackerSetupVC.delegate = self
         present(newTrackerSetupVC, animated: true)
     }
     
