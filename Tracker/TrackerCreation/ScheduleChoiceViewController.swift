@@ -16,6 +16,8 @@ final class ScheduleChoiceViewController: UIViewController {
     private let doneButton = UIButton(type: .system)
     private let table = UITableView()
     
+    private let cellReuseID = "switcherCell"
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -23,6 +25,7 @@ final class ScheduleChoiceViewController: UIViewController {
         view.backgroundColor = .ypWhite
         setUpTitle()
         setUpDoneButton()
+        setUpTable()
     }
     
     // MARK: - Private Methods - Setup
@@ -62,12 +65,66 @@ final class ScheduleChoiceViewController: UIViewController {
         ])
     }
     
+    private func setUpTable() {
+        table.layer.masksToBounds = true
+        table.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+        
+        table.delegate = self
+        table.dataSource = self
+        table.rowHeight = LayoutConstants.Table.rowHeight
+        table.isScrollEnabled = false
+        table.separatorStyle = .singleLine
+        table.separatorInset = LayoutConstants.Table.separatorInset
+        table.separatorColor = LayoutConstants.Table.separatorColor
+        table.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseID)
+        
+        view.addSubview(table)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        let tableHeight = CGFloat(Weekday.allCases.count)*LayoutConstants.Table.rowHeight - 0.5
+        NSLayoutConstraint.activate([
+            table.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            table.widthAnchor.constraint(equalToConstant: LayoutConstants.Table.width),
+            table.bottomAnchor.constraint(equalTo: doneButton.topAnchor,
+                                       constant: -LayoutConstants.Table.spacingToButton),
+            table.heightAnchor.constraint(equalToConstant: tableHeight)
+        ])
+    }
+    
     // MARK: - Private Methods - Intentions
     
     @objc
     private func doneButtonTapped() {
         // TODO: implement button tap
     }
+
+}
+
+
+// MARK: - UITableViewDataSource
+extension ScheduleChoiceViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        Weekday.allCases.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
+        cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
+        cell.textLabel?.text = Weekday.week[indexPath.row].asString(short: false)
+        cell.textLabel?.font = LayoutConstants.Table.cellTextFont
+        cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        let switcher = UISwitch()
+        switcher.onTintColor = .ypBlue
+        cell.accessoryView = switcher
+        return cell
+    }
+    
+    
+}
+
+
+// MARK: - UITableViewDelegate
+extension ScheduleChoiceViewController: UITableViewDelegate {
     
 }
 
@@ -88,6 +145,18 @@ extension ScheduleChoiceViewController {
             static let bottomPadding: CGFloat = 16
             static let height: CGFloat = 60
             static let width: CGFloat = 335
+        }
+        enum Table {
+            static let cornerRadius: CGFloat = 16
+            static let rowHeight: CGFloat = 75
+            static let width: CGFloat = 343
+            static let spacingToButton: CGFloat = 39
+            static let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            static let separatorColor: UIColor = .gray
+            
+            static let cellTextFont: UIFont = .systemFont(ofSize: 17, weight: .regular)
+            static let cellTextColor: UIColor = .ypBlack
+            static let cellBackgroundColor: UIColor = .ypBackground
         }
     }
 }
