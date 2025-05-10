@@ -172,6 +172,8 @@ final class CategoryChoiceViewController: UIViewController {
     @objc
     private func addButtonTapped() {
         // TODO: - Implement button tap
+        let vc = CategoryCreationViewController()
+        present(vc, animated: true)
     }
     
 }
