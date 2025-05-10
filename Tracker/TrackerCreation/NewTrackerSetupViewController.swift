@@ -197,6 +197,8 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     private func chooseCategoryTapped() {
         // TODO: implement choosing category
+        let vc = CategoryChoiceViewController()
+        present(vc, animated: true)
     }
     
     private func chooseScheduleTapped() {
