@@ -101,7 +101,9 @@ final class NewTrackerViewController: UIViewController {
             assertionFailure("NewTrackerViewController.didTapCreate: unknown title")
             return
         }
-        // TODO: - transition to next view controller
+        let newTrackerSetupVC = NewTrackerSetupViewController()
+        newTrackerSetupVC.trackerIsRegular = createRegularTracker
+        present(newTrackerSetupVC, animated: true)
     }
     
 }
