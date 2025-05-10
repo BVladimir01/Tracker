@@ -47,18 +47,16 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
             if createButtonEnabled {
                 createButton.isEnabled = true
                 createButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
-                createButton.titleLabel?.textColor = LayoutConstants.Buttons.createButtonTextColor
             } else {
                 createButton.isEnabled = false
                 createButton.backgroundColor = LayoutConstants.Buttons.createButtonDisabledColor
-                createButton.titleLabel?.textColor = LayoutConstants.Buttons.createButtonDisabledTextColor
             }
         }
     }
     private var shouldEnableCreateButton: Bool {
         if let trackerName = nameTextField.text, !trackerName.isEmpty,
            trackerCategory != nil,
-           !weekdays.isEmpty {
+           !weekdays.isEmpty || !trackerIsRegular {
             return true
         } else {
             return false

@@ -36,9 +36,9 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
     func newTrackerViewControllerDelegate(_ vc: UIViewController, 
                                           didCreateTracker tracker: Tracker,
                                           for category: TrackerCategory) {
-        vc.dismiss(animated: true)
         trackerDataStorage.add(tracker: tracker, for: category)
         collectionView.reloadData()
+        vc.dismiss(animated: true)
     }
     
     // MARK: - Private Methods - View Configuration
