@@ -110,7 +110,7 @@ class TrackerDataStore: TrackerDataSource {
     // MARK: - Private Methods
     
     private func shouldShow(tracker: Tracker, on date: Date) -> Bool {
-        guard let targetWeekday = Weekday(rawValue: calendar.component(.weekday, from: date)) else {
+        guard let targetWeekday = Weekday.fromCalendarComponent(calendar.component(.weekday, from: date))else {
             assertionFailure("TrackerDataStore.shouldShow: Failed to create weekday from calendar")
             return false
         }

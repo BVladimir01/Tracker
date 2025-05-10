@@ -8,17 +8,19 @@
 import Foundation
 
 enum Weekday: Int, CaseIterable, Equatable, Comparable {
-    case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
+    case monday = 0, tuesday, wednesday, thursday, friday, saturday, sunday
     
-    static let week: [Weekday] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
+    static func fromCalendarComponent(_ index: Int) -> Weekday? {
+        let gregorianOrdered: [Weekday?] = [nil, .sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
+        // safe return
+        if gregorianOrdered.indices.contains(index) {
+            return gregorianOrdered[index]
+        } else {
+            return nil
+        }
+    }
     
     static func < (lhs: Weekday, rhs: Weekday) -> Bool {
-        if lhs == sunday {
-            return false
-        }
-        if rhs == sunday {
-            return true
-        }
         return lhs.rawValue < rhs.rawValue
     }
     
