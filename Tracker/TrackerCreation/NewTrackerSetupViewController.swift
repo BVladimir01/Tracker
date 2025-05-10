@@ -175,7 +175,8 @@ final class NewTrackerSetupViewController: UIViewController {
     
     @objc
     private func cancelButtonTapped() {
-        // TODO: implement cancel button tap
+        // TODO: implement using delegates
+        presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     @objc
