@@ -220,6 +220,9 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
         
         let weekdaysAsStrings = schedule.sorted().map { $0.asString(short: true) }
         cell.detailTextLabel?.text = weekdaysAsStrings.joined(separator: ", ")
+        if schedule.count == Weekday.allCases.count {
+            cell.detailTextLabel?.text = "Каждый день"
+        }
         cell.detailTextLabel?.font = LayoutConstants.Table.cellTextFont
         cell.detailTextLabel?.textColor = LayoutConstants.Table.cellDetailTextColor
         
