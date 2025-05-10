@@ -190,6 +190,8 @@ final class NewTrackerSetupViewController: UIViewController {
     
     private func chooseScheduleTapped() {
         // TODO: implement choosing Schedule
+        let vc = ScheduleChoiceViewController()
+        present(vc, animated: true)
     }
 }
 

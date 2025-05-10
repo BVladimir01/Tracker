@@ -27,6 +27,7 @@
 		E7D037AC2DCD32AC007819A8 /* TrackerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */; };
 		E7D037B12DCF1E59007819A8 /* NewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037B02DCF1E59007819A8 /* NewTrackerViewController.swift */; };
 		E7D037B32DCF2F3C007819A8 /* NewTrackerSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */; };
+		E7D037B72DCF7095007819A8 /* ScheduleChoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037B62DCF7095007819A8 /* ScheduleChoiceViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataSource.swift; sourceTree = "<group>"; };
 		E7D037B02DCF1E59007819A8 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
 		E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerSetupViewController.swift; sourceTree = "<group>"; };
+		E7D037B62DCF7095007819A8 /* ScheduleChoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleChoiceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +155,7 @@
 			children = (
 				E7D037B02DCF1E59007819A8 /* NewTrackerViewController.swift */,
 				E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */,
+				E7D037B62DCF7095007819A8 /* ScheduleChoiceViewController.swift */,
 			);
 			path = TrackerCreation;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 			files = (
 				E7D037962DC8AADA007819A8 /* UIColor+RGBColor.swift in Sources */,
 				E7D037932DC8A9BB007819A8 /* Tracker.swift in Sources */,
+				E7D037B72DCF7095007819A8 /* ScheduleChoiceViewController.swift in Sources */,
 				E7D037B12DCF1E59007819A8 /* NewTrackerViewController.swift in Sources */,
 				E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */,
 				E7D037AA2DCD3292007819A8 /* TrackerDataStore.swift in Sources */,
