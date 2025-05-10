@@ -107,6 +107,10 @@ class TrackerDataStore: TrackerDataSource {
         completedTrackersDict[trackerID]?.removeAll(where: { calendar.isDate($0, inSameDayAs: date) })
     }
     
+    func add(category: TrackerCategory) {
+        trackerCategories.append(category)
+    }
+    
     // MARK: - Private Methods
     
     private func shouldShow(tracker: Tracker, on date: Date) -> Bool {

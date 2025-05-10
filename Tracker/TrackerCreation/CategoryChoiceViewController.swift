@@ -15,7 +15,7 @@ protocol CategoryChoiceViewControllerDelegate: AnyObject {
 
 
 // MARK: - CategoryChoiceViewController
-final class CategoryChoiceViewController: UIViewController {
+final class CategoryChoiceViewController: UIViewController, CategoryCreationViewControllerDelegate {
     
     // MARK: - Internal Properties
     weak var delegate: CategoryChoiceViewControllerDelegate?
@@ -58,7 +58,22 @@ final class CategoryChoiceViewController: UIViewController {
         }
     }
     
-    // MARK: - Private Methods - Setup
+    // MARK: - Internal Methods
+    
+    func categoryCreationViewControllerDelegate(_ vc: UIViewController, didSelectCategoryTitle title: String) {
+        vc.dismiss(animated: true)
+        dataStorage.add(category: TrackerCategory(title: title, trackers: []))
+        table.insertRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0)],
+                         with: .automatic)
+        table.reloadRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 2, section: 0)],
+                         with: .none)
+        table.selectRow(at: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0),
+                        animated: true,
+                        scrollPosition: .bottom)
+        tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
+    }
+    
+    // MARK: - Private Methods - SetupR
     
     private func setUpTitle() {
         let title = UILabel()
@@ -173,6 +188,7 @@ final class CategoryChoiceViewController: UIViewController {
     private func addButtonTapped() {
         // TODO: - Implement button tap
         let vc = CategoryCreationViewController()
+        vc.delegate = self
         present(vc, animated: true)
     }
     

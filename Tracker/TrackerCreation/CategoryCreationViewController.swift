@@ -8,15 +8,23 @@
 import UIKit
 
 
+// MARK: CategoryCreationViewControllerDelegate
+protocol CategoryCreationViewControllerDelegate: AnyObject {
+    func categoryCreationViewControllerDelegate(_ vc: UIViewController, didSelectCategoryTitle title: String)
+}
+
+
 // MARK: - CategoryCreationViewController
 final class CategoryCreationViewController: UIViewController {
+    
+    // MARK: - Internal Properties
+    
+    weak var delegate: CategoryCreationViewControllerDelegate?
     
     // MARK: - Private Properties
     
     private let textField = UITextField()
     private let doneButton = UIButton(type: .system)
-    
-    private let dataStorage: TrackerDataSource = TrackerDataStore.shared
     
     // MARK: - Lifecycle
     
@@ -53,7 +61,7 @@ final class CategoryCreationViewController: UIViewController {
         textField.layer.masksToBounds = true
         textField.textColor = LayoutConstants.TextField.textColor
         textField.backgroundColor = LayoutConstants.TextField.backgroundColor
-        textField.addTarget(self, action: #selector(textFieldValueChanged(_:)), for: .editingChanged)
+        textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0,
                                                    width: LayoutConstants.TextField.innerLeftPadding,
@@ -115,7 +123,11 @@ final class CategoryCreationViewController: UIViewController {
     
     @objc
     private func doneButtonTapped() {
-        // TODO: - Implement button tap
+        guard let categoryTitle = textField.text else {
+            assertionFailure("CategoryCreationViewController.doneButtonTapped: TextField.text is nil")
+            return
+        }
+        delegate?.categoryCreationViewControllerDelegate(self, didSelectCategoryTitle: categoryTitle)
     }
 }
 

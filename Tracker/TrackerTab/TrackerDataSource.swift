@@ -15,5 +15,6 @@ protocol TrackerDataSource {
     func isCompleted(trackerID: UUID, on date: Date) -> Bool
     func removeRecord(for trackerID: UUID, on date: Date)
     func addRecord(for trackerID: UUID, on date: Date)
+    func add(category: TrackerCategory)
 }
 
