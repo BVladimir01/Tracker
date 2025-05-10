@@ -95,6 +95,8 @@ final class TrackerViewController: UIViewController {
 
     @objc private func addTrackerTapped() {
         // TODO: Implement tracker addition
+        let creatorVC = NewTrackerViewController()
+        present(creatorVC, animated: true)
     }
     
     @objc private func dateChanged() {
