@@ -14,6 +14,9 @@ final class CategoryChoiceViewController: UIViewController {
     // MARK: - Private Properties
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
+    private let table = UITableView()
+    
+    private let cellReuseID = "checkMarkCell"
     private let dataStorage: TrackerDataStore = TrackerDataStore.shared
     
     private var shouldDisplayStub: Bool {
@@ -28,6 +31,12 @@ final class CategoryChoiceViewController: UIViewController {
         setUpTitle()
         setUpStubView()
         setUpAddButton()
+        setUpTable()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        table.isScrollEnabled = table.contentSize.height > LayoutConstants.Table.maxHeight
     }
     
     // MARK: - Private Methods - Setup
@@ -105,6 +114,29 @@ final class CategoryChoiceViewController: UIViewController {
         ])
     }
     
+    private func setUpTable() {
+        
+        
+        table.dataSource = self
+        table.isScrollEnabled = false
+        table.backgroundColor = .clear
+        table.rowHeight = LayoutConstants.Table.rowHeight
+        table.separatorStyle = .singleLine
+        table.separatorInset = LayoutConstants.Table.separatorInset
+        table.separatorColor = LayoutConstants.Table.separatorColor
+        table.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseID)
+        
+        view.addSubview(table)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            table.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            table.widthAnchor.constraint(equalToConstant: LayoutConstants.Table.width),
+            table.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+                                       constant: LayoutConstants.Table.spacingToTop),
+            table.heightAnchor.constraint(lessThanOrEqualToConstant: LayoutConstants.Table.maxHeight)
+        ])
+    }
+    
     // MARK: - Private Methods - Helpers
     
     private func replaceStubView() {
@@ -127,6 +159,41 @@ final class CategoryChoiceViewController: UIViewController {
 }
 
 
+// MARK: - UITableViewDataSource
+extension CategoryChoiceViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        dataStorage.trackerCategories.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
+        cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
+        cell.textLabel?.text = dataStorage.trackerCategories[indexPath.row].title
+        cell.textLabel?.font = LayoutConstants.Table.cellTextFont
+        cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+            cell.layer.masksToBounds = true
+            cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        }
+        if indexPath.row == 0 {
+            cell.layer.masksToBounds = true
+            cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        }
+        return cell
+    }
+    
+    
+}
+
+
+// MARK: - UITableViewDelegate
+extension CategoryChoiceViewController: UITableViewDelegate {
+    
+}
 
 
 // MARK: - LayoutConstants
@@ -162,7 +229,8 @@ extension CategoryChoiceViewController {
             static let cornerRadius: CGFloat = 16
             static let rowHeight: CGFloat = 75
             static let width: CGFloat = 343
-            static let spacingToButton: CGFloat = 39
+            static let maxHeight: CGFloat = 525
+            static let spacingToTop: CGFloat = 87
             static let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             static let separatorColor: UIColor = .gray
             
