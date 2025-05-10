@@ -7,10 +7,18 @@
 
 import Foundation
 
-enum Weekday: Int, CaseIterable, Equatable {
+enum Weekday: Int, CaseIterable, Equatable, Comparable {
     case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
     
-    static let week: [Weekday] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
+    static func < (lhs: Weekday, rhs: Weekday) -> Bool {
+        if lhs == sunday {
+            return false
+        }
+        if rhs == sunday {
+            return true
+        }
+        return lhs.rawValue < rhs.rawValue
+    }
     
     func asString(short: Bool) -> String {
         switch self {
