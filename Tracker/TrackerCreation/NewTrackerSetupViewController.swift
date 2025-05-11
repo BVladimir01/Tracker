@@ -78,7 +78,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     // MARK: - Interntal Methods
     
-    func scheduleChoiceViewController(_ vc: UIViewController, didChooseWeekdays weekdays: Set<Weekday>) {
+    func scheduleChoiceViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>) {
         self.weekdays = weekdays
         createButtonEnabled = shouldEnableCreateButton
         vc.dismiss(animated: true)
@@ -241,7 +241,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     private func chooseScheduleTapped() {
         let vc = ScheduleChoiceViewController()
         vc.delegate = self
-        vc.startingWeekdays = weekdays
+        vc.initialWeekdays = weekdays
         present(vc, animated: true)
     }
     

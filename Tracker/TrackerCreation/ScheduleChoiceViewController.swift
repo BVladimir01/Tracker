@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - ScheduleChoiceViewControllerDelegate
 protocol ScheduleChoiceViewControllerDelegate: AnyObject {
-    func scheduleChoiceViewController(_ vc: UIViewController, didChooseWeekdays weekdays: Set<Weekday>)
+    func scheduleChoiceViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>)
 }
 
 
@@ -20,7 +20,7 @@ final class ScheduleChoiceViewController: UIViewController {
     // MARK: - Internal Properties
     
     weak var delegate: ScheduleChoiceViewControllerDelegate?
-    var startingWeekdays: Set<Weekday> = []
+    var initialWeekdays: Set<Weekday> = []
     
     // MARK: - Private Properties
     
@@ -33,7 +33,7 @@ final class ScheduleChoiceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = LayoutConstants.backgroundColor
         setUpTitle()
         setUpDoneButton()
         setUpTable()
@@ -53,7 +53,7 @@ final class ScheduleChoiceViewController: UIViewController {
         NSLayoutConstraint.activate([
             title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                       constant: LayoutConstants.Title.topPadding)
+                                       constant: LayoutConstants.Title.spacingToSuperviewTop)
         ])
     }
     
@@ -64,7 +64,7 @@ final class ScheduleChoiceViewController: UIViewController {
         doneButton.backgroundColor = LayoutConstants.Button.backgroundColor
         doneButton.layer.cornerRadius = LayoutConstants.Button.cornerRadius
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        if !startingWeekdays.isEmpty { setDoneButton(enabled: true) }
+        if !initialWeekdays.isEmpty { setDoneButton(enabled: true) }
         
         view.addSubview(doneButton)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -118,7 +118,7 @@ final class ScheduleChoiceViewController: UIViewController {
     
     private func setDoneButton(enabled: Bool) {
         doneButton.isEnabled = enabled
-        doneButton.backgroundColor = enabled ? .ypBlack : .ypGray
+        doneButton.backgroundColor = enabled ? LayoutConstants.Button.backgroundColor : LayoutConstants.Button.disabledBackgroundColor
     }
     
     // MARK: - Private Methods - Intentions
@@ -133,7 +133,7 @@ final class ScheduleChoiceViewController: UIViewController {
                 chosenDays.insert(weekday)
             }
         }
-        delegate?.scheduleChoiceViewController(self, didChooseWeekdays: chosenDays)
+        delegate?.scheduleChoiceViewController(self, didSelect: chosenDays)
     }
     
     @objc
@@ -169,11 +169,13 @@ extension ScheduleChoiceViewController: UITableViewDataSource {
         }
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        // This will only be called once when cells are created
+        // Cells will not be reused (dequeued)
         let switcher = UISwitch()
-        switcher.onTintColor = .ypBlue
-        if startingWeekdays.contains(weekday) {
-            switcher.isOn = true
+        if initialWeekdays.contains(weekday) {
+            switcher.setOn(true, animated: true)
         }
+        switcher.onTintColor = LayoutConstants.Table.cellSwitcherOnColor
         switcher.addTarget(self, action: #selector(switcherToggled(_:)), for: .valueChanged)
         cell.accessoryView = switcher
         return cell
@@ -185,10 +187,11 @@ extension ScheduleChoiceViewController: UITableViewDataSource {
 // MARK: - LayoutConstants
 extension ScheduleChoiceViewController {
     enum LayoutConstants {
+        static let backgroundColor: UIColor = .ypWhite
         enum Title {
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypBlack
-            static let topPadding: CGFloat = 27
+            static let spacingToSuperviewTop: CGFloat = 27
         }
         enum Button {
             static let backgroundColor: UIColor = .ypBlack
@@ -211,6 +214,7 @@ extension ScheduleChoiceViewController {
             static let cellTextFont: UIFont = .systemFont(ofSize: 17, weight: .regular)
             static let cellTextColor: UIColor = .ypBlack
             static let cellBackgroundColor: UIColor = .ypBackground
+            static let cellSwitcherOnColor: UIColor = .ypBlue
         }
     }
 }
