@@ -44,17 +44,6 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     private let cellReuseID = "subtitleCell"
     
-    private var createButtonEnabled = false {
-        didSet {
-            if createButtonEnabled {
-                createButton.isEnabled = true
-                createButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
-            } else {
-                createButton.isEnabled = false
-                createButton.backgroundColor = LayoutConstants.Buttons.createButtonDisabledColor
-            }
-        }
-    }
     private var shouldEnableCreateButton: Bool {
         if let trackerName = nameTextField.text, !trackerName.isEmpty,
            trackerCategory != nil,
@@ -81,13 +70,13 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     func scheduleChoiceViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>) {
         self.weekdays = weekdays
-        createButtonEnabled = shouldEnableCreateButton
+        updateCreateButtonState()
         vc.dismiss(animated: true)
     }
     
     func categoryChoiceViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
         self.trackerCategory = category
-        createButtonEnabled = shouldEnableCreateButton
+        updateCreateButtonState()
     }
     
     // MARK: - Private Methods - Setup
@@ -170,7 +159,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         createButton.titleLabel?.font = LayoutConstants.Buttons.font
         createButton.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
         createButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
-        createButtonEnabled = false
+        updateCreateButtonState()
         
         view.addSubview(createButton)
         createButton.translatesAutoresizingMaskIntoConstraints = false
@@ -207,6 +196,18 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
                                        constant: LayoutConstants.Table.spacingToTextField),
             table.heightAnchor.constraint(equalToConstant: tableHeight)
         ])
+    }
+    
+    // MARK: - Private Methods - Helpers
+    
+    private func updateCreateButtonState() {
+        setCreateButton(enabled: shouldEnableCreateButton)
+    }
+    
+    private func setCreateButton(enabled: Bool) {
+        let color = enabled ? LayoutConstants.Buttons.createButtonBackgroundColor : LayoutConstants.Buttons.createButtonDisabledColor
+        createButton.isEnabled = enabled
+        createButton.backgroundColor = color
     }
     
     // MARK: - Private Methods - Intentions
@@ -249,7 +250,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     @objc
     private func nameTextFieldEditingChange(_ sender: UITextField) {
-        createButtonEnabled = shouldEnableCreateButton
+        updateCreateButtonState()
     }
 }
 

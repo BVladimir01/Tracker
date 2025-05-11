@@ -29,6 +29,18 @@ final class ScheduleChoiceViewController: UIViewController {
     
     private let cellReuseID = "switcherCell"
     
+    private var shouldEnableDoneButton: Bool {
+        for i in 0..<Weekday.allCases.count {
+            let indexPath = IndexPath(row: i, section: 0)
+            if let cell = table.cellForRow(at: indexPath),
+                let switcher = cell.accessoryView as? UISwitch,
+                switcher.isOn {
+                return true
+            }
+        }
+        return false
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -104,16 +116,8 @@ final class ScheduleChoiceViewController: UIViewController {
     
     // MARK: - Private Methods - Helpers
     
-    private func shouldDoneButtonBeEnabled() -> Bool {
-        for i in 0..<Weekday.allCases.count {
-            let indexPath = IndexPath(row: i, section: 0)
-            if let cell = table.cellForRow(at: indexPath), 
-                let switcher = cell.accessoryView as? UISwitch,
-                switcher.isOn {
-                return true
-            }
-        }
-        return false
+    private func updateDoneButtonState() {
+        setDoneButton(enabled: shouldEnableDoneButton)
     }
     
     private func setDoneButton(enabled: Bool) {
@@ -138,13 +142,7 @@ final class ScheduleChoiceViewController: UIViewController {
     
     @objc
     private func switcherToggled(_ sender: UISwitch) {
-        if sender.isOn {
-            setDoneButton(enabled: true)
-            return
-        }
-        if !shouldDoneButtonBeEnabled() {
-            setDoneButton(enabled: false)
-        }
+        updateDoneButtonState()
     }
 
 }

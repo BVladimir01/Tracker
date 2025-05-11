@@ -27,6 +27,14 @@ final class CategoryCreationViewController: UIViewController {
     private let textField = UITextField()
     private let doneButton = UIButton(type: .system)
     
+    private var shouldEnableDoneButton: Bool {
+        if let text = textField.text {
+            !text.isEmpty
+        } else {
+            false
+        }
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -41,7 +49,7 @@ final class CategoryCreationViewController: UIViewController {
     
     private func setUpTitle() {
         let title = UILabel()
-        title.text = "Новый трекер"
+        title.text = "Новая Категория"
         title.font = LayoutConstants.Title.font
         title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
@@ -109,17 +117,23 @@ final class CategoryCreationViewController: UIViewController {
         ])
     }
     
+    // MARK: - Private Methods - Helpers
+    
+    private func updateDoneButtonState() {
+        setDoneButton(enabled: shouldEnableDoneButton)
+    }
+    
+    private func setDoneButton(enabled: Bool) {
+        let color = enabled ? LayoutConstants.Button.backgroundColor : LayoutConstants.Button.disabledBackgroundColor
+        doneButton.isEnabled = enabled
+        doneButton.backgroundColor = color
+    }
+    
     // MARK: - Private Methods - Intentions
     
     @objc
     private func textFieldEditingChanged(_ sender: UITextField) {
-        if sender.text?.isEmpty ?? true {
-            doneButton.backgroundColor = LayoutConstants.Button.disabledBackgroundColor
-            doneButton.isEnabled = false
-        } else {
-            doneButton.backgroundColor = LayoutConstants.Button.backgroundColor
-            doneButton.isEnabled = true
-        }
+        updateDoneButtonState()
     }
     
     @objc

@@ -70,7 +70,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
                         animated: true,
                         scrollPosition: .bottom)
         tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
-        replaceStubView()
+        updateStubViewState()
         vc.dismiss(animated: true)
     }
     
@@ -127,7 +127,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
             stubView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
-        replaceStubView()
+        updateStubViewState()
     }
     
     private func setUpAddButton() {
@@ -173,7 +173,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     
     // MARK: - Private Methods - Helpers
     
-    private func replaceStubView() {
+    private func updateStubViewState() {
         stubView.isHidden = !shouldDisplayStub
     }
     
@@ -222,7 +222,6 @@ extension CategoryChoiceViewController: UITableViewDataSource {
         return cell
     }
     
-    
 }
 
 
@@ -249,6 +248,7 @@ extension CategoryChoiceViewController: UITableViewDelegate {
         tableView.reloadRows(at: [IndexPath(row: newSelectedRow, section: 0)], with: .none)
         tableView.deselectRow(at: IndexPath(row: newSelectedRow, section: 0), animated: false)
     }
+    
 }
 
 
