@@ -105,6 +105,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         nameTextField.textColor = LayoutConstants.TextField.textColor
         nameTextField.backgroundColor = LayoutConstants.TextField.backgroundColor
         nameTextField.addTarget(self, action: #selector(nameTextFieldEditingChange(_:)), for: .editingChanged)
+        nameTextField.delegate = self
         
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0,
                                                    width: LayoutConstants.TextField.innerLeftPadding,
@@ -234,6 +235,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     }
     
     private func chooseCategoryTapped() {
+        nameTextField.resignFirstResponder()
         let vc = CategoryChoiceViewController()
         vc.delegate = self
         vc.dataStorage = dataStorage
@@ -242,6 +244,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     }
     
     private func chooseScheduleTapped() {
+        nameTextField.resignFirstResponder()
         let vc = ScheduleChoiceViewController()
         vc.delegate = self
         vc.initialWeekdays = weekdays
@@ -252,6 +255,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     private func nameTextFieldEditingChange(_ sender: UITextField) {
         updateCreateButtonState()
     }
+    
 }
 
 
@@ -314,7 +318,6 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 extension NewTrackerSetupViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             chooseCategoryTapped()
@@ -325,7 +328,15 @@ extension NewTrackerSetupViewController: UITableViewDelegate {
         }
         tableView.deselectRow(at: indexPath, animated: false)
     }
-    
+}
+
+
+// MARK: - UITextFieldDelegate
+extension NewTrackerSetupViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 }
 
 

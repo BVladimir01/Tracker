@@ -71,6 +71,7 @@ final class CategoryCreationViewController: UIViewController {
         textField.textColor = LayoutConstants.TextField.textColor
         textField.backgroundColor = LayoutConstants.TextField.backgroundColor
         textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
+        textField.delegate = self
         
         let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0,
                                                    width: LayoutConstants.TextField.innerLeftPadding,
@@ -150,6 +151,15 @@ final class CategoryCreationViewController: UIViewController {
         }
         dataStorage.add(category: newCategory)
         delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
+    }
+}
+
+
+// MARK: - UITextFieldDelegate
+extension CategoryCreationViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 
