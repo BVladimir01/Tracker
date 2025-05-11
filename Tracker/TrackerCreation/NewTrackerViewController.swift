@@ -41,7 +41,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: - Internal Methods
     
-    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory) {
+    func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController) {
         vc.dismiss(animated: true)
         delegate?.newTrackerViewControllerDidCreateTracker(self)
     }
@@ -123,6 +123,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
         }
         let newTrackerSetupVC = NewTrackerSetupViewController()
         newTrackerSetupVC.trackerIsRegular = createRegularTracker
+        newTrackerSetupVC.dataStorage = dataStorage
         newTrackerSetupVC.delegate = self
         present(newTrackerSetupVC, animated: true)
     }

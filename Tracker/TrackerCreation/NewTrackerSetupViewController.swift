@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: NewTrackerSetupViewControllerDelegate
 protocol NewTrackerSetupViewControllerDelegate: AnyObject {
-    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory)
+    func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController)
 }
 
 
@@ -20,7 +20,10 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     // MARK: - Internal Properties
     
     var trackerIsRegular = true
+    var dataStorage: TrackerDataSource!
     weak var delegate: NewTrackerSetupViewControllerDelegate?
+    
+    // MARK: - Private Properties
     
     private var trackerCategory: TrackerCategory? {
         didSet {
@@ -32,8 +35,6 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
             table.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
         }
     }
-    
-    // MARK: - Private Properties
     
     private let nameTextField = UITextField()
     private let cancelButton = UIButton(type: .system)
@@ -227,7 +228,8 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         }
         let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(Date())
         let tracker = Tracker(id: UUID(), title: trackerTitle, color: .init(red: 1, green: 1, blue: 1), emoji: "🫥", schedule: schedule)
-        delegate?.newTrackerSetupViewController(self, didCreateTracker: tracker, for: trackerCategory)
+        dataStorage.add(tracker: tracker, for: trackerCategory)
+        delegate?.newTrackerSetupViewControllerDidCreateTracker(self)
     }
     
     private func chooseCategoryTapped() {
