@@ -43,6 +43,10 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         vc.dismiss(animated: true)
     }
     
+    func newTrackerViewControllerDidCancelCreation(_ vc: UIViewController) {
+        vc.dismiss(animated: true)
+    }
+    
     // MARK: - Private Methods - Views Setup
     
     private func setUpStubView() {

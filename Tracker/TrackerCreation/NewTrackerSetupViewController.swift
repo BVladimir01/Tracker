@@ -11,6 +11,7 @@ import UIKit
 // MARK: NewTrackerSetupViewControllerDelegate
 protocol NewTrackerSetupViewControllerDelegate: AnyObject {
     func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController)
+    func newTrackerSetupViewControllerDidCancelCreation(_ vc: UIViewController)
 }
 
 
@@ -212,8 +213,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     @objc
     private func cancelButtonTapped() {
-        // TODO: implement using delegates
-        presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+        delegate?.newTrackerSetupViewControllerDidCancelCreation(self)
     }
     
     @objc

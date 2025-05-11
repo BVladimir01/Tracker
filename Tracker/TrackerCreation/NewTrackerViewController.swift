@@ -10,6 +10,7 @@ import UIKit
 // MARK: NewTrackerViewControllerDelegate
 protocol NewTrackerViewControllerDelegate: AnyObject {
     func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController)
+    func newTrackerViewControllerDidCancelCreation(_ vc: UIViewController)
 }
 
 
@@ -44,6 +45,11 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController) {
         vc.dismiss(animated: true)
         delegate?.newTrackerViewControllerDidCreateTracker(self)
+    }
+    
+    func newTrackerSetupViewControllerDidCancelCreation(_ vc: UIViewController) {
+        vc.dismiss(animated: false)
+        delegate?.newTrackerViewControllerDidCancelCreation(self)
     }
     
     // MARK: - Private Methods - Setup
