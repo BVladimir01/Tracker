@@ -42,6 +42,12 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    private var isCompleted: Bool = false {
+        didSet {
+            let newImage = UIImage(resource: isCompleted ? .minus : .plus).withTintColor(themeColor)
+            recordButton.setImage(newImage, for: .normal)
+        }
+    }
     
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -55,20 +61,15 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - InternalMethods
     
-    func configure(tracker: Tracker) {
-        emojiLabel.text = String(tracker.emoji)
-        titleLabel.text = tracker.title
-        themeColor = UIColor.from(RGBColor: tracker.color)
-        trackerID = tracker.id
+    func configure(with viewModel: TrackerCellViewModel) {
+        titleLabel.text = viewModel.title
+        emojiLabel.text = String(viewModel.emoji)
+        themeColor = viewModel.color
+        isCompleted = viewModel.isCompleted
     }
     
-    func setRecordText(_ text: String) {
-        recordLabel.text = text
-    }
-    
-    func setIsCompleted(_ isCompleted: Bool) {
-        let newImage = UIImage(resource: isCompleted ? .minus : .plus).withTintColor(themeColor)
-        recordButton.setImage(newImage, for: .normal)
+    func set(trackerID: UUID) {
+        self.trackerID = trackerID
     }
     
     // MARK: - Private Methods - Setup

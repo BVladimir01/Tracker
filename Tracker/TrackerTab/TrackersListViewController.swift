@@ -8,8 +8,8 @@
 import UIKit
 
 
-// MARK: - TrackerViewController
-final class TrackerViewController: UIViewController, NewTrackerViewControllerDelegate {
+// MARK: - TrackersListViewController
+final class TrackersListViewController: UIViewController, NewTrackerViewControllerDelegate {
     
     // MARK: - Private Properties
     
@@ -25,8 +25,9 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Трекеры"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: .addTracker.withTintColor(.ypBlack, renderingMode: .alwaysOriginal), style: .plain, target: self, action: #selector(addTrackerTapped))
+        view.backgroundColor = LayoutConstants.backgroundColor
         setUpStubView()
+        setUpDoneButton()
         setUpDatePicker()
         setUpCollectionView()
     }
@@ -41,7 +42,7 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
         vc.dismiss(animated: true)
     }
     
-    // MARK: - Private Methods - View Configuration
+    // MARK: - Private Methods - Views Setup
     
     private func setUpStubView() {
         let stubImageView = UIImageView(image: .trackerStub)
@@ -51,7 +52,7 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
             stubImageView.centerXAnchor.constraint(equalTo: stubView.centerXAnchor),
             stubImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.Stub.imageHeight),
             stubImageView.widthAnchor.constraint(equalTo: stubImageView.heightAnchor, multiplier: LayoutConstants.Stub.imageAspectRatio),
-            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor, constant: LayoutConstants.Stub.imageTopPadding),
+            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor, constant: LayoutConstants.Stub.imageToStubViewTop),
         ])
         
         let label = UILabel()
@@ -76,6 +77,14 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
         ])
     }
     
+    private func setUpDoneButton() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: .addTracker.withTintColor(LayoutConstants.addButtonColor, renderingMode: .alwaysOriginal), 
+            style: .plain,
+            target: self,
+            action: #selector(addTrackerTapped))
+    }
+    
     private func setUpDatePicker() {
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
@@ -91,7 +100,7 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: CategoryTitleView.reuseID)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .ypWhite
+        collectionView.backgroundColor = LayoutConstants.backgroundColor
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -101,10 +110,35 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
         ])
     }
     
+    // MARK: - Private Methods - Helpers
+    
+    private func trackerCellViewModel(from tracker: Tracker) -> TrackerCellViewModel {
+        let recordText: String
+        let daysEnding = ["дней", "день", "дня", "дня", "дня",
+                          "дней", "дней", "дней", "дней", "дней"]
+        let daysDone = trackerDataStorage.daysDone(trackerID: tracker.id)
+        switch tracker.schedule {
+        case .regular:
+            let lastDigit = daysDone % 10
+            recordText = "\(daysDone) \(daysEnding[lastDigit])"
+        case .irregular:
+            if daysDone == 0 {
+                recordText = "Не выполнен"
+            } else {
+                recordText = "Выполнен"
+            }
+        }
+        let isCompleted = trackerDataStorage.isCompleted(trackerID: tracker.id, on: datePicker.date)
+        return TrackerCellViewModel(title: tracker.title,
+                                    color: UIColor.from(RGBColor: tracker.color),
+                                    emoji: tracker.emoji,
+                                    recordText: recordText, 
+                                    isCompleted: isCompleted)
+    }
+    
     // MARK: - Private Methods - User Intentions
 
     @objc private func addTrackerTapped() {
-        // TODO: Implement tracker addition
         let creatorVC = NewTrackerViewController()
         creatorVC.delegate = self
         present(creatorVC, animated: true)
@@ -123,28 +157,11 @@ final class TrackerViewController: UIViewController, NewTrackerViewControllerDel
         }
     }
     
-    private func recordText(for tracker: Tracker) -> String {
-        let daysEnding = ["дней", "день", "дня", "дня", "дня",
-                          "дней", "дней", "дней", "дней", "дней"]
-        let daysDone = trackerDataStorage.daysDone(trackerID: tracker.id)
-        switch tracker.schedule {
-        case .regular:
-            let lastDigit = daysDone % 10
-            return "\(daysDone) \(daysEnding[lastDigit])"
-        case .irregular:
-            if daysDone == 0 {
-                return "Не выполнен"
-            } else {
-                return "Выполнен"
-            }
-        }
-    }
-    
 }
 
 
 // MARK: - UICollectionViewDataSource
-extension TrackerViewController: UICollectionViewDataSource {
+extension TrackersListViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         trackerDataStorage.trackerCategories(on: datePicker.date).count
@@ -161,9 +178,8 @@ extension TrackerViewController: UICollectionViewDataSource {
         }
         let categories = trackerDataStorage.trackerCategories(on: datePicker.date)
         let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
-        cell.configure(tracker: trackerToShow)
-        cell.setRecordText(recordText(for: trackerToShow))
-        cell.setIsCompleted(trackerDataStorage.isCompleted(trackerID: trackerToShow.id, on: datePicker.date))
+        cell.configure(with: trackerCellViewModel(from: trackerToShow))
+        cell.set(trackerID: trackerToShow.id)
         cell.delegate = self
         return cell
     }
@@ -181,14 +197,8 @@ extension TrackerViewController: UICollectionViewDataSource {
 }
 
 
-// MARK: - UICollectionViewDelegate
-extension TrackerViewController: UICollectionViewDelegate {
-    
-}
-
-
 // MARK: - UICollectionViewDelegateFlowLayout
-extension TrackerViewController: UICollectionViewDelegateFlowLayout {
+extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         LayoutConstants.CollectionView.itemSize
@@ -212,13 +222,13 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
         let width = collectionView.frame.width - 2*LayoutConstants.CollectionView.headerLateralPadding
         return view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
     }
+    
 }
 
 
-// MARK: -
-extension TrackerViewController: TrackerCollectionViewCellDelegate {
+// MARK: - TrackerCollectionViewCellDelegate
+extension TrackersListViewController: TrackerCollectionViewCellDelegate {
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
-        // TODO: process cell tap
         guard let trackerID = cell.trackerID else {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get tracker id of the cell")
             return
@@ -239,12 +249,14 @@ extension TrackerViewController: TrackerCollectionViewCellDelegate {
 
 
 // MARK: - LayoutConstants
-extension TrackerViewController {
+extension TrackersListViewController {
     private enum LayoutConstants {
+        static let backgroundColor: UIColor = .ypWhite
+        static let addButtonColor: UIColor = .ypBlack
         enum Stub {
             static let imageHeight: CGFloat = 80
             static let imageAspectRatio: CGFloat = 1
-            static let imageTopPadding: CGFloat = 220
+            static let imageToStubViewTop: CGFloat = 220
             
             static let labelFont: UIFont = .systemFont(ofSize: 12, weight: .medium)
             static let textColor: UIColor = .ypBlack
