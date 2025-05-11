@@ -50,6 +50,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Initializers
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpViews()
@@ -66,6 +67,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         emojiLabel.text = String(viewModel.emoji)
         themeColor = viewModel.color
         isCompleted = viewModel.isCompleted
+        recordLabel.text = viewModel.recordText
     }
     
     func set(trackerID: UUID) {
@@ -195,6 +197,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
 }
 
 
+// MARK: LayoutConstants
 extension TrackerCollectionViewCell {
     private enum LayoutConstants {
         static let trackerMainViewCornerRadius: CGFloat = 16
