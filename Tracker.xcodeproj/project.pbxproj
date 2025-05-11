@@ -142,8 +142,8 @@
 			isa = PBXGroup;
 			children = (
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
-				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
 				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
+				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
 			);
 			path = TrackerTab;
 			sourceTree = "<group>";

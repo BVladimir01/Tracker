@@ -32,7 +32,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = LayoutConstants.backgroundColor
         setUpTitle()
         setUpRegularTrackerButton()
         setUpIrregularTrackerButton()
@@ -50,56 +50,57 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     private func setUpTitle() {
         let title = UILabel()
         title.text = "Создание трекера"
-        title.font = LayoutConstants.titleFont
-        title.textColor = LayoutConstants.titleTextColor
+        title.font = LayoutConstants.Title.Font
+        title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
         
         view.addSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: LayoutConstants.titleTopPadding)
+            title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+                                       constant: LayoutConstants.Title.spacingToSuperviewTop)
         ])
     }
     
     private func setUpRegularTrackerButton() {
         regularTrackerButton.setTitle(regularTrackerTitle, for: .normal)
-        regularTrackerButton.setTitleColor(LayoutConstants.buttonTextColor, for: .normal)
-        regularTrackerButton.titleLabel?.font = LayoutConstants.buttonTitleFont
+        regularTrackerButton.setTitleColor(LayoutConstants.Buttons.textColor, for: .normal)
+        regularTrackerButton.titleLabel?.font = LayoutConstants.Buttons.titleFont
         regularTrackerButton.addTarget(self, action: #selector(didTapCreate(_:)), for: .touchUpInside)
         
-        regularTrackerButton.layer.cornerRadius = LayoutConstants.buttonCornerRadius
-        regularTrackerButton.backgroundColor = LayoutConstants.buttonColor
+        regularTrackerButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
+        regularTrackerButton.backgroundColor = LayoutConstants.Buttons.backgroundColor
         
         view.addSubview(regularTrackerButton)
         regularTrackerButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             regularTrackerButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             regularTrackerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                                      constant: LayoutConstants.buttonTopPadding),
-            regularTrackerButton.heightAnchor.constraint(equalToConstant: LayoutConstants.buttonHeight),
-            regularTrackerButton.widthAnchor.constraint(equalToConstant: LayoutConstants.buttonWidth)
+                                                      constant: LayoutConstants.Buttons.topButtonToSuperviewTop),
+            regularTrackerButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Buttons.height),
+            regularTrackerButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Buttons.width)
         ])
         
     }
     
     private func setUpIrregularTrackerButton() {
         irregularTrackerButton.setTitle(irregularTrackerTitle, for: .normal)
-        irregularTrackerButton.setTitleColor(LayoutConstants.buttonTextColor, for: .normal)
-        irregularTrackerButton.titleLabel?.font = LayoutConstants.buttonTitleFont
+        irregularTrackerButton.setTitleColor(LayoutConstants.Buttons.textColor, for: .normal)
+        irregularTrackerButton.titleLabel?.font = LayoutConstants.Buttons.titleFont
         irregularTrackerButton.addTarget(self, action: #selector(didTapCreate(_:)), for: .touchUpInside)
         
-        irregularTrackerButton.layer.cornerRadius = LayoutConstants.buttonCornerRadius
-        irregularTrackerButton.backgroundColor = LayoutConstants.buttonColor
+        irregularTrackerButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
+        irregularTrackerButton.backgroundColor = LayoutConstants.Buttons.backgroundColor
         
         view.addSubview(irregularTrackerButton)
         irregularTrackerButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             irregularTrackerButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             irregularTrackerButton.topAnchor.constraint(equalTo: regularTrackerButton.bottomAnchor,
-                                                      constant: LayoutConstants.buttonsSpacing),
-            irregularTrackerButton.heightAnchor.constraint(equalToConstant: LayoutConstants.buttonHeight),
-            irregularTrackerButton.widthAnchor.constraint(equalToConstant: LayoutConstants.buttonWidth)
+                                                        constant: LayoutConstants.Buttons.buttonsSpacing),
+            irregularTrackerButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Buttons.height),
+            irregularTrackerButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Buttons.width)
         ])
     }
     
@@ -131,19 +132,22 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
 // MARK: - LayoutConstants
 extension NewTrackerViewController {
     enum LayoutConstants {
-        static let titleFont: UIFont = .systemFont(ofSize: 16, weight: .medium)
-        static let titleTextColor: UIColor = .ypBlack
-        static let titleTopPadding: CGFloat = 27
-        
-        static let buttonTitleFont: UIFont = .systemFont(ofSize: 16, weight: .medium)
-        static let buttonColor: UIColor = .ypBlack
-        static let buttonTextColor: UIColor = .ypWhite
-        static let buttonWidth: CGFloat = 335
-        static let buttonHeight: CGFloat = 60
-        static let buttonCornerRadius: CGFloat = 16
-        
-        static let buttonTopPadding: CGFloat = 344
-        static let buttonsSpacing: CGFloat = 16
-        
+        static let backgroundColor: UIColor = .ypWhite
+        enum Title {
+            static let Font: UIFont = .systemFont(ofSize: 16, weight: .medium)
+            static let textColor: UIColor = .ypBlack
+            static let spacingToSuperviewTop: CGFloat = 27
+        }
+        enum Buttons {
+            static let titleFont: UIFont = .systemFont(ofSize: 16, weight: .medium)
+            static let backgroundColor: UIColor = .ypBlack
+            static let textColor: UIColor = .ypWhite
+            static let width: CGFloat = 335
+            static let height: CGFloat = 60
+            static let cornerRadius: CGFloat = 16
+            
+            static let topButtonToSuperviewTop: CGFloat = 344
+            static let buttonsSpacing: CGFloat = 16
+        }
     }
 }
