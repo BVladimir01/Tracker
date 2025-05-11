@@ -16,10 +16,10 @@ class TrackerDataStore: TrackerDataSource {
     static let shared = TrackerDataStore()
     
     private(set) var trackerCategories: [TrackerCategory] = [
-        TrackerCategory(title: "TrackerCategoryTitle1",
-                        trackers: [testTracker1, testTracker2]),
-        TrackerCategory(title: "TrackerCategoryTitle2",
-                        trackers: [testTracker3, irregularTracker])
+//        TrackerCategory(title: "TrackerCategoryTitle1",
+//                        trackers: [testTracker1, testTracker2]),
+//        TrackerCategory(title: "TrackerCategoryTitle2",
+//                        trackers: [testTracker3, irregularTracker])
     ]
     
     // MARK: - Private Properties

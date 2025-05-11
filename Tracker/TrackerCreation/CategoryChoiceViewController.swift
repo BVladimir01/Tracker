@@ -64,11 +64,10 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
         table.insertRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0)],
                          with: .automatic)
-        table.reloadRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 2, section: 0)],
-                         with: .none)
-        table.selectRow(at: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0),
-                        animated: true,
-                        scrollPosition: .bottom)
+        if dataStorage.trackerCategories.count >= 2 {
+            table.reloadRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 2, section: 0)],
+                             with: .none)
+        }
         tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
         updateStubViewState()
         vc.dismiss(animated: true)
@@ -201,22 +200,27 @@ extension CategoryChoiceViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let category = dataStorage.trackerCategories[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
+        let cellIsFirst = indexPath.row == 0
+        let cellIsLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
         cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
         cell.textLabel?.text = category.title
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
-        cell.layer.masksToBounds = true
-        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-            cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        } else if indexPath.row == 0 {
-            cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        } else {
-            cell.layer.cornerRadius = .zero
-        }
         cell.accessoryType = (category == selectedCategory) ? .checkmark : .none
+        cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+        cell.layer.masksToBounds = true
+        switch (cellIsFirst, cellIsLast) {
+        case (true, true):
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        case (true, false):
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        case (false, true):
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        case (false, false):
+            cell.layer.masksToBounds = false
+            cell.layer.cornerRadius = 0
+        }
         cell.selectedBackgroundView?.layer.masksToBounds = true
         cell.selectedBackgroundView?.layer.cornerRadius = LayoutConstants.Table.cornerRadius
         return cell
