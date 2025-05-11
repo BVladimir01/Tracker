@@ -183,11 +183,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         // Some categories may even disappear, since their trackers
         // should not be shown on this day. Thus reloading whole view
         collectionView.reloadData()
-        if numberOfSections(in: collectionView) == 0 {
-            collectionView.isHidden = true
-        } else {
-            collectionView.isHidden = false
-        }
+        updateStubViewState()
     }
     
 }
