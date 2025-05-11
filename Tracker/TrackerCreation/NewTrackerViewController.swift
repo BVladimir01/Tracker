@@ -21,6 +21,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     weak var delegate: NewTrackerViewControllerDelegate?
     var dataStorage: TrackersDataSource!
+    var selectedDate: Date?
     
     // MARK: - Private Properties
     
@@ -74,7 +75,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
         regularTrackerButton.setTitle(regularTrackerTitle, for: .normal)
         regularTrackerButton.setTitleColor(LayoutConstants.Buttons.textColor, for: .normal)
         regularTrackerButton.titleLabel?.font = LayoutConstants.Buttons.titleFont
-        regularTrackerButton.addTarget(self, action: #selector(didTapCreate(_:)), for: .touchUpInside)
+        regularTrackerButton.addTarget(self, action: #selector(didSelectTrackerType(_:)), for: .touchUpInside)
         
         regularTrackerButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
         regularTrackerButton.backgroundColor = LayoutConstants.Buttons.backgroundColor
@@ -95,7 +96,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
         irregularTrackerButton.setTitle(irregularTrackerTitle, for: .normal)
         irregularTrackerButton.setTitleColor(LayoutConstants.Buttons.textColor, for: .normal)
         irregularTrackerButton.titleLabel?.font = LayoutConstants.Buttons.titleFont
-        irregularTrackerButton.addTarget(self, action: #selector(didTapCreate(_:)), for: .touchUpInside)
+        irregularTrackerButton.addTarget(self, action: #selector(didSelectTrackerType(_:)), for: .touchUpInside)
         
         irregularTrackerButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
         irregularTrackerButton.backgroundColor = LayoutConstants.Buttons.backgroundColor
@@ -113,7 +114,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: - Private Methods - Intentions
     
-    @objc private func didTapCreate(_ sender: UIButton) {
+    @objc private func didSelectTrackerType(_ sender: UIButton) {
         guard let buttonTitle = sender.title(for: .normal) else {
             assertionFailure("NewTrackerViewController.didTapCreate: Failed to get title of the button")
             return
@@ -131,6 +132,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
         newTrackerSetupVC.trackerIsRegular = createRegularTracker
         newTrackerSetupVC.dataStorage = dataStorage
         newTrackerSetupVC.delegate = self
+        newTrackerSetupVC.selectedDate = selectedDate
         present(newTrackerSetupVC, animated: true)
     }
     

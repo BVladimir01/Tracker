@@ -174,6 +174,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         let creatorVC = NewTrackerViewController()
         creatorVC.delegate = self
         creatorVC.dataStorage = dataStorage
+        creatorVC.selectedDate = selectedDate
         present(creatorVC, animated: true)
     }
     

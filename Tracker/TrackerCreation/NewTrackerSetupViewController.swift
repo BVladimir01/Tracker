@@ -22,6 +22,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     var trackerIsRegular = true
     var dataStorage: TrackersDataSource!
+    var selectedDate: Date?
     weak var delegate: NewTrackerSetupViewControllerDelegate?
     
     // MARK: - Private Properties
@@ -233,7 +234,11 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get tracker category")
             return
         }
-        let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(Date())
+        guard let selectedDate else {
+            assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get date for irregular tracker")
+            return
+        }
+        let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(selectedDate)
         let tracker = Tracker(id: UUID(), title: trackerTitle, color: .init(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1)), emoji: "🫥", schedule: schedule)
         dataStorage.add(tracker: tracker, for: trackerCategory)
         delegate?.newTrackerSetupViewControllerDidCreateTracker(self)
