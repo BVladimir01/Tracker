@@ -33,6 +33,10 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     private var shouldDisplayStub: Bool {
         dataStorage.trackerCategories.isEmpty
     }
+    private var tableShouldScroll: Bool {
+        table.contentSize.height > LayoutConstants.Table.maxHeight
+    }
+    
     private var selectedCategory: TrackerCategory?
     
     // MARK: - Lifecycle
@@ -44,11 +48,8 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         setUpStubView()
         setUpAddButton()
         setUpTable()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        table.isScrollEnabled = table.contentSize.height > LayoutConstants.Table.maxHeight
+        updateStubViewState()
+        updateTableViewState()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -70,6 +71,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         }
         tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
         updateStubViewState()
+        updateTableViewState()
         vc.dismiss(animated: true)
     }
     
@@ -125,8 +127,6 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
             stubView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             stubView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        
-        updateStubViewState()
     }
     
     private func setUpAddButton() {
@@ -174,6 +174,10 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     
     private func updateStubViewState() {
         stubView.isHidden = !shouldDisplayStub
+    }
+    
+    private func updateTableViewState() {
+        table.isScrollEnabled = tableShouldScroll
     }
     
     // MARK: - Private Methods - Intentions
