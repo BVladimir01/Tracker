@@ -24,6 +24,10 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     private let stubView = UIView()
     let datePicker = UIDatePicker()
     
+    private var shouldShowStubView: Bool {
+        dataStorage.trackerCategories(on: datePicker.date).isEmpty
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -34,12 +38,14 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         setUpDoneButton()
         setUpDatePicker()
         setUpCollectionView()
+        updateStubViewState()
     }
     
     // MARK: - Internal Methods
     
     func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController) {
         collectionView.reloadData()
+        updateStubViewState()
         vc.dismiss(animated: true)
     }
     
@@ -57,7 +63,8 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
             stubImageView.centerXAnchor.constraint(equalTo: stubView.centerXAnchor),
             stubImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.Stub.imageHeight),
             stubImageView.widthAnchor.constraint(equalTo: stubImageView.heightAnchor, multiplier: LayoutConstants.Stub.imageAspectRatio),
-            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor, constant: LayoutConstants.Stub.imageToStubViewTop),
+            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor,
+                                               constant: LayoutConstants.Stub.imageToStubViewTop),
         ])
         
         let label = UILabel()
@@ -116,6 +123,19 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     }
     
     // MARK: - Private Methods - Helpers
+    
+    private func updateStubViewState() {
+        setStubView(visible: shouldShowStubView)
+    }
+    
+    private func setStubView(visible: Bool) {
+        stubView.isHidden = !visible
+        if visible {
+            view.bringSubviewToFront(stubView)
+        } else {
+            view.sendSubviewToBack(stubView)
+        }
+    }
     
     private func trackerCellViewModel(from tracker: Tracker) -> TrackerCellViewModel {
         let recordText: String
@@ -238,6 +258,7 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - TrackerCollectionViewCellDelegate
 extension TrackersListViewController: TrackerCollectionViewCellDelegate {
+    
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
         guard let trackerID = cell.trackerID else {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get tracker id of the cell")
@@ -255,6 +276,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         }
         collectionView.reloadItems(at: [indexPath])
     }
+    
 }
 
 
