@@ -61,9 +61,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         selectedCategory = category
     }
     
-    func categoryCreationViewControllerDelegate(_ vc: UIViewController, didSelectCategoryTitle title: String) {
-        vc.dismiss(animated: true)
-        dataStorage.add(category: TrackerCategory(title: title, trackers: []))
+    func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
         table.insertRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0)],
                          with: .automatic)
         table.reloadRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 2, section: 0)],
@@ -73,6 +71,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
                         scrollPosition: .bottom)
         tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
         replaceStubView()
+        vc.dismiss(animated: true)
     }
     
     // MARK: - Private Methods - Setup
@@ -184,6 +183,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     private func addButtonTapped() {
         // TODO: - Implement button tap
         let vc = CategoryCreationViewController()
+        vc.dataStorage = dataStorage
         vc.delegate = self
         present(vc, animated: true)
     }

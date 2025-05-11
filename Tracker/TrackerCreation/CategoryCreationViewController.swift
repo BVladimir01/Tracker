@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: CategoryCreationViewControllerDelegate
 protocol CategoryCreationViewControllerDelegate: AnyObject {
-    func categoryCreationViewControllerDelegate(_ vc: UIViewController, didSelectCategoryTitle title: String)
+    func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory)
 }
 
 
@@ -19,6 +19,7 @@ final class CategoryCreationViewController: UIViewController {
     
     // MARK: - Internal Properties
     
+    var dataStorage: TrackerDataSource!
     weak var delegate: CategoryCreationViewControllerDelegate?
     
     // MARK: - Private Properties
@@ -50,7 +51,7 @@ final class CategoryCreationViewController: UIViewController {
         NSLayoutConstraint.activate([
             title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                       constant: LayoutConstants.Title.topPadding)
+                                       constant: LayoutConstants.Title.spacingToSuperviewTop)
         ])
     }
     
@@ -127,7 +128,14 @@ final class CategoryCreationViewController: UIViewController {
             assertionFailure("CategoryCreationViewController.doneButtonTapped: TextField.text is nil")
             return
         }
-        delegate?.categoryCreationViewControllerDelegate(self, didSelectCategoryTitle: categoryTitle)
+        let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
+        // TODO: show alert with an error message
+        if dataStorage.trackerCategories.contains(newCategory) {
+            assertionFailure("CategoryCreationViewController.doneButtonTapped: Such category already exists")
+            return
+        }
+        dataStorage.add(category: newCategory)
+        delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
     }
 }
 
@@ -139,7 +147,7 @@ extension CategoryCreationViewController {
         enum Title {
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypBlack
-            static let topPadding: CGFloat = 27
+            static let spacingToSuperviewTop: CGFloat = 27
         }
         enum TextField {
             static let placeHolder = "Введите название категории"
