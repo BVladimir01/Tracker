@@ -124,6 +124,10 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         let daysDone = dataStorage.daysDone(of: tracker.id)
         switch tracker.schedule {
         case .regular:
+            if (10..<20).contains(daysDone) {
+                recordText = "\(daysDone) дней"
+                break
+            }
             let lastDigit = daysDone % 10
             recordText = "\(daysDone) \(daysEnding[lastDigit])"
         case .irregular:
