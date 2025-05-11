@@ -228,7 +228,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
             return
         }
         let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(Date())
-        let tracker = Tracker(id: UUID(), title: trackerTitle, color: .init(red: 1, green: 1, blue: 1), emoji: "🫥", schedule: schedule)
+        let tracker = Tracker(id: UUID(), title: trackerTitle, color: .init(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1)), emoji: "🫥", schedule: schedule)
         dataStorage.add(tracker: tracker, for: trackerCategory)
         delegate?.newTrackerSetupViewControllerDidCreateTracker(self)
     }

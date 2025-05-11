@@ -17,12 +17,9 @@ class TrackerDataStore: TrackerDataSource {
     
     private(set) var trackerCategories: [TrackerCategory] = [
         TrackerCategory(title: "TrackerCategoryTitle1",
-                        trackers: [testTracker1, testTracker2, testTracker3]),
+                        trackers: [testTracker1, testTracker2]),
         TrackerCategory(title: "TrackerCategoryTitle2",
-                        trackers: [testTracker3, testTracker1, testTracker2]),
-        TrackerCategory(title: "TrackerCategoryTitle3",
-                        trackers: [testTracker2, testTracker3, testTracker1]),
-        TrackerCategory(title: "Irregular title", trackers: [irregularTracker])
+                        trackers: [testTracker3, irregularTracker])
     ]
     
     // MARK: - Private Properties
