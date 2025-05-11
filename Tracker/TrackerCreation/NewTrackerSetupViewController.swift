@@ -66,6 +66,11 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         setUpTable()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        nameTextField.becomeFirstResponder()
+    }
+    
     // MARK: - Interntal Methods
     
     func scheduleChoiceViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>) {

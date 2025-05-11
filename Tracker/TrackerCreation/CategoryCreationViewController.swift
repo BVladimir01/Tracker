@@ -45,6 +45,11 @@ final class CategoryCreationViewController: UIViewController {
         setUpDoneButton()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textField.becomeFirstResponder()
+    }
+    
     // MARK: - Private Methods - Setup
     
     private func setUpTitle() {
