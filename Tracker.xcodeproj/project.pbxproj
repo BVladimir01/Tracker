@@ -92,6 +92,7 @@
 		E7D0370D2DC3B80E007819A8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				E7D037C22DD08EBB007819A8 /* Data */,
 				E7D037AF2DCF1E38007819A8 /* TrackerCreation */,
 				E7D037A62DCA88C2007819A8 /* StatsTab */,
 				E7D037A52DCA88AF007819A8 /* TrackerTab */,
@@ -143,8 +144,6 @@
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
 				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
-				E7D037A92DCD3292007819A8 /* TrackerDataStore.swift */,
-				E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */,
 			);
 			path = TrackerTab;
 			sourceTree = "<group>";
@@ -167,6 +166,15 @@
 				E7D037BE2DCFD6A6007819A8 /* CategoryCreationViewController.swift */,
 			);
 			path = TrackerCreation;
+			sourceTree = "<group>";
+		};
+		E7D037C22DD08EBB007819A8 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				E7D037A92DCD3292007819A8 /* TrackerDataStore.swift */,
+				E7D037AB2DCD32AC007819A8 /* TrackerDataSource.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -5,7 +5,6 @@
 //  Created by Vladimir on 08.05.2025.
 //
 
-import Foundation
 import UIKit
 
 
@@ -75,7 +74,7 @@ class TrackerDataStore: TrackerDataSource {
         return result
     }
     
-    func daysDone(trackerID: UUID) -> Int {
+    func daysDone(of trackerID: UUID) -> Int {
         return completedTrackersDict[trackerID]?.count ?? 0
     }
     
@@ -116,7 +115,7 @@ class TrackerDataStore: TrackerDataSource {
         newTrackers.append(tracker)
         let newTrackerCategory = TrackerCategory(title: category.title, trackers: newTrackers)
         var newTrackerCategories: [TrackerCategory] = []
-        for (i, trackerCategory) in trackerCategories.enumerated() {
+        for trackerCategory in trackerCategories {
             newTrackerCategories.append(trackerCategory == newTrackerCategory ? newTrackerCategory : trackerCategory)
         }
         trackerCategories = newTrackerCategories

@@ -116,7 +116,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         let recordText: String
         let daysEnding = ["дней", "день", "дня", "дня", "дня",
                           "дней", "дней", "дней", "дней", "дней"]
-        let daysDone = trackerDataStorage.daysDone(trackerID: tracker.id)
+        let daysDone = trackerDataStorage.daysDone(of: tracker.id)
         switch tracker.schedule {
         case .regular:
             let lastDigit = daysDone % 10
