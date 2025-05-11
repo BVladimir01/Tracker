@@ -1,5 +1,5 @@
 //
-//  CategoryChoiceViewController.swift
+//  CategorySelectionViewController.swift
 //  Tracker
 //
 //  Created by Vladimir on 10.05.2025.
@@ -8,19 +8,19 @@
 import UIKit
 
 
-// MARK: - CategoryChoiceViewControllerDelegate
-protocol CategoryChoiceViewControllerDelegate: AnyObject {
-    func categoryChoiceViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?)
+// MARK: - CategorySelectionViewControllerDelegate
+protocol CategorySelectionViewControllerDelegate: AnyObject {
+    func categorySelectionViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?)
 }
 
 
-// MARK: - CategoryChoiceViewController
-final class CategoryChoiceViewController: UIViewController, CategoryCreationViewControllerDelegate {
+// MARK: - CategorySelectionViewController
+final class CategorySelectionViewController: UIViewController, CategoryCreationViewControllerDelegate {
     
     // MARK: - Internal Properties
     
-    var dataStorage: TrackerDataSource!
-    weak var delegate: CategoryChoiceViewControllerDelegate?
+    var dataStorage: TrackersDataSource!
+    weak var delegate: CategorySelectionViewControllerDelegate?
     
     // MARK: - Private Properties
     
@@ -53,7 +53,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        delegate?.categoryChoiceViewController(self, didDismissWith: selectedCategory)
+        delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
     }
     
     // MARK: - Internal Methods
@@ -195,7 +195,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
 
 
 // MARK: - UITableViewDataSource
-extension CategoryChoiceViewController: UITableViewDataSource {
+extension CategorySelectionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         dataStorage.trackerCategories.count
@@ -234,7 +234,7 @@ extension CategoryChoiceViewController: UITableViewDataSource {
 
 
 // MARK: - UITableViewDelegate
-extension CategoryChoiceViewController: UITableViewDelegate {
+extension CategorySelectionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let oldSelectedRow: Int?
@@ -261,7 +261,7 @@ extension CategoryChoiceViewController: UITableViewDelegate {
 
 
 // MARK: - LayoutConstants
-extension CategoryChoiceViewController {
+extension CategorySelectionViewController {
     enum LayoutConstants {
         static let backgroundColor: UIColor = .ypWhite
         enum Title {

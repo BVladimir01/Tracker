@@ -19,7 +19,7 @@ final class CategoryCreationViewController: UIViewController {
     
     // MARK: - Internal Properties
     
-    var dataStorage: TrackerDataSource!
+    var dataStorage: TrackersDataSource!
     weak var delegate: CategoryCreationViewControllerDelegate?
     
     // MARK: - Private Properties

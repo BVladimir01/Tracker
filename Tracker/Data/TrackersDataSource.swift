@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol TrackerDataSource {
+protocol TrackersDataSource {
     var trackerCategories: [TrackerCategory] { get }
     func trackerCategories(on date: Date) -> [TrackerCategory]
     func daysDone(of trackerID: UUID) -> Int

@@ -1,5 +1,5 @@
 //
-//  ScheduleChoiceViewController.swift
+//  ScheduleSelectionViewController.swift
 //  Tracker
 //
 //  Created by Vladimir on 10.05.2025.
@@ -8,18 +8,18 @@
 import UIKit
 
 
-// MARK: - ScheduleChoiceViewControllerDelegate
-protocol ScheduleChoiceViewControllerDelegate: AnyObject {
-    func scheduleChoiceViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>)
+// MARK: - ScheduleSelectionViewControllerDelegate
+protocol ScheduleSelectionViewControllerDelegate: AnyObject {
+    func scheduleSelectionViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>)
 }
 
 
-// MARK: - ScheduleChoiceViewController
-final class ScheduleChoiceViewController: UIViewController {
+// MARK: - ScheduleSelectionViewController
+final class ScheduleSelectionViewController: UIViewController {
     
     // MARK: - Internal Properties
     
-    weak var delegate: ScheduleChoiceViewControllerDelegate?
+    weak var delegate: ScheduleSelectionViewControllerDelegate?
     var initialWeekdays: Set<Weekday> = []
     
     // MARK: - Private Properties
@@ -129,15 +129,15 @@ final class ScheduleChoiceViewController: UIViewController {
     
     @objc
     private func doneButtonTapped() {
-        var chosenDays: Set<Weekday> = []
+        var selectedWeekdays: Set<Weekday> = []
         for i in 0..<Weekday.allCases.count {
             let indexPath = IndexPath(row: i, section: 0)
             let cell = table.cellForRow(at: indexPath)
             if let switcher = cell?.accessoryView as? UISwitch, switcher.isOn, let weekday = Weekday(rawValue: i) {
-                chosenDays.insert(weekday)
+                selectedWeekdays.insert(weekday)
             }
         }
-        delegate?.scheduleChoiceViewController(self, didSelect: chosenDays)
+        delegate?.scheduleSelectionViewController(self, didSelect: selectedWeekdays)
     }
     
     @objc
@@ -149,7 +149,7 @@ final class ScheduleChoiceViewController: UIViewController {
 
 
 // MARK: - UITableViewDataSource
-extension ScheduleChoiceViewController: UITableViewDataSource {
+extension ScheduleSelectionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         Weekday.allCases.count
@@ -158,7 +158,7 @@ extension ScheduleChoiceViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
         guard let weekday = Weekday(rawValue: indexPath.row) else {
-            assertionFailure("ScheduleChoiceViewController.tableView: Failed to create weekday from indexPath")
+            assertionFailure("ScheduleSelectionViewController.tableView: Failed to create weekday from indexPath")
             return cell
         }
         cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
@@ -186,7 +186,7 @@ extension ScheduleChoiceViewController: UITableViewDataSource {
 
 
 // MARK: - LayoutConstants
-extension ScheduleChoiceViewController {
+extension ScheduleSelectionViewController {
     enum LayoutConstants {
         static let backgroundColor: UIColor = .ypWhite
         enum Title {

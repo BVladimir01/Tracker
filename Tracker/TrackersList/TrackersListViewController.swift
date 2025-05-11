@@ -15,7 +15,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     
     // isn't implicit unwrap conventional solution here?
     // if it is nil, the app SHOULD crash
-    var dataStorage: TrackerDataSource!
+    var dataStorage: TrackersDataSource!
     
     // MARK: - Private Properties
 

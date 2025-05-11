@@ -8,12 +8,12 @@
 import UIKit
 
 
-// MARK: - TrackerDataStore
-class TrackerDataStore: TrackerDataSource {
+// MARK: - TrackersDataStore
+class TrackersDataStore: TrackersDataSource {
     
     // MARK: - Internal Properties
     
-    static let shared = TrackerDataStore()
+    static let shared = TrackersDataStore()
     
     private(set) var trackerCategories: [TrackerCategory] = [
 //        TrackerCategory(title: "TrackerCategoryTitle1",
@@ -122,7 +122,7 @@ class TrackerDataStore: TrackerDataSource {
     
     private func shouldShow(tracker: Tracker, on date: Date) -> Bool {
         guard let targetWeekday = Weekday.fromCalendarComponent(calendar.component(.weekday, from: date))else {
-            assertionFailure("TrackerDataStore.shouldShow: Failed to create weekday from calendar")
+            assertionFailure("TrackersDataStore.shouldShow: Failed to create weekday from calendar")
             return false
         }
         switch tracker.schedule {

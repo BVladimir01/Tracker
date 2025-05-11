@@ -20,7 +20,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     // MARK: - Internal Properties
     
     weak var delegate: NewTrackerViewControllerDelegate?
-    var dataStorage: TrackerDataSource!
+    var dataStorage: TrackersDataSource!
     
     // MARK: - Private Properties
     

@@ -16,12 +16,12 @@ protocol NewTrackerSetupViewControllerDelegate: AnyObject {
 
 
 // MARK: - NewTrackerSetupViewController
-final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewControllerDelegate, CategoryChoiceViewControllerDelegate {
+final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionViewControllerDelegate, CategorySelectionViewControllerDelegate {
     
     // MARK: - Internal Properties
     
     var trackerIsRegular = true
-    var dataStorage: TrackerDataSource!
+    var dataStorage: TrackersDataSource!
     weak var delegate: NewTrackerSetupViewControllerDelegate?
     
     // MARK: - Private Properties
@@ -73,13 +73,13 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     // MARK: - Interntal Methods
     
-    func scheduleChoiceViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>) {
+    func scheduleSelectionViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>) {
         self.weekdays = weekdays
         updateCreateButtonState()
         vc.dismiss(animated: true)
     }
     
-    func categoryChoiceViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
+    func categorySelectionViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
         self.trackerCategory = category
         updateCreateButtonState()
     }
@@ -241,7 +241,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     private func chooseCategoryTapped() {
         nameTextField.resignFirstResponder()
-        let vc = CategoryChoiceViewController()
+        let vc = CategorySelectionViewController()
         vc.delegate = self
         vc.dataStorage = dataStorage
         vc.setInitialCategory(to: trackerCategory)
@@ -250,7 +250,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     private func chooseScheduleTapped() {
         nameTextField.resignFirstResponder()
-        let vc = ScheduleChoiceViewController()
+        let vc = ScheduleSelectionViewController()
         vc.delegate = self
         vc.initialWeekdays = weekdays
         present(vc, animated: true)
