@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - CategoryChoiceViewControllerDelegate
 protocol CategoryChoiceViewControllerDelegate: AnyObject {
-    func categoryChoiceViewController(_ vc: UIViewController, didDismissWithCategory category: TrackerCategory?)
+    func categoryChoiceViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?)
 }
 
 
@@ -18,27 +18,28 @@ protocol CategoryChoiceViewControllerDelegate: AnyObject {
 final class CategoryChoiceViewController: UIViewController, CategoryCreationViewControllerDelegate {
     
     // MARK: - Internal Properties
+    
+    var dataStorage: TrackerDataSource!
     weak var delegate: CategoryChoiceViewControllerDelegate?
     
     // MARK: - Private Properties
+    
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
     private let table = UITableView()
     
     private let cellReuseID = "checkmarkCell"
-    private let dataStorage: TrackerDataStore = TrackerDataStore.shared
     
     private var shouldDisplayStub: Bool {
         dataStorage.trackerCategories.isEmpty
     }
-    private var chosenCategory: TrackerCategory?
-    private var selectedRow: Int?
+    private var selectedCategory: TrackerCategory?
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = LayoutConstants.backgroundColor
         setUpTitle()
         setUpStubView()
         setUpAddButton()
@@ -51,14 +52,14 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        if let selectedRow {
-            delegate?.categoryChoiceViewController(self, didDismissWithCategory: dataStorage.trackerCategories[selectedRow])
-        } else {
-            delegate?.categoryChoiceViewController(self, didDismissWithCategory: nil)
-        }
+        delegate?.categoryChoiceViewController(self, didDismissWith: selectedCategory)
     }
     
     // MARK: - Internal Methods
+    
+    func setInitialCategory(to category: TrackerCategory?) {
+        selectedCategory = category
+    }
     
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didSelectCategoryTitle title: String) {
         vc.dismiss(animated: true)
@@ -71,9 +72,10 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
                         animated: true,
                         scrollPosition: .bottom)
         tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
+        replaceStubView()
     }
     
-    // MARK: - Private Methods - SetupR
+    // MARK: - Private Methods - Setup
     
     private func setUpTitle() {
         let title = UILabel()
@@ -87,7 +89,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         NSLayoutConstraint.activate([
             title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                       constant: LayoutConstants.Title.topPadding)
+                                       constant: LayoutConstants.Title.spacingToSuperViewTop)
         ])
     }
     
@@ -99,7 +101,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
             stubImageView.centerXAnchor.constraint(equalTo: stubView.centerXAnchor),
             stubImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.Stub.imageHeight),
             stubImageView.widthAnchor.constraint(equalToConstant: LayoutConstants.Stub.imageWidth),
-            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor, constant: LayoutConstants.Stub.imageTopPadding),
+            stubImageView.topAnchor.constraint(equalTo: stubView.topAnchor, constant: LayoutConstants.Stub.imageSpacingToSuperViewTop),
         ])
         
         let label = UILabel()
@@ -112,7 +114,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         stubView.addSubview(label)
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: stubView.centerXAnchor),
-            label.topAnchor.constraint(equalTo: stubImageView.bottomAnchor, constant: LayoutConstants.Stub.labelTopToStubImageBottom)
+            label.topAnchor.constraint(equalTo: stubImageView.bottomAnchor, constant: LayoutConstants.Stub.labelToImageSpacing)
         ])
         
         stubView.backgroundColor = .ypWhite
@@ -120,7 +122,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         view.addSubview(stubView)
         NSLayoutConstraint.activate([
             stubView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                          constant: LayoutConstants.Stub.stubViewTopPadding),
+                                          constant: LayoutConstants.Stub.stubViewToSuperViewSpacing),
             stubView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stubView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             stubView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -142,7 +144,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
         NSLayoutConstraint.activate([
             addButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                               constant: -LayoutConstants.Button.bottomPadding),
+                                               constant: -LayoutConstants.Button.spacingToSuperviewBottom),
             addButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Button.width),
             addButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Button.height)
         ])
@@ -165,7 +167,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
             table.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             table.widthAnchor.constraint(equalToConstant: LayoutConstants.Table.width),
             table.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                       constant: LayoutConstants.Table.spacingToTop),
+                                       constant: LayoutConstants.Table.spacingToSuperviewTop),
             table.heightAnchor.constraint(lessThanOrEqualToConstant: LayoutConstants.Table.maxHeight)
         ])
     }
@@ -173,13 +175,7 @@ final class CategoryChoiceViewController: UIViewController, CategoryCreationView
     // MARK: - Private Methods - Helpers
     
     private func replaceStubView() {
-        if shouldDisplayStub {
-            view.bringSubviewToFront(stubView)
-            stubView.alpha = 1
-        } else {
-            view.sendSubviewToBack(stubView)
-            stubView.alpha = 0
-        }
+        stubView.isHidden = !shouldDisplayStub
     }
     
     // MARK: - Private Methods - Intentions
@@ -220,7 +216,7 @@ extension CategoryChoiceViewController: UITableViewDataSource {
         } else {
             cell.layer.cornerRadius = .zero
         }
-        cell.accessoryType = (indexPath.row == selectedRow) ? .checkmark : .none
+        cell.accessoryType = (category == selectedCategory) ? .checkmark : .none
         cell.selectedBackgroundView?.layer.masksToBounds = true
         cell.selectedBackgroundView?.layer.cornerRadius = LayoutConstants.Table.cornerRadius
         return cell
@@ -234,17 +230,24 @@ extension CategoryChoiceViewController: UITableViewDataSource {
 extension CategoryChoiceViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let oldSelectedRow = selectedRow
-        if indexPath.row == selectedRow {
-            selectedRow = nil
+        let oldSelectedRow: Int?
+        let newSelectedRow = indexPath.row
+        if let selectedCategory,
+            let idOfSelectedCategory = dataStorage.trackerCategories.firstIndex(of: selectedCategory) {
+            oldSelectedRow = idOfSelectedCategory
         } else {
-            selectedRow = indexPath.row
+            oldSelectedRow = nil
+        }
+        if newSelectedRow == oldSelectedRow {
+            selectedCategory = nil
+        } else {
+            selectedCategory = dataStorage.trackerCategories[newSelectedRow]
         }
         if let oldSelectedRow {
             tableView.reloadRows(at: [IndexPath(row: oldSelectedRow, section: 0)], with: .none)
         }
-        tableView.reloadRows(at: [indexPath], with: .none)
-        tableView.deselectRow(at: indexPath, animated: false)
+        tableView.reloadRows(at: [IndexPath(row: newSelectedRow, section: 0)], with: .none)
+        tableView.deselectRow(at: IndexPath(row: newSelectedRow, section: 0), animated: false)
     }
 }
 
@@ -252,29 +255,30 @@ extension CategoryChoiceViewController: UITableViewDelegate {
 // MARK: - LayoutConstants
 extension CategoryChoiceViewController {
     enum LayoutConstants {
+        static let backgroundColor: UIColor = .ypWhite
         enum Title {
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypBlack
-            static let topPadding: CGFloat = 27
+            static let spacingToSuperViewTop: CGFloat = 27
         }
         enum Stub {
             static let imageHeight: CGFloat = 80
             static let imageWidth: CGFloat = 80
-            static let imageTopPadding: CGFloat = 246
+            static let imageSpacingToSuperViewTop: CGFloat = 246
             
             static let labelFont: UIFont = .systemFont(ofSize: 12, weight: .medium)
             static let textColor: UIColor = .ypBlack
-            static let labelTopToStubImageBottom: CGFloat = 8
+            static let labelToImageSpacing: CGFloat = 8
             
             static let backgroundColor: UIColor = .ypWhite
-            static let stubViewTopPadding: CGFloat = 49
+            static let stubViewToSuperViewSpacing: CGFloat = 49
         }
         enum Button {
             static let backgroundColor: UIColor = .ypBlack
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypWhite
             static let cornerRadius: CGFloat = 16
-            static let bottomPadding: CGFloat = 16
+            static let spacingToSuperviewBottom: CGFloat = 16
             static let height: CGFloat = 60
             static let width: CGFloat = 335
         }
@@ -283,7 +287,7 @@ extension CategoryChoiceViewController {
             static let rowHeight: CGFloat = 75
             static let width: CGFloat = 343
             static let maxHeight: CGFloat = 525
-            static let spacingToTop: CGFloat = 87
+            static let spacingToSuperviewTop: CGFloat = 87
             static let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             static let separatorColor: UIColor = .gray
             

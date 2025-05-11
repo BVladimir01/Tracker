@@ -68,7 +68,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = LayoutConstants.backgroundColor
         setUpTitle()
         setUpNameTextField()
         setUpCancelButton()
@@ -84,7 +84,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         vc.dismiss(animated: true)
     }
     
-    func categoryChoiceViewController(_ vc: UIViewController, didDismissWithCategory category: TrackerCategory?) {
+    func categoryChoiceViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
         self.trackerCategory = category
         createButtonEnabled = shouldEnableCreateButton
     }
@@ -235,6 +235,8 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
     private func chooseCategoryTapped() {
         let vc = CategoryChoiceViewController()
         vc.delegate = self
+        vc.dataStorage = dataStorage
+        vc.setInitialCategory(to: trackerCategory)
         present(vc, animated: true)
     }
     
@@ -326,6 +328,7 @@ extension NewTrackerSetupViewController: UITableViewDelegate {
 // MARK: - LayoutConstants
 extension NewTrackerSetupViewController {
     enum LayoutConstants {
+        static let backgroundColor: UIColor = .ypWhite
         enum Title {
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypBlack
