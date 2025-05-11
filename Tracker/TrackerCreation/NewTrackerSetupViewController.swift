@@ -198,7 +198,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleChoiceViewC
         
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
-        let tableHeight = (trackerIsRegular ? 2 : 1)*LayoutConstants.Table.rowHeight - 0.5
+        let tableHeight = (trackerIsRegular ? 2 : 1)*LayoutConstants.Table.rowHeight
         NSLayoutConstraint.activate([
             table.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             table.widthAnchor.constraint(equalToConstant: LayoutConstants.Table.width),
@@ -287,6 +287,7 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
         cell.detailTextLabel?.textColor = LayoutConstants.Table.cellDetailTextColor
         
         cell.accessoryType = .disclosureIndicator
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

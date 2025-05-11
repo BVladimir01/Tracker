@@ -92,7 +92,7 @@ final class ScheduleChoiceViewController: UIViewController {
         
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
-        let tableHeight = CGFloat(Weekday.allCases.count)*LayoutConstants.Table.rowHeight - 0.5
+        let tableHeight = CGFloat(Weekday.allCases.count)*LayoutConstants.Table.rowHeight
         NSLayoutConstraint.activate([
             table.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             table.widthAnchor.constraint(equalToConstant: LayoutConstants.Table.width),
@@ -169,6 +169,9 @@ extension ScheduleChoiceViewController: UITableViewDataSource {
         }
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        if indexPath.row == self.tableView(tableView, numberOfRowsInSection: indexPath.section) - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        }
         // This will only be called once when cells are created
         // Cells will not be reused (dequeued)
         let switcher = UISwitch()
