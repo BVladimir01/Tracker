@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: NewTrackerViewControllerDelegate
 protocol NewTrackerViewControllerDelegate: AnyObject {
-    func newTrackerViewControllerDelegate(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory)
+    func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController)
 }
 
 
@@ -19,6 +19,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     // MARK: - Internal Properties
     
     weak var delegate: NewTrackerViewControllerDelegate?
+    var dataStorage: TrackerDataSource!
     
     // MARK: - Private Properties
     
@@ -42,7 +43,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker, for category: TrackerCategory) {
         vc.dismiss(animated: true)
-        delegate?.newTrackerViewControllerDelegate(self, didCreateTracker: tracker, for: category)
+        delegate?.newTrackerViewControllerDidCreateTracker(self)
     }
     
     // MARK: - Private Methods - Setup

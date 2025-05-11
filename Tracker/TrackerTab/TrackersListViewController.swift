@@ -38,10 +38,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     
     // MARK: - Internal Methods
     
-    func newTrackerViewControllerDelegate(_ vc: UIViewController, 
-                                          didCreateTracker tracker: Tracker,
-                                          for category: TrackerCategory) {
-        dataStorage.add(tracker: tracker, for: category)
+    func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController) {
         collectionView.reloadData()
         vc.dismiss(animated: true)
     }
@@ -145,6 +142,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     @objc private func addTrackerTapped() {
         let creatorVC = NewTrackerViewController()
         creatorVC.delegate = self
+        creatorVC.dataStorage = dataStorage
         present(creatorVC, animated: true)
     }
     
