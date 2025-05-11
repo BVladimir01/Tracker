@@ -28,8 +28,9 @@ class TabBarController: UITabBarController {
     }
     
     private func setUpAndReturnTrackerNavStack() -> UIViewController {
-        let trackerVC = TrackersListViewController()
-        let trackerNavController = UINavigationController(rootViewController: trackerVC)
+        let trackersVC = TrackersListViewController()
+        trackersVC.dataStorage = TrackerDataStore.shared
+        let trackerNavController = UINavigationController(rootViewController: trackersVC)
         trackerNavController.navigationBar.prefersLargeTitles = true
         trackerNavController.tabBarItem = UITabBarItem(title: "Трекеры", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
         return trackerNavController

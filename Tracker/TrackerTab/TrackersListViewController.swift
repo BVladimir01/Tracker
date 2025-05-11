@@ -11,9 +11,13 @@ import UIKit
 // MARK: - TrackersListViewController
 final class TrackersListViewController: UIViewController, NewTrackerViewControllerDelegate {
     
-    // MARK: - Private Properties
+    // MARK: - Internal Properties
     
-    private let trackerDataStorage: TrackerDataSource = TrackerDataStore.shared
+    // isn't implicit unwrap conventional solution here?
+    // if it is nil, the app SHOULD crash
+    var dataStorage: TrackerDataSource!
+    
+    // MARK: - Private Properties
 
     private let collectionView = UICollectionView(frame: .zero,
                                                   collectionViewLayout: UICollectionViewFlowLayout())
@@ -37,7 +41,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     func newTrackerViewControllerDelegate(_ vc: UIViewController, 
                                           didCreateTracker tracker: Tracker,
                                           for category: TrackerCategory) {
-        trackerDataStorage.add(tracker: tracker, for: category)
+        dataStorage.add(tracker: tracker, for: category)
         collectionView.reloadData()
         vc.dismiss(animated: true)
     }
@@ -116,7 +120,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         let recordText: String
         let daysEnding = ["дней", "день", "дня", "дня", "дня",
                           "дней", "дней", "дней", "дней", "дней"]
-        let daysDone = trackerDataStorage.daysDone(of: tracker.id)
+        let daysDone = dataStorage.daysDone(of: tracker.id)
         switch tracker.schedule {
         case .regular:
             let lastDigit = daysDone % 10
@@ -128,7 +132,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
                 recordText = "Выполнен"
             }
         }
-        let isCompleted = trackerDataStorage.isCompleted(trackerID: tracker.id, on: datePicker.date)
+        let isCompleted = dataStorage.isCompleted(trackerID: tracker.id, on: datePicker.date)
         return TrackerCellViewModel(title: tracker.title,
                                     color: UIColor.from(RGBColor: tracker.color),
                                     emoji: tracker.emoji,
@@ -164,11 +168,11 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
 extension TrackersListViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerDataStorage.trackerCategories(on: datePicker.date).count
+        dataStorage.trackerCategories(on: datePicker.date).count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        trackerDataStorage.trackerCategories(on: datePicker.date)[section].trackers.count
+        dataStorage.trackerCategories(on: datePicker.date)[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -176,7 +180,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue or typecast cell")
             return UICollectionViewCell()
         }
-        let categories = trackerDataStorage.trackerCategories(on: datePicker.date)
+        let categories = dataStorage.trackerCategories(on: datePicker.date)
         let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
         cell.configure(with: trackerCellViewModel(from: trackerToShow))
         cell.set(trackerID: trackerToShow.id)
@@ -189,7 +193,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return   UICollectionReusableView()
         }
-        let categories = trackerDataStorage.trackerCategories(on: datePicker.date)
+        let categories = dataStorage.trackerCategories(on: datePicker.date)
         view.changeTitleText(categories[indexPath.section].title)
         return view
     }
@@ -238,10 +242,10 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             return
         }
         let date = datePicker.date
-        if trackerDataStorage.isCompleted(trackerID: trackerID, on: date) {
-            trackerDataStorage.removeRecord(for: trackerID, on: date)
+        if dataStorage.isCompleted(trackerID: trackerID, on: date) {
+            dataStorage.removeRecord(for: trackerID, on: date)
         } else {
-            trackerDataStorage.addRecord(for: trackerID, on: date)
+            dataStorage.addRecord(for: trackerID, on: date)
         }
         collectionView.reloadItems(at: [indexPath])
     }
