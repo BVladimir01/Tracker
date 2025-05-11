@@ -74,6 +74,10 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         self.trackerID = trackerID
     }
     
+    func setRecordButton(enabled: Bool) {
+        recordButton.isEnabled = enabled
+    }
+    
     // MARK: - Private Methods - Setup
     
     private func setUpViews() {

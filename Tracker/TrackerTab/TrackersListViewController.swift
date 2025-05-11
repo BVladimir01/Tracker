@@ -201,15 +201,18 @@ extension TrackersListViewController: UICollectionViewDataSource {
         dataStorage.trackerCategories(on: datePicker.date)[section].trackers.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, 
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.reuseID, for: indexPath) as? TrackerCollectionViewCell else {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue or typecast cell")
             return UICollectionViewCell()
         }
         let categories = dataStorage.trackerCategories(on: datePicker.date)
         let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
+        let buttonEnabled = !(datePicker.date > Date())
         cell.configure(with: trackerCellViewModel(from: trackerToShow))
         cell.set(trackerID: trackerToShow.id)
+        cell.setRecordButton(enabled: buttonEnabled)
         cell.delegate = self
         return cell
     }
