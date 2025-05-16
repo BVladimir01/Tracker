@@ -60,10 +60,9 @@ final class TrackersDataStore: TrackersDataSource {
     func trackerCategories(on date: Date) -> [TrackerCategory] {
         var result: [TrackerCategory] = []
         for trackerCategory in trackerCategories {
-            let categoryType = type(of: trackerCategory)
             let trackersToShow = trackerCategory.trackers.filter { shouldShow(tracker: $0, on: date) }
             if !trackersToShow.isEmpty {
-                let newCategory = categoryType.init(title: trackerCategory.title,
+                let newCategory = TrackerCategory(title: trackerCategory.title,
                                                     trackers: trackersToShow)
                 result.append(newCategory)
             }
