@@ -250,10 +250,12 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let indexPath = IndexPath(row: 0, section: section)
-        let view = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+        let dummyView = CategoryTitleView()
+        let text = dataStorage.trackerCategories(on: selectedDate)[section].title
+        dummyView.changeTitleText(text)
         let width = collectionView.frame.width - 2*LayoutConstants.CollectionView.headerLateralPadding
-        return view.systemLayoutSizeFitting(CGSize(width: width, height: UIView.layoutFittingCompressedSize.height), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
+        let targetSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
+        return dummyView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
     }
     
 }
