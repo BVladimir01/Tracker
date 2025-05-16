@@ -127,7 +127,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         titleLabel.text = "Title"
         titleLabel.textColor = .white
         titleLabel.font = LayoutConstants.Title.font
-        titleLabel.numberOfLines = 0
+        titleLabel.numberOfLines = 2
         
         trackerMainView.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
