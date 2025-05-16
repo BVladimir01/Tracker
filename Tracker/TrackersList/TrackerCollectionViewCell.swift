@@ -15,7 +15,7 @@ protocol TrackerCollectionViewCellDelegate: AnyObject {
 
 
 // MARK: - TrackerCollectionViewCell
-class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Internal Properties
     

@@ -9,7 +9,7 @@ import UIKit
 
 
 // MARK: - CategoryTitleView
-class CategoryTitleView: UICollectionReusableView {
+final class CategoryTitleView: UICollectionReusableView {
     
     // MARK: - Internal Properties
     

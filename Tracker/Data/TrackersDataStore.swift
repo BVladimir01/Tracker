@@ -9,7 +9,7 @@ import UIKit
 
 
 // MARK: - TrackersDataStore
-class TrackersDataStore: TrackersDataSource {
+final class TrackersDataStore: TrackersDataSource {
     
     // MARK: - Internal Properties
     

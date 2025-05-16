@@ -8,7 +8,7 @@
 import UIKit
 
 
-class StatsViewController: UIViewController {
+final class StatsViewController: UIViewController {
     
     // MARK: - Private Properties
     
