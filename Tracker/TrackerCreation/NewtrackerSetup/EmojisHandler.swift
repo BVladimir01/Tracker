@@ -8,15 +8,28 @@
 import UIKit
 
 
+// MARK: - EmojisHandlerDelegate
+protocol EmojisHandlerDelegate: AnyObject {
+    func emojisHandler(_ handler: EmojisHandler, didSelect emoji: String)
+}
+
+
+// MARK: - EmojisHandler
 final class EmojisHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var choice = ""
+    // MARK: - Internal Properties
+    
+    weak var delegate: EmojisHandlerDelegate?
+    
+    // MARK: - Private Properties
     
     private let emojis = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
         "😇", "😡", "🥶", "🤔", "🙌", "🍔",
         "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
     ]
+    
+    // MARK: - Internal Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         emojis.count
@@ -45,7 +58,7 @@ final class EmojisHandler: NSObject, UICollectionViewDataSource, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        choice = emojis[indexPath.item]
+        delegate?.emojisHandler(self, didSelect: emojis[indexPath.item])
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -53,6 +66,8 @@ final class EmojisHandler: NSObject, UICollectionViewDataSource, UICollectionVie
     }
 }
 
+
+// MARK: - LayoutConstants
 extension EmojisHandler {
     enum LayoutConstants {
         static let itemSize = CGSize(width: 52, height: 52)

@@ -8,15 +8,28 @@
 import UIKit
 
 
+// MARK: - ColorsHandlerDelegate
+protocol ColorsHandlerDelegate: AnyObject {
+    func colorsHandler(_ handler: ColorsHandler, didSelect color: UIColor)
+}
+
+
+// MARK: - ColorsHandler
 final class ColorsHandler: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var choice: UIColor = .ypColorSelection1
+    // MARK: - Internal Properties
+    
+    weak var delegate: ColorsHandlerDelegate?
+    
+    // MARK: - Private Properties
     
     private let colors: [UIColor] = [
         .ypColorSelection1, .ypColorSelection2, .ypColorSelection3, .ypColorSelection4, .ypColorSelection5, .ypColorSelection6,
         .ypColorSelection7, .ypColorSelection8, .ypColorSelection9, .ypColorSelection10, .ypColorSelection11, .ypColorSelection12,
         .ypColorSelection13, .ypColorSelection14, .ypColorSelection15, .ypColorSelection16, .ypColorSelection17, .ypColorSelection18
     ]
+    
+    // MARK: - Internal Methods
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         colors.count
@@ -45,7 +58,7 @@ final class ColorsHandler: NSObject, UICollectionViewDataSource, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        choice = colors[indexPath.item]
+        delegate?.colorsHandler(self, didSelect: colors[indexPath.item])
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -53,6 +66,8 @@ final class ColorsHandler: NSObject, UICollectionViewDataSource, UICollectionVie
     }
 }
 
+
+// MARK: - LayoutConstants
 extension ColorsHandler {
     enum LayoutConstants {
         static let itemSize = CGSize(width: 52, height: 52)

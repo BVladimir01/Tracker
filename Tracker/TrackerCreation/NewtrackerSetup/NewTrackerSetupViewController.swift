@@ -16,7 +16,7 @@ protocol NewTrackerSetupViewControllerDelegate: AnyObject {
 
 
 // MARK: - NewTrackerSetupViewController
-final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionViewControllerDelegate, CategorySelectionViewControllerDelegate {
+final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionViewControllerDelegate, CategorySelectionViewControllerDelegate, EmojisHandlerDelegate, ColorsHandlerDelegate {
     
     // MARK: - Internal Properties
     
@@ -30,11 +30,23 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private var trackerCategory: TrackerCategory? {
         didSet {
             settingsTable.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            updateCreateButtonState()
         }
     }
     private var weekdays: Set<Weekday> = [] {
         didSet {
             settingsTable.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
+            updateCreateButtonState()
+        }
+    }
+    private var emoji: String? {
+        didSet {
+            updateCreateButtonState()
+        }
+    }
+    private var color: UIColor? {
+        didSet {
+            updateCreateButtonState()
         }
     }
     
@@ -56,7 +68,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private var shouldEnableCreateButton: Bool {
         if let trackerName = nameTextField.text, !trackerName.isEmpty,
-           trackerCategory != nil,
+           trackerCategory != nil, color != nil, emoji != nil,
            !weekdays.isEmpty || !trackerIsRegular {
             return true
         } else {
@@ -77,6 +89,8 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         setUpEmojisCollectionView()
         setUpColorsCollectionView()
         NSLayoutConstraint.activate(constraints)
+        colorsHandler.delegate = self
+        emojisHandler.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -88,13 +102,19 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     func scheduleSelectionViewController(_ vc: UIViewController, didSelect weekdays: Set<Weekday>) {
         self.weekdays = weekdays
-        updateCreateButtonState()
         vc.dismiss(animated: true)
     }
     
     func categorySelectionViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
         self.trackerCategory = category
-        updateCreateButtonState()
+    }
+    
+    func emojisHandler(_ handler: EmojisHandler, didSelect emoji: String) {
+        self.emoji = emoji
+    }
+    
+    func colorsHandler(_ handler: ColorsHandler, didSelect color: UIColor) {
+        self.color = color
     }
     
     // MARK: - Private Methods - Setup
@@ -335,8 +355,12 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get date for irregular tracker")
             return
         }
+        guard let emoji , let rgbColor = color?.rgbColor else {
+            assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to unwrap color or emoji")
+            return
+        }
         let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(selectedDate)
-        let tracker = Tracker(id: UUID(), title: trackerTitle, color: .init(red: Double.random(in: 0...1), green: Double.random(in: 0...1), blue: Double.random(in: 0...1)), emoji: "🫥", schedule: schedule)
+        let tracker = Tracker(id: UUID(), title: trackerTitle, color: rgbColor, emoji: Character(emoji), schedule: schedule)
         dataStorage.add(tracker: tracker, for: trackerCategory)
         delegate?.newTrackerSetupViewControllerDidCreateTracker(self)
     }
