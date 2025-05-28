@@ -29,21 +29,28 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private var trackerCategory: TrackerCategory? {
         didSet {
-            table.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            settingsTable.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
     }
     private var weekdays: Set<Weekday> = [] {
         didSet {
-            table.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
+            settingsTable.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
         }
     }
+    
+    private let emojisHandler = EmojisHandler()
     
     private let nameTextField = UITextField()
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
-    private let table = UITableView()
+    private let settingsTable = UITableView()
+    private let emojisCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let colorsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let contentScrollView = UIScrollView()
     
-    private let cellReuseID = "subtitleCell"
+    private let settingsTableCellReuseID = "subtitleCell"
+    
+    private var constraints: [NSLayoutConstraint] = []
     
     private var shouldEnableCreateButton: Bool {
         if let trackerName = nameTextField.text, !trackerName.isEmpty,
@@ -60,11 +67,12 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = LayoutConstants.backgroundColor
-        setUpTitle()
+        setUpTitleAndScrollView()
         setUpNameTextField()
         setUpCancelButton()
         setUpCreateButton()
-        setUpTable()
+        setUpSettingsTable()
+        setUpEmojisCollectionView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,7 +95,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     // MARK: - Private Methods - Setup
     
-    private func setUpTitle() {
+    private func setUpTitleAndScrollView() {
         let title = UILabel()
         title.text = "Новый трекер"
         title.font = LayoutConstants.Title.font
@@ -180,29 +188,60 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         ])
     }
     
-    private func setUpTable() {
-        table.layer.masksToBounds = true
-        table.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+    private func setUpSettingsTable() {
+        settingsTable.layer.masksToBounds = true
+        settingsTable.layer.cornerRadius = LayoutConstants.SettingsTable.cornerRadius
         
-        table.delegate = self
-        table.dataSource = self
-        table.rowHeight = LayoutConstants.Table.rowHeight
-        table.isScrollEnabled = false
-        table.separatorStyle = .singleLine
-        table.separatorInset = LayoutConstants.Table.separatorInset
-        table.separatorColor = LayoutConstants.Table.separatorColor
-        table.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseID)
+        settingsTable.delegate = self
+        settingsTable.dataSource = self
+        settingsTable.rowHeight = LayoutConstants.SettingsTable.rowHeight
+        settingsTable.isScrollEnabled = false
+        settingsTable.separatorStyle = .singleLine
+        settingsTable.separatorInset = LayoutConstants.SettingsTable.separatorInset
+        settingsTable.separatorColor = LayoutConstants.SettingsTable.separatorColor
+        settingsTable.register(UITableViewCell.self, forCellReuseIdentifier: settingsTableCellReuseID)
         
-        view.addSubview(table)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        let tableHeight = (trackerIsRegular ? 2 : 1)*LayoutConstants.Table.rowHeight
+        view.addSubview(settingsTable)
+        settingsTable.translatesAutoresizingMaskIntoConstraints = false
+        let tableHeight = (trackerIsRegular ? 2 : 1)*LayoutConstants.SettingsTable.rowHeight
         NSLayoutConstraint.activate([
-            table.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            table.widthAnchor.constraint(equalToConstant: LayoutConstants.Table.width),
-            table.topAnchor.constraint(equalTo: nameTextField.bottomAnchor,
-                                       constant: LayoutConstants.Table.spacingToTextField),
-            table.heightAnchor.constraint(equalToConstant: tableHeight)
+            settingsTable.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            settingsTable.widthAnchor.constraint(equalToConstant: LayoutConstants.SettingsTable.width),
+            settingsTable.topAnchor.constraint(equalTo: nameTextField.bottomAnchor,
+                                       constant: LayoutConstants.SettingsTable.spacingToTextField),
+            settingsTable.heightAnchor.constraint(equalToConstant: tableHeight)
         ])
+    }
+    
+    private func setUpEmojisCollectionView() {
+        let emojiTitle = UILabel()
+        emojiTitle.text = "Emoji"
+        emojiTitle.textColor = LayoutConstants.SelectionCollectionView.titleColor
+        emojiTitle.font = LayoutConstants.SelectionCollectionView.titleFont
+        view.addSubview(emojiTitle)
+        emojiTitle.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emojiTitle.topAnchor.constraint(equalTo: settingsTable.bottomAnchor,
+                                            constant: LayoutConstants.SelectionCollectionView.emojiTopSpacing),
+            emojiTitle.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
+                                             constant: LayoutConstants.SelectionCollectionView.titleLeadingSpacing)
+        ])
+        
+        view.addSubview(emojisCollectionView)
+        emojisCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            emojisCollectionView.topAnchor.constraint(equalTo: emojiTitle.bottomAnchor,
+                                             constant: LayoutConstants.SelectionCollectionView.collectionViewTopSpacing),
+            emojisCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                                                 constant: LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
+            emojisCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                                                  constant: -LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
+            emojisCollectionView.heightAnchor.constraint(equalToConstant: LayoutConstants.SelectionCollectionView.collectionViewHeight)
+        ])
+        emojisCollectionView.register(EmojisCollectionViewCell.self,
+                                      forCellWithReuseIdentifier: EmojisCollectionViewCell.reuseID)
+        emojisCollectionView.delegate = emojisHandler
+        emojisCollectionView.dataSource = emojisHandler
     }
     
     // MARK: - Private Methods - Helpers
@@ -273,33 +312,33 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
 extension NewTrackerSetupViewController: UITableViewDataSource {
     
     private func configureCategoryCell(_ cell: UITableViewCell) {
-        cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
+        cell.backgroundColor = LayoutConstants.SettingsTable.cellBackgroundColor
         
         cell.textLabel?.text = "Категория"
-        cell.textLabel?.font = LayoutConstants.Table.cellTextFont
-        cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        cell.textLabel?.font = LayoutConstants.SettingsTable.cellTextFont
+        cell.textLabel?.textColor = LayoutConstants.SettingsTable.cellTextColor
         
         cell.detailTextLabel?.text = trackerCategory?.title
-        cell.detailTextLabel?.font = LayoutConstants.Table.cellTextFont
-        cell.detailTextLabel?.textColor = LayoutConstants.Table.cellDetailTextColor
+        cell.detailTextLabel?.font = LayoutConstants.SettingsTable.cellTextFont
+        cell.detailTextLabel?.textColor = LayoutConstants.SettingsTable.cellDetailTextColor
         
         cell.accessoryType = .disclosureIndicator
     }
     
     private func configureScheduleCell(_ cell: UITableViewCell) {
-        cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
+        cell.backgroundColor = LayoutConstants.SettingsTable.cellBackgroundColor
         
         cell.textLabel?.text = "Расписание"
-        cell.textLabel?.font = LayoutConstants.Table.cellTextFont
-        cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
+        cell.textLabel?.font = LayoutConstants.SettingsTable.cellTextFont
+        cell.textLabel?.textColor = LayoutConstants.SettingsTable.cellTextColor
         
         let weekdaysAsStrings = weekdays.sorted().map { $0.asString(short: true) }
         cell.detailTextLabel?.text = weekdaysAsStrings.joined(separator: ", ")
         if weekdays.count == Weekday.allCases.count {
             cell.detailTextLabel?.text = "Каждый день"
         }
-        cell.detailTextLabel?.font = LayoutConstants.Table.cellTextFont
-        cell.detailTextLabel?.textColor = LayoutConstants.Table.cellDetailTextColor
+        cell.detailTextLabel?.font = LayoutConstants.SettingsTable.cellTextFont
+        cell.detailTextLabel?.textColor = LayoutConstants.SettingsTable.cellDetailTextColor
         
         cell.accessoryType = .disclosureIndicator
     }
@@ -309,7 +348,7 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellReuseID)
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: settingsTableCellReuseID)
         if indexPath.row == 0 {
             configureCategoryCell(cell)
         } else if indexPath.row == 1 {
@@ -339,7 +378,6 @@ extension NewTrackerSetupViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: false)
     }
 }
-
 
 // MARK: - UITextFieldDelegate
 extension NewTrackerSetupViewController: UITextFieldDelegate {
@@ -389,8 +427,7 @@ extension NewTrackerSetupViewController {
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let cornerRadius: CGFloat = 16
         }
-        enum Table {
-            
+        enum SettingsTable {
             static let cornerRadius: CGFloat = 16
             static let rowHeight: CGFloat = 75
             static let width: CGFloat = 343
@@ -402,6 +439,16 @@ extension NewTrackerSetupViewController {
             static let cellTextColor: UIColor = .ypBlack
             static let cellDetailTextColor: UIColor = .ypGray
             static let cellBackgroundColor: UIColor = .ypBackground
+        }
+        enum SelectionCollectionView {
+            static let titleFont: UIFont = .systemFont(ofSize: 19, weight: .bold)
+            static let titleColor: UIColor = .ypBlack
+            static let emojiTopSpacing: CGFloat = 32
+            static let colorTopSpacing: CGFloat = 16
+            static let titleLeadingSpacing: CGFloat = 28
+            static let collectionViewTopSpacing: CGFloat = 0
+            static let collectionViewLateralSpacing: CGFloat = 0
+            static let collectionViewHeight: CGFloat = 204
         }
     }
 }

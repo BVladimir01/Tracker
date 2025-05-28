@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E7C3A8CF2DE7428500096105 /* EmojisHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */; };
+		E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */; };
 		E7D0370F2DC3B80E007819A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D0370E2DC3B80E007819A8 /* AppDelegate.swift */; };
 		E7D037112DC3B80E007819A8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037102DC3B80E007819A8 /* SceneDelegate.swift */; };
 		E7D037132DC3B80E007819A8 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037122DC3B80E007819A8 /* TabBarController.swift */; };
@@ -34,6 +36,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisHandler.swift; sourceTree = "<group>"; };
+		E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7D0370B2DC3B80E007819A8 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7D0370E2DC3B80E007819A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7D037102DC3B80E007819A8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +77,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E70556012DE6F55500A43EF6 /* NewtrackerSetup */ = {
+			isa = PBXGroup;
+			children = (
+				E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */,
+				E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */,
+				E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */,
+				E7D037C52DD0FE86007819A8 /* Schedule */,
+				E7D037C42DD0FE76007819A8 /* Category */,
+			);
+			path = NewtrackerSetup;
+			sourceTree = "<group>";
+		};
 		E7D037022DC3B80E007819A8 = {
 			isa = PBXGroup;
 			children = (
@@ -160,9 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				E7D037B02DCF1E59007819A8 /* NewTrackerViewController.swift */,
-				E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */,
-				E7D037C52DD0FE86007819A8 /* Schedule */,
-				E7D037C42DD0FE76007819A8 /* Category */,
+				E70556012DE6F55500A43EF6 /* NewtrackerSetup */,
 			);
 			path = TrackerCreation;
 			sourceTree = "<group>";
@@ -267,6 +281,7 @@
 				E7D037BB2DCF9B17007819A8 /* CategorySelectionViewController.swift in Sources */,
 				E7D037932DC8A9BB007819A8 /* Tracker.swift in Sources */,
 				E7D037B72DCF7095007819A8 /* ScheduleSelectionViewController.swift in Sources */,
+				E7C3A8CF2DE7428500096105 /* EmojisHandler.swift in Sources */,
 				E7D037B12DCF1E59007819A8 /* NewTrackerViewController.swift in Sources */,
 				E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */,
 				E7D037AA2DCD3292007819A8 /* TrackersDataStore.swift in Sources */,
@@ -285,6 +300,7 @@
 				E7D037A42DCA6DA8007819A8 /* TrackerCollectionViewCell.swift in Sources */,
 				E7D037112DC3B80E007819A8 /* SceneDelegate.swift in Sources */,
 				E7D037C12DD07A7D007819A8 /* TrackerCellViewModel.swift in Sources */,
+				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
