@@ -68,13 +68,14 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = LayoutConstants.backgroundColor
-        setUpTitleAndScrollView()
+        setUpTitle()
         setUpNameTextField()
         setUpCancelButton()
         setUpCreateButton()
         setUpSettingsTable()
         setUpEmojisCollectionView()
         setUpColorsCollectionView()
+        NSLayoutConstraint.activate(constraints)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -97,7 +98,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     // MARK: - Private Methods - Setup
     
-    private func setUpTitleAndScrollView() {
+    private func setUpTitle() {
         let title = UILabel()
         title.text = "Новый трекер"
         title.font = LayoutConstants.Title.font
@@ -106,7 +107,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         
         view.addSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                        constant: LayoutConstants.Title.topPadding)
@@ -139,7 +140,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         
         view.addSubview(nameTextField)
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             nameTextField.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                                constant: LayoutConstants.TextField.topPadding),
@@ -159,7 +160,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         
         view.addSubview(cancelButton)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             cancelButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                                                   constant: LayoutConstants.Buttons.lateralPadding),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
@@ -180,7 +181,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         
         view.addSubview(createButton)
         createButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             createButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
                                                   constant: -LayoutConstants.Buttons.lateralPadding),
             createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
@@ -206,7 +207,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         view.addSubview(settingsTable)
         settingsTable.translatesAutoresizingMaskIntoConstraints = false
         let tableHeight = (trackerIsRegular ? 2 : 1)*LayoutConstants.SettingsTable.rowHeight
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             settingsTable.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             settingsTable.widthAnchor.constraint(equalToConstant: LayoutConstants.SettingsTable.width),
             settingsTable.topAnchor.constraint(equalTo: nameTextField.bottomAnchor,
@@ -222,7 +223,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         emojiTitle.font = LayoutConstants.SelectionCollectionView.titleFont
         view.addSubview(emojiTitle)
         emojiTitle.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             emojiTitle.topAnchor.constraint(equalTo: settingsTable.bottomAnchor,
                                             constant: LayoutConstants.SelectionCollectionView.emojiTopSpacing),
             emojiTitle.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
@@ -231,7 +232,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         
         view.addSubview(emojisCollectionView)
         emojisCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             emojisCollectionView.topAnchor.constraint(equalTo: emojiTitle.bottomAnchor,
                                              constant: LayoutConstants.SelectionCollectionView.collectionViewTopSpacing),
             emojisCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
@@ -253,7 +254,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         colorTitle.font = LayoutConstants.SelectionCollectionView.titleFont
         view.addSubview(colorTitle)
         colorTitle.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             colorTitle.topAnchor.constraint(equalTo: emojisCollectionView.bottomAnchor,
                                             constant: LayoutConstants.SelectionCollectionView.colorTopSpacing),
             colorTitle.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
@@ -262,7 +263,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         
         view.addSubview(colorsCollectionView)
         colorsCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
+        constraints.append(contentsOf: [
             colorsCollectionView.topAnchor.constraint(equalTo: colorTitle.bottomAnchor,
                                              constant: LayoutConstants.SelectionCollectionView.collectionViewTopSpacing),
             colorsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
