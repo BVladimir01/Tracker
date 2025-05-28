@@ -39,6 +39,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     private let emojisHandler = EmojisHandler()
+    private let colorsHandler = ColorsHandler()
     
     private let nameTextField = UITextField()
     private let cancelButton = UIButton(type: .system)
@@ -73,6 +74,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         setUpCreateButton()
         setUpSettingsTable()
         setUpEmojisCollectionView()
+        setUpColorsCollectionView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -242,6 +244,37 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
                                       forCellWithReuseIdentifier: EmojisCollectionViewCell.reuseID)
         emojisCollectionView.delegate = emojisHandler
         emojisCollectionView.dataSource = emojisHandler
+    }
+    
+    private func setUpColorsCollectionView() {
+        let colorTitle = UILabel()
+        colorTitle.text = "Цвет"
+        colorTitle.textColor = LayoutConstants.SelectionCollectionView.titleColor
+        colorTitle.font = LayoutConstants.SelectionCollectionView.titleFont
+        view.addSubview(colorTitle)
+        colorTitle.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            colorTitle.topAnchor.constraint(equalTo: emojisCollectionView.bottomAnchor,
+                                            constant: LayoutConstants.SelectionCollectionView.colorTopSpacing),
+            colorTitle.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
+                                             constant: LayoutConstants.SelectionCollectionView.titleLeadingSpacing)
+        ])
+        
+        view.addSubview(colorsCollectionView)
+        colorsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            colorsCollectionView.topAnchor.constraint(equalTo: colorTitle.bottomAnchor,
+                                             constant: LayoutConstants.SelectionCollectionView.collectionViewTopSpacing),
+            colorsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                                                 constant: LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
+            colorsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                                                  constant: -LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
+            colorsCollectionView.heightAnchor.constraint(equalToConstant: LayoutConstants.SelectionCollectionView.collectionViewHeight)
+        ])
+        colorsCollectionView.register(ColorsCollectionViewCell.self,
+                                      forCellWithReuseIdentifier: ColorsCollectionViewCell.reuseID)
+        colorsCollectionView.delegate = colorsHandler
+        colorsCollectionView.dataSource = colorsHandler
     }
     
     // MARK: - Private Methods - Helpers
