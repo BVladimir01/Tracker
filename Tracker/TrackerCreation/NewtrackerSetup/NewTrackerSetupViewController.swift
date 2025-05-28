@@ -44,6 +44,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private let nameTextField = UITextField()
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
+    private let contentView = UIView()
     private let settingsTable = UITableView()
     private let emojisCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let colorsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -68,7 +69,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = LayoutConstants.backgroundColor
-        setUpTitle()
+        setUpTitleAndScrollView()
         setUpNameTextField()
         setUpCancelButton()
         setUpCreateButton()
@@ -98,7 +99,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     // MARK: - Private Methods - Setup
     
-    private func setUpTitle() {
+    private func setUpTitleAndScrollView() {
         let title = UILabel()
         title.text = "Новый трекер"
         title.font = LayoutConstants.Title.font
@@ -112,6 +113,28 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                        constant: LayoutConstants.Title.topPadding)
         ])
+        
+        let scrollView = UIScrollView()
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        constraints.append(contentsOf: [
+            scrollView.topAnchor.constraint(equalTo: title.bottomAnchor,
+                                            constant: LayoutConstants.ScrollView.topSpacing),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor,
+                                               constant: -LayoutConstants.ScrollView.bottomSpacing)
+        ])
+        scrollView.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        constraints.append(contentsOf: [
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+//        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     private func setUpNameTextField() {
@@ -138,11 +161,11 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         nameTextField.rightView = rightPaddingView
         nameTextField.rightViewMode = .always
         
-        view.addSubview(nameTextField)
+        contentView.addSubview(nameTextField)
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
-            nameTextField.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            nameTextField.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            nameTextField.topAnchor.constraint(equalTo: contentView.topAnchor,
                                                constant: LayoutConstants.TextField.topPadding),
             nameTextField.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.width),
             nameTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.height)
@@ -204,11 +227,11 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         settingsTable.separatorColor = LayoutConstants.SettingsTable.separatorColor
         settingsTable.register(UITableViewCell.self, forCellReuseIdentifier: settingsTableCellReuseID)
         
-        view.addSubview(settingsTable)
+        contentView.addSubview(settingsTable)
         settingsTable.translatesAutoresizingMaskIntoConstraints = false
         let tableHeight = (trackerIsRegular ? 2 : 1)*LayoutConstants.SettingsTable.rowHeight
         constraints.append(contentsOf: [
-            settingsTable.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            settingsTable.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             settingsTable.widthAnchor.constraint(equalToConstant: LayoutConstants.SettingsTable.width),
             settingsTable.topAnchor.constraint(equalTo: nameTextField.bottomAnchor,
                                        constant: LayoutConstants.SettingsTable.spacingToTextField),
@@ -221,23 +244,23 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         emojiTitle.text = "Emoji"
         emojiTitle.textColor = LayoutConstants.SelectionCollectionView.titleColor
         emojiTitle.font = LayoutConstants.SelectionCollectionView.titleFont
-        view.addSubview(emojiTitle)
+        contentView.addSubview(emojiTitle)
         emojiTitle.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
             emojiTitle.topAnchor.constraint(equalTo: settingsTable.bottomAnchor,
                                             constant: LayoutConstants.SelectionCollectionView.emojiTopSpacing),
-            emojiTitle.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
+            emojiTitle.leftAnchor.constraint(equalTo: contentView.leftAnchor,
                                              constant: LayoutConstants.SelectionCollectionView.titleLeadingSpacing)
         ])
         
-        view.addSubview(emojisCollectionView)
+        contentView.addSubview(emojisCollectionView)
         emojisCollectionView.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
             emojisCollectionView.topAnchor.constraint(equalTo: emojiTitle.bottomAnchor,
                                              constant: LayoutConstants.SelectionCollectionView.collectionViewTopSpacing),
-            emojisCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+            emojisCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
                                                  constant: LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
-            emojisCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+            emojisCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
                                                   constant: -LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
             emojisCollectionView.heightAnchor.constraint(equalToConstant: LayoutConstants.SelectionCollectionView.collectionViewHeight)
         ])
@@ -252,24 +275,25 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         colorTitle.text = "Цвет"
         colorTitle.textColor = LayoutConstants.SelectionCollectionView.titleColor
         colorTitle.font = LayoutConstants.SelectionCollectionView.titleFont
-        view.addSubview(colorTitle)
+        contentView.addSubview(colorTitle)
         colorTitle.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
             colorTitle.topAnchor.constraint(equalTo: emojisCollectionView.bottomAnchor,
                                             constant: LayoutConstants.SelectionCollectionView.colorTopSpacing),
-            colorTitle.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor,
+            colorTitle.leftAnchor.constraint(equalTo: contentView.leftAnchor,
                                              constant: LayoutConstants.SelectionCollectionView.titleLeadingSpacing)
         ])
         
-        view.addSubview(colorsCollectionView)
+        contentView.addSubview(colorsCollectionView)
         colorsCollectionView.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
             colorsCollectionView.topAnchor.constraint(equalTo: colorTitle.bottomAnchor,
                                              constant: LayoutConstants.SelectionCollectionView.collectionViewTopSpacing),
-            colorsCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+            colorsCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
                                                  constant: LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
-            colorsCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+            colorsCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
                                                   constant: -LayoutConstants.SelectionCollectionView.collectionViewLateralSpacing),
+            colorsCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             colorsCollectionView.heightAnchor.constraint(equalToConstant: LayoutConstants.SelectionCollectionView.collectionViewHeight)
         ])
         colorsCollectionView.register(ColorsCollectionViewCell.self,
@@ -437,7 +461,7 @@ extension NewTrackerSetupViewController {
             static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
             static let textColor: UIColor = .ypBlack
             static let cornerRadius: CGFloat = 16
-            static let topPadding: CGFloat = 87
+            static let topPadding: CGFloat = 24
             static let width: CGFloat = 343
             static let height: CGFloat = 75
             static let innerLeftPadding: CGFloat = 16
@@ -483,6 +507,11 @@ extension NewTrackerSetupViewController {
             static let collectionViewTopSpacing: CGFloat = 0
             static let collectionViewLateralSpacing: CGFloat = 0
             static let collectionViewHeight: CGFloat = 204
+        }
+        enum ScrollView {
+            static let topSpacing: CGFloat = 14
+            static let bottomSpacing: CGFloat = 16
+            
         }
     }
 }
