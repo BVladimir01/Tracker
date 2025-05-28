@@ -7,15 +7,19 @@
 
 import UIKit
 
+
 class TabBarController: UITabBarController {
+    
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewControllers = []
         view.backgroundColor = .ypWhite
         addViewControllers()
         setUpTabBar()
     }
+    
+    // MARK: - Private Methods
     
     private func addViewControllers() {
         let trackerNavController = setUpAndReturnTrackerNavStack()
@@ -24,8 +28,9 @@ class TabBarController: UITabBarController {
     }
     
     private func setUpAndReturnTrackerNavStack() -> UIViewController {
-        let trackerVC = TrackerViewController()
-        let trackerNavController = UINavigationController(rootViewController: trackerVC)
+        let trackersVC = TrackersListViewController()
+        trackersVC.dataStorage = TrackersDataStore.shared
+        let trackerNavController = UINavigationController(rootViewController: trackersVC)
         trackerNavController.navigationBar.prefersLargeTitles = true
         trackerNavController.tabBarItem = UITabBarItem(title: "Трекеры", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
         return trackerNavController
@@ -38,8 +43,6 @@ class TabBarController: UITabBarController {
         statsNavController.tabBarItem = UITabBarItem(title: "Статистика", image: .tabBarStatsItem.withTintColor(.ypBlue), selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
         return statsNavController
     }
-    
-    
 
     private func setUpTabBar() {
         let separatorHeight: CGFloat = 0.5
