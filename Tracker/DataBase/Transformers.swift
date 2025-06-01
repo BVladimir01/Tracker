@@ -36,15 +36,6 @@ final class RGBColorValueTransformer: SimpleCodableValueTransformer<RGBColorBoxe
 }
 
 
-@objc(ScheduleValueTransformer)
-final class ScheduleValueTransformer: SimpleCodableValueTransformer<ScheduleBoxedValue> {
-    static func register() {
-        ValueTransformer.setValueTransformer(RGBColorValueTransformer(),
-                                             forName: NSValueTransformerName(String(describing: ScheduleValueTransformer.self)))
-    }
-}
-
-
 enum TransformersRegistry {
     static func registerAll() {
         RGBColorValueTransformer.register()
