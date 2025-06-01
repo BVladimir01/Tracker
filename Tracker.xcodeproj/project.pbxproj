@@ -13,7 +13,6 @@
 		E7C3A8D52DE7439400096105 /* ColorsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D42DE7439400096105 /* ColorsHandler.swift */; };
 		E7C3A8EF2DE8203900096105 /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */; };
 		E7C3A8F12DE823F000096105 /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8F02DE823E100096105 /* Transformers.swift */; };
-		E7C3A9312DECA33200096105 /* StoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9302DECA32E00096105 /* StoreProtocol.swift */; };
 		E7C3A9332DECA35000096105 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9322DECA34D00096105 /* TrackerStore.swift */; };
 		E7C3A9352DECBA3100096105 /* BoxedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9342DECBA2D00096105 /* BoxedValue.swift */; };
 		E7D0370F2DC3B80E007819A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D0370E2DC3B80E007819A8 /* AppDelegate.swift */; };
@@ -49,7 +48,6 @@
 		E7C3A8D42DE7439400096105 /* ColorsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsHandler.swift; sourceTree = "<group>"; };
 		E7C3A8EE2DE8203900096105 /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E7C3A8F02DE823E100096105 /* Transformers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
-		E7C3A9302DECA32E00096105 /* StoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreProtocol.swift; sourceTree = "<group>"; };
 		E7C3A9322DECA34D00096105 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		E7C3A9342DECBA2D00096105 /* BoxedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxedValue.swift; sourceTree = "<group>"; };
 		E7D0370B2DC3B80E007819A8 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,7 +108,6 @@
 			children = (
 				E7C3A9342DECBA2D00096105 /* BoxedValue.swift */,
 				E7C3A9322DECA34D00096105 /* TrackerStore.swift */,
-				E7C3A9302DECA32E00096105 /* StoreProtocol.swift */,
 				E7C3A8F02DE823E100096105 /* Transformers.swift */,
 				E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */,
 			);
@@ -333,7 +330,6 @@
 				E7D037A42DCA6DA8007819A8 /* TrackerCollectionViewCell.swift in Sources */,
 				E7C3A8D32DE7439000096105 /* ColorsCollectionViewCell.swift in Sources */,
 				E7D037112DC3B80E007819A8 /* SceneDelegate.swift in Sources */,
-				E7C3A9312DECA33200096105 /* StoreProtocol.swift in Sources */,
 				E7D037C12DD07A7D007819A8 /* TrackerCellViewModel.swift in Sources */,
 				E7C3A9352DECBA3100096105 /* BoxedValue.swift in Sources */,
 				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
