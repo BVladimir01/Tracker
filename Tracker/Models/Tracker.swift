@@ -14,6 +14,7 @@ struct Tracker: Identifiable, Equatable, Hashable {
     let color: RGBColor
     let emoji: Character
     let schedule: Schedule
+    let category: TrackerCategory
     
     static func == (lhs: Tracker, rhs: Tracker) -> Bool {
         lhs.id == rhs.id

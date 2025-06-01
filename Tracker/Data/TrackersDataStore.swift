@@ -84,7 +84,7 @@ final class TrackersDataStore: TrackersDataSource {
     
     func addRecord(for trackerID: UUID, on date: Date) {
         // alter completedTrackers
-        completedTrackers.append(TrackerRecord(id: trackerID, date: date))
+        completedTrackers.append(TrackerRecord(trackerId: trackerID, date: date))
         // alter completedTrackersDict
         if completedTrackersDict[trackerID] == nil {
             completedTrackersDict[trackerID] = [date]
@@ -96,7 +96,7 @@ final class TrackersDataStore: TrackersDataSource {
     func removeRecord(for trackerID: UUID, on date: Date) {
         // alter completedTrackers
         completedTrackers.removeAll(where: { record in
-            record.id == trackerID && calendar.isDate(record.date, inSameDayAs: date)
+            record.trackerId == trackerID && calendar.isDate(record.date, inSameDayAs: date)
         })
         // alter completedTrackersDict
         completedTrackersDict[trackerID]?.removeAll(where: { calendar.isDate($0, inSameDayAs: date) })
