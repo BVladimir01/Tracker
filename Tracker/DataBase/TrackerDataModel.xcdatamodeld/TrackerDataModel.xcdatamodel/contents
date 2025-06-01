@@ -8,8 +8,8 @@
     <entity name="TrackerEntity" representedClassName="TrackerEntity" syncable="YES" codeGenerationType="class">
         <attribute name="emoji" attributeType="String"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="rgbColor" attributeType="Transformable" valueTransformerName="RGBColorValueTransformer"/>
-        <attribute name="schedule" attributeType="Transformable" valueTransformerName="ScheduleValueTransformer"/>
+        <attribute name="rgbColor" attributeType="Transformable" valueTransformerName="RGBColorValueTransformer" customClassName="RGBColorBoxedValue"/>
+        <attribute name="schedule" attributeType="Transformable" valueTransformerName="ScheduleValueTransformer" customClassName="ScheduleBoxedValue"/>
         <attribute name="title" attributeType="String"/>
         <relationship name="category" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCategoryEntity" inverseName="trackers" inverseEntity="TrackerCategoryEntity"/>
         <relationship name="records" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrackerRecordEntity" inverseName="tracker" inverseEntity="TrackerRecordEntity"/>

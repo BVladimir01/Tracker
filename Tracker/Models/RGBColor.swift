@@ -22,3 +22,6 @@ struct RGBColor: Codable {
     }
     
 }
+
+
+final class RGBColorBoxedValue: BoxedValue<RGBColor> { }

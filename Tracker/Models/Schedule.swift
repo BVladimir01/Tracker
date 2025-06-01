@@ -12,3 +12,6 @@ enum Schedule: Codable {
     case regular(Set<Weekday>)
     case irregular(Date)
 }
+
+
+final class ScheduleBoxedValue: BoxedValue<Schedule> { }

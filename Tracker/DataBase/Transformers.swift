@@ -28,7 +28,7 @@ class SimpleCodableValueTransformer<T: Codable>: ValueTransformer {
 
 
 @objc(RGBColorValueTransformer)
-final class RGBColorValueTransformer: SimpleCodableValueTransformer<RGBColor> {
+final class RGBColorValueTransformer: SimpleCodableValueTransformer<RGBColorBoxedValue> {
     static func register() {
         ValueTransformer.setValueTransformer(RGBColorValueTransformer(),
                                              forName: NSValueTransformerName(String(describing: RGBColorValueTransformer.self)))
@@ -37,7 +37,7 @@ final class RGBColorValueTransformer: SimpleCodableValueTransformer<RGBColor> {
 
 
 @objc(ScheduleValueTransformer)
-final class ScheduleValueTransformer: SimpleCodableValueTransformer<Schedule> {
+final class ScheduleValueTransformer: SimpleCodableValueTransformer<ScheduleBoxedValue> {
     static func register() {
         ValueTransformer.setValueTransformer(RGBColorValueTransformer(),
                                              forName: NSValueTransformerName(String(describing: ScheduleValueTransformer.self)))
