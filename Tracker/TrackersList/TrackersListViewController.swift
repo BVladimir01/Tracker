@@ -327,6 +327,18 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
 }
 
 
+extension TrackersListViewController: TrackerStoreDelegate {
+    func didUpdate(with update: TrackerStoreUpdate) {
+        let insertedItemIndexPaths = update.insertedItemIndexPaths
+        let insertedSections = update.insertedSections
+        collectionView.performBatchUpdates {
+            collectionView.insertSections(insertedSections)
+            collectionView.insertItems(at: Array(insertedItemIndexPaths))
+        }
+    }
+}
+
+
 // MARK: - LayoutConstants
 extension TrackersListViewController {
     private enum LayoutConstants {
