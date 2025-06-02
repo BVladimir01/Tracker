@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,5 +18,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    lazy var persistentContainer: NSPersistentContainer = {
+       let container = NSPersistentContainer(name: "TrackerDataModel")
+        container.loadPersistentStores { description, error in
+            if let error {
+                assertionFailure("AppDelegate: \(error.localizedDescription)")
+            }
+        }
+        return container
+    }()
 }
 
