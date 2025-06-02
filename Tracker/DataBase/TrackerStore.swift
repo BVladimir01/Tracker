@@ -7,13 +7,27 @@
 
 import CoreData
 
-final class TrackerStore {
+struct TrackerStoreUpdate {
+    let insertedItemIndexPaths: Set<IndexPath>
+    let insertedSections: IndexSet
+}
+
+protocol TrackerStoreDelegate {
+    func didUpdate(with update: TrackerStoreUpdate)
+}
+
+final class TrackerStore: NSObject {
     
     private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    private let delegate: TrackerStoreDelegate
     
-    init(context: NSManagedObjectContext) {
+    private var insertedSections: IndexSet?
+    private var insertedItemIndexPaths: Set<IndexPath>?
+    
+    init(context: NSManagedObjectContext, delegate: TrackerStoreDelegate) {
         self.context = context
+        self.delegate = delegate
     }
     
     func add(_ tracker: Tracker) throws {
@@ -85,5 +99,45 @@ final class TrackerStore {
     enum TrackerStoreError: Error {
         case categoryNotFount(title: String)
         case unexpected(message: String)
+    }
+}
+
+
+extension TrackerStore: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        insertedItemIndexPaths = Set()
+        insertedSections = IndexSet()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        guard let insertedItemIndexPaths, let insertedSections else {
+            assertionFailure("TrackerStore.controllerDidChangeContent: inserted indices are nil")
+            return
+        }
+        let update = TrackerStoreUpdate(insertedItemIndexPaths: insertedItemIndexPaths,
+                                        insertedSections: insertedSections)
+        delegate.didUpdate(with: update)
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange sectionInfo: any NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            insertedSections?.insert(sectionIndex)
+        default:
+            break
+        }
+    }
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let newIndexPath else {
+                assertionFailure("TrackerStore.controller: Failed to get newIndexPath for data change")
+                return
+            }
+            insertedItemIndexPaths?.insert(newIndexPath)
+        default:
+            break
+        }
     }
 }

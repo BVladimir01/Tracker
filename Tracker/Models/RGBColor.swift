@@ -24,4 +24,4 @@ struct RGBColor: Codable {
 }
 
 
-final class RGBColorBoxedValue: BoxedValue<RGBColor> { }
+public final class RGBColorBoxedValue: BoxedValue<RGBColor> { }
