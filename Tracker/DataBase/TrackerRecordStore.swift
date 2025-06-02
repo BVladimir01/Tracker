@@ -33,8 +33,8 @@ final class TrackerRecordStore {
         try context.save()
     }
     
-    func remove(_ record: TrackerRecord) throws {
-        let recordEntity = try trackerRecordEntity(with: record.id)
+    func removeRecord(with recordID: UUID) throws {
+        let recordEntity = try trackerRecordEntity(with: recordID)
         context.delete(recordEntity)
         try context.save()
     }
