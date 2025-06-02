@@ -160,7 +160,6 @@ final class CategoryCreationViewController: UIViewController {
         }
         let newCategory = TrackerCategory(id: UUID(), title: categoryTitle)
         do {
-            try categoryStore.add(newCategory)
             delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
         } catch {
             assertionFailure("CategoryCreationViewController.doneButtonTapped: error \(error)")

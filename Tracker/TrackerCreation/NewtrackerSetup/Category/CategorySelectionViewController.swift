@@ -85,6 +85,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         do {
             try categoryStore.add(category)
             let selectedRow = try categoryStore.indexPath(for: category).row
+            self.selectedRow = selectedRow
             table.reloadRows(at: [IndexPath(row: selectedRow, section: 0)], with: .automatic)
             table.selectRow(at: IndexPath(row: selectedRow, section: 0), animated: false, scrollPosition: .none)
             self.selectedRow = selectedRow
