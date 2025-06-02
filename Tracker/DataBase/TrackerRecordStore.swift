@@ -26,17 +26,28 @@ final class TrackerRecordStore {
     
     func add(_ record: TrackerRecord) throws {
         let recordEntity = TrackerRecordEntity(context: context)
-        recordEntity.tracker = try trackerEntity(with: record.trackerID)
+        recordEntity.tracker = try trackerEntity(withID: record.trackerID)
         recordEntity.date = record.date
         recordEntity.id = record.id
         context.insert(recordEntity)
         try context.save()
     }
     
-    func removeRecord(with recordID: UUID) throws {
-        let recordEntity = try trackerRecordEntity(with: recordID)
-        context.delete(recordEntity)
-        try context.save()
+    func removeRecord(fromTrackerWithID trackerID: UUID, on date: Date) throws {
+        let recordEntities = try trackerRecordEntities(on: date)
+        for recordEntity in recordEntities {
+            guard let trackerEntity = recordEntity.tracker else {
+                throw TrackerRecordStoreError.recordPropertiesNotInitialized(forObjectID: recordEntity.objectID)
+            }
+            guard let id = trackerEntity.id else {
+                throw TrackerRecordStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
+            }
+            if trackerID == id {
+                context.delete(recordEntity)
+                try context.save()
+            }
+        }
+        throw TrackerStoreError.unexpected(message: "TrackerRecordStore: failed to remove record")
     }
     
     func daysDone(of tracker: Tracker) throws -> Int {
@@ -85,33 +96,47 @@ final class TrackerRecordStore {
                            dayEnd as NSDate)
     }
     
-    private func trackerEntity(with id: UUID) throws -> TrackerEntity {
+    private func trackerEntity(withID id: UUID) throws -> TrackerEntity {
         let request = TrackerEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let results = try context.fetch(request)
         if let trackerEntity = results.first {
             return trackerEntity
         } else {
-            throw TrackerRecordStoreError.TrackerNotFound(id: id)
+            throw TrackerRecordStoreError.trackerNotFound(id: id)
         }
     }
     
-    private func trackerRecordEntity(with id: UUID) throws -> TrackerRecordEntity {
+    private func trackerEntities(on date: Date) throws -> [TrackerEntity] {
+        let request = TrackerEntity.fetchRequest()
+        request.predicate = try fetchRequestPredicate(for: date)
+        return try context.fetch(request)
+    }
+    
+    private func trackerRecordEntity(withID id: UUID) throws -> TrackerRecordEntity {
         let request = TrackerRecordEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id = %@", id as NSUUID)
-        let results = try context.fetch(request)
-        if let recordEntity = results.first {
+        let recordEntities = try context.fetch(request)
+        if let recordEntity = recordEntities.first {
             return recordEntity
         } else {
-            throw TrackerRecordStoreError.TrackerRecordNotFound(id: id)
+            throw TrackerRecordStoreError.trackerRecordNotFound(id: id)
         }
+    }
+    
+    private func trackerRecordEntities(on date: Date) throws -> [TrackerRecordEntity] {
+        let request = TrackerRecordEntity.fetchRequest()
+        request.predicate = try fetchRequestPredicate(for: date)
+        return try context.fetch(request)
     }
     
 }
 
 enum TrackerRecordStoreError: Error {
     case unknown(message: String)
-    case TrackerNotFound(id: UUID)
-    case TrackerRecordNotFound(id: UUID)
+    case trackerNotFound(id: UUID)
+    case trackerRecordNotFound(id: UUID)
     case fetchedResultsControllerIsNil
+    case trackerPropertiesNotInitialized(forObjectID: NSManagedObjectID)
+    case recordPropertiesNotInitialized(forObjectID: NSManagedObjectID)
 }
