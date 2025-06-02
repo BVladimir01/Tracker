@@ -19,6 +19,10 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 
 final class TrackerCategoryStore: NSObject {
     
+    var numberOfRows: Int {
+        fetchedResultsController.sections?.first?.numberOfObjects ?? 0
+    }
+    
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
     weak private var delegate:TrackerCategoryStoreDelegate?
@@ -33,16 +37,55 @@ final class TrackerCategoryStore: NSObject {
                                                             managedObjectContext: context,
                                                             sectionNameKeyPath: nil,
                                                             cacheName: nil)
-        try resultsController.performFetch()
         fetchedResultsController = resultsController
+        super.init()
+        resultsController.delegate = self
+        try resultsController.performFetch()
     }
     
     func add(_ category: TrackerCategory) throws {
         let categoryEntity = TrackerCategoryEntity(context: context)
         categoryEntity.title = category.title
+        categoryEntity.id = category.id
         try context.save()
     }
     
+    func indexPath(for category: TrackerCategory) throws -> IndexPath {
+        let entity = try trackerCategoryEntity(from: category)
+        guard let indexPath = fetchedResultsController.indexPath(forObject: entity) else {
+            throw TrackerCategoryStoreError.categoryEntityDoesNotExist(forID: category.id)
+        }
+        return indexPath
+    }
+    
+    func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory {
+        let categoryEntity = fetchedResultsController.object(at: indexPath)
+        return try trackerCategory(from: categoryEntity)
+    }
+    
+    private func trackerCategory(from categoryEntity: TrackerCategoryEntity) throws -> TrackerCategory {
+        guard let id = categoryEntity.id, let title = categoryEntity.title else {
+            throw TrackerCategoryStoreError.propertyIsNil(ofObjectWithID: categoryEntity.objectID)
+        }
+        return TrackerCategory(id: id, title: title)
+    }
+    
+    private func trackerCategoryEntity(from category: TrackerCategory) throws -> TrackerCategoryEntity {
+        let request = TrackerCategoryEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
+        let categoryEntities = try context.fetch(request)
+        guard let entity = categoryEntities.first else {
+            throw TrackerCategoryStoreError.categoryEntityDoesNotExist(forID: category.id)
+        }
+        return entity
+    }
+    
+}
+
+
+enum TrackerCategoryStoreError: Error {
+    case propertyIsNil(ofObjectWithID: NSManagedObjectID)
+    case categoryEntityDoesNotExist(forID: UUID)
 }
 
 
