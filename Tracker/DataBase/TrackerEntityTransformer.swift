@@ -33,7 +33,12 @@ struct TrackerEntityTransformer {
                 guard let newWeekday = Weekday(rawValue: weekdayRawValue) else {
                     throw TrackerStoreError.unexpected(message: "TrackerStore.schedule: Failed to create weekday from raw value")
                 }
-                weekdayRawValue >>= 1
+                if weekdaysMask & 1 != 0 {
+                    weekdays.insert(newWeekday)
+                }
+                weekdays.insert(newWeekday)
+                weekdayRawValue += 1
+                weekdaysMask >>= 1
             }
             if weekdays.isEmpty {
                 throw TrackerStoreError.unexpected(message: "Tracker.schedule: Weekdays are empty")
