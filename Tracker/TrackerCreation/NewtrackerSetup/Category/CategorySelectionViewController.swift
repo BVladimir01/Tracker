@@ -17,12 +17,11 @@ protocol CategorySelectionViewControllerDelegate: AnyObject {
 // MARK: - CategorySelectionViewController
 final class CategorySelectionViewController: UIViewController, CategoryCreationViewControllerDelegate {
     
-    // MARK: - Internal Properties
-    
-    var dataStorage: TrackersDataSource!
-    weak var delegate: CategorySelectionViewControllerDelegate?
-    
     // MARK: - Private Properties
+    
+    private weak var delegate: CategorySelectionViewControllerDelegate?
+    private let categoryStore: TrackerCategoryStore
+    private var selectedRow: Int? = nil
     
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
@@ -31,13 +30,28 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     private let cellReuseID = "checkmarkCell"
     
     private var shouldDisplayStub: Bool {
-        dataStorage.trackerCategories.isEmpty
+        categoryStore.numberOfRows == 0
     }
     private var tableShouldScroll: Bool {
         table.contentSize.height > LayoutConstants.Table.maxHeight
     }
     
-    private var selectedCategory: TrackerCategory?
+    init(delegate: CategorySelectionViewControllerDelegate?, categoryStore: TrackerCategoryStore, initialCategory: TrackerCategory?) {
+        self.delegate = delegate
+        self.categoryStore = categoryStore
+        if let initialCategory {
+            do {
+                selectedRow = try categoryStore.indexPath(for: initialCategory).row
+            } catch {
+                assertionFailure("CategorySelectionViewController.init: error \(error)")
+            }
+        }
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init not implemented")
+    }
     
     // MARK: - Lifecycle
     
@@ -53,23 +67,25 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
+        guard let selectedRow else {
+            return
+        }
+        do {
+            let selectedCategory = try categoryStore.trackerCategory(at: IndexPath(row: selectedRow, section: 0))
+            delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
+        } catch {
+            assertionFailure("CategorySelectionViewController.viewWillDisappear: error \(error)")
+        }
     }
     
     // MARK: - Internal Methods
     
-    func setInitialCategory(to category: TrackerCategory?) {
-        selectedCategory = category
-    }
-    
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
-        table.insertRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0)],
-                         with: .automatic)
-        if dataStorage.trackerCategories.count >= 2 {
-            table.reloadRows(at: [IndexPath(row: dataStorage.trackerCategories.count - 2, section: 0)],
-                             with: .none)
+        do {
+            try categoryStore.add(category)
+        } catch {
+            assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: error \(error)")
         }
-        tableView(table, didSelectRowAt: IndexPath(row: dataStorage.trackerCategories.count - 1, section: 0))
         updateStubViewState()
         updateTableViewState()
         vc.dismiss(animated: true)
@@ -186,7 +202,6 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     private func addButtonTapped() {
         // TODO: - Implement button tap
         let vc = CategoryCreationViewController()
-        vc.dataStorage = dataStorage
         vc.delegate = self
         present(vc, animated: true)
     }
@@ -198,11 +213,17 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
 extension CategorySelectionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        dataStorage.trackerCategories.count
+        categoryStore.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let category = dataStorage.trackerCategories[indexPath.row]
+        let category: TrackerCategory
+        do {
+            category = try categoryStore.trackerCategory(at: indexPath)
+        } catch {
+            assertionFailure("CategorySelectionViewController.tableView: error \(error)")
+            return UITableViewCell()
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
         let cellIsFirst = indexPath.row == 0
         let cellIsLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
@@ -210,7 +231,7 @@ extension CategorySelectionViewController: UITableViewDataSource {
         cell.textLabel?.text = category.title
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
-        cell.accessoryType = (category == selectedCategory) ? .checkmark : .none
+        cell.accessoryType = (indexPath.row == selectedRow) ? .checkmark : .none
         cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
         cell.layer.masksToBounds = true
         switch (cellIsFirst, cellIsLast) {
@@ -237,24 +258,13 @@ extension CategorySelectionViewController: UITableViewDataSource {
 extension CategorySelectionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let oldSelectedRow: Int?
-        let newSelectedRow = indexPath.row
-        if let selectedCategory,
-            let idOfSelectedCategory = dataStorage.trackerCategories.firstIndex(of: selectedCategory) {
-            oldSelectedRow = idOfSelectedCategory
-        } else {
-            oldSelectedRow = nil
+        var updatedRows: [IndexPath] = []
+        if let oldSelectedRow = selectedRow {
+            updatedRows.append(IndexPath(row: oldSelectedRow, section: 0))
         }
-        if newSelectedRow == oldSelectedRow {
-            selectedCategory = nil
-        } else {
-            selectedCategory = dataStorage.trackerCategories[newSelectedRow]
-        }
-        if let oldSelectedRow {
-            tableView.reloadRows(at: [IndexPath(row: oldSelectedRow, section: 0)], with: .none)
-        }
-        tableView.reloadRows(at: [IndexPath(row: newSelectedRow, section: 0)], with: .none)
-        tableView.deselectRow(at: IndexPath(row: newSelectedRow, section: 0), animated: false)
+        updatedRows.append(indexPath)
+        tableView.reloadRows(at: updatedRows, with: .none)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
 }
