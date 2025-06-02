@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: NewTrackerSetupViewControllerDelegate
 protocol NewTrackerSetupViewControllerDelegate: AnyObject {
-    func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController)
+    func newTrackerSetupViewController(_ vc: UIViewController, DidCreateTracker tracker: Tracker)
     func newTrackerSetupViewControllerDidCancelCreation(_ vc: UIViewController)
 }
 
@@ -18,14 +18,12 @@ protocol NewTrackerSetupViewControllerDelegate: AnyObject {
 // MARK: - NewTrackerSetupViewController
 final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionViewControllerDelegate, CategorySelectionViewControllerDelegate, EmojisHandlerDelegate, ColorsHandlerDelegate {
     
-    // MARK: - Internal Properties
-    
-    var trackerIsRegular = true
-    var dataStorage: TrackersDataSource!
-    var selectedDate: Date?
-    weak var delegate: NewTrackerSetupViewControllerDelegate?
-    
     // MARK: - Private Properties
+    
+    private var trackerIsRegular: Bool
+    private var categoryStore: TrackerCategoryStore
+    private var selectedDate: Date
+    private weak var delegate: NewTrackerSetupViewControllerDelegate?
     
     private var trackerCategory: TrackerCategory? {
         didSet {
@@ -74,6 +72,20 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         } else {
             return false
         }
+    }
+    
+    // MARK: - Initializers
+    
+    init(trackerIsRegular: Bool, categoryStore: TrackerCategoryStore, selectedDate: Date, delegate: NewTrackerSetupViewControllerDelegate?) {
+        self.trackerIsRegular = trackerIsRegular
+        self.categoryStore = categoryStore
+        self.selectedDate = selectedDate
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init not implemented")
     }
     
     // MARK: - Lifecycle
@@ -351,26 +363,18 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get tracker category")
             return
         }
-        guard let selectedDate else {
-            assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to get date for irregular tracker")
-            return
-        }
         guard let emoji , let rgbColor = color?.rgbColor else {
             assertionFailure("NewTrackerSetupViewController.createButtonTapped: Failed to unwrap color or emoji")
             return
         }
         let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(selectedDate)
-        let tracker = Tracker(id: UUID(), title: trackerTitle, color: rgbColor, emoji: Character(emoji), schedule: schedule)
-        dataStorage.add(tracker: tracker, for: trackerCategory)
-        delegate?.newTrackerSetupViewControllerDidCreateTracker(self)
+        let tracker = Tracker(id: UUID(), title: trackerTitle, color: rgbColor, emoji: Character(emoji), schedule: schedule, categoryID: trackerCategory.id)
+        delegate?.newTrackerSetupViewController(self, DidCreateTracker: tracker)
     }
     
     private func chooseCategoryTapped() {
         nameTextField.resignFirstResponder()
         let vc = CategorySelectionViewController()
-        vc.delegate = self
-        vc.dataStorage = dataStorage
-        vc.setInitialCategory(to: trackerCategory)
         present(vc, animated: true)
     }
     
