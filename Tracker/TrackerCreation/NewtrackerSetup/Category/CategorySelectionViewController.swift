@@ -21,7 +21,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     
     private weak var delegate: CategorySelectionViewControllerDelegate?
     private let categoryStore: TrackerCategoryStore
-    private var selectedRow: Int? = nil
+    private var selectedCategory: TrackerCategory?
     
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
@@ -39,13 +39,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     init(delegate: CategorySelectionViewControllerDelegate, categoryStore: TrackerCategoryStore, initialCategory: TrackerCategory?) {
         self.delegate = delegate
         self.categoryStore = categoryStore
-        if let initialCategory {
-            do {
-                selectedRow = try categoryStore.indexPath(for: initialCategory).row
-            } catch {
-                assertionFailure("CategorySelectionViewController.init: error \(error)")
-            }
-        }
+        selectedCategory = initialCategory
         super.init(nibName: nil, bundle: nil)
         categoryStore.delegate = self
     }
@@ -68,15 +62,10 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        guard let selectedRow else {
+        guard let selectedCategory else {
             return
         }
-        do {
-            let selectedCategory = try categoryStore.trackerCategory(at: IndexPath(row: selectedRow, section: 0))
-            delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
-        } catch {
-            assertionFailure("CategorySelectionViewController.viewWillDisappear: error \(error)")
-        }
+        delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
     }
     
     // MARK: - Internal Methods
@@ -84,11 +73,16 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
         do {
             try categoryStore.add(category)
-            let selectedRow = try categoryStore.indexPath(for: category).row
-            self.selectedRow = selectedRow
-            table.reloadRows(at: [IndexPath(row: selectedRow, section: 0)], with: .automatic)
-            table.selectRow(at: IndexPath(row: selectedRow, section: 0), animated: false, scrollPosition: .none)
-            self.selectedRow = selectedRow
+            let newSelectedRow = try categoryStore.indexPath(for: category).row
+            let previousRow = newSelectedRow - 1
+            let nextRow = newSelectedRow + 1
+            tableView(table, didSelectRowAt: IndexPath(row: newSelectedRow, section: 0))
+            if previousRow >= 0 {
+                table.reloadRows(at: [IndexPath(row: previousRow, section: 0)], with: .none)
+            }
+            if nextRow <= table.numberOfRows(inSection: 0) - 1 {
+                table.reloadRows(at: [IndexPath(row: nextRow, section: 0)], with: .none)
+            }
         } catch {
             assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: error \(error)")
         }
@@ -222,7 +216,13 @@ extension CategorySelectionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let category: TrackerCategory
+        let selectedRow: Int?
         do {
+            if let selectedCategory {
+                selectedRow = try categoryStore.indexPath(for: selectedCategory).row
+            } else {
+                selectedRow = nil
+            }
             category = try categoryStore.trackerCategory(at: indexPath)
         } catch {
             assertionFailure("CategorySelectionViewController.tableView: error \(error)")
@@ -235,7 +235,11 @@ extension CategorySelectionViewController: UITableViewDataSource {
         cell.textLabel?.text = category.title
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
-        cell.accessoryType = (indexPath.row == selectedRow) ? .checkmark : .none
+        if let selectedRow {
+            cell.accessoryType = (indexPath.row == selectedRow) ? .checkmark : .none
+        } else {
+            cell.accessoryType = .none
+        }
         cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
         cell.layer.masksToBounds = true
         switch (cellIsFirst, cellIsLast) {
@@ -263,10 +267,16 @@ extension CategorySelectionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var updatedRows: [IndexPath] = []
-        if let oldSelectedRow = selectedRow {
-            updatedRows.append(IndexPath(row: oldSelectedRow, section: 0))
-        }
         updatedRows.append(indexPath)
+        do {
+            if let oldSelectedCategory = selectedCategory {
+                let oldSelectedRow = try categoryStore.indexPath(for: oldSelectedCategory).row
+                updatedRows.append(IndexPath(row: oldSelectedRow, section: 0))
+            }
+            selectedCategory = try categoryStore.trackerCategory(at: indexPath)
+        } catch {
+            assertionFailure("CategorySelectionViewController.tableView: error \(error)")
+        }
         tableView.reloadRows(at: updatedRows, with: .none)
         tableView.deselectRow(at: indexPath, animated: false)
     }
@@ -278,7 +288,7 @@ extension CategorySelectionViewController: TrackerCategoryStoreDelegate {
     func didUpdate(with update: TrackerCategoryUpdate) {
         let insertedIndices = update.insertedIndices
         table.performBatchUpdates {
-            table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .automatic)
+            table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .none)
         }
     }
     
