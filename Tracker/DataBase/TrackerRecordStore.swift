@@ -8,14 +8,21 @@
 import CoreData
 
 
+// MARK: - TrackerRecordStore
 final class TrackerRecordStore {
     
-    var context: NSManagedObjectContext
-    var fetchedResultsController: NSFetchedResultsController<TrackerRecordEntity>?
+    // MARK: - Private Properties
+    
+    private var context: NSManagedObjectContext
+    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordEntity>?
+    
+    // MARK: - Initializers
     
     init(context: NSManagedObjectContext) {
         self.context = context
     }
+    
+    // MARK: - Internal Methods
     
     func add(_ record: TrackerRecord) throws {
         let recordEntity = TrackerRecordEntity(context: context)
@@ -31,6 +38,15 @@ final class TrackerRecordStore {
         context.delete(recordEntity)
         try context.save()
     }
+    
+    func daysDone(of tracker: Tracker) throws -> Int {
+        let request = TrackerEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
+        let requestResult = try context.fetch(request)
+        return requestResult.count
+    }
+    
+    // MARK: - Private Methods
     
     private func fetchedResultsController(for date: Date?) throws -> NSFetchedResultsController<TrackerRecordEntity> {
         let request = TrackerRecordEntity.fetchRequest()
