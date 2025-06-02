@@ -23,7 +23,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     private let recordStore: TrackerRecordStore
     
     private var shouldShowStubView: Bool {
-        dataStorage.trackerCategories(on: selectedDate).isEmpty
+        trackerStore.
     }
     private var selectedDate: Date {
         datePicker.date

@@ -16,17 +16,42 @@ protocol TrackerStoreDelegate: AnyObject {
     func didUpdate(with update: TrackerStoreUpdate)
 }
 
+// MARK: - TrackerStore
 final class TrackerStore: NSObject {
+    
+    // MARK: Internal Properties
+    
+    var numberOfSections: Int {
+        fetchedResultsController?.sections?.count ?? 0
+    }
+    
+    // MARK: - Private Properties
     
     private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
-    weak private var delegate: TrackerStoreDelegate?
+    private weak var delegate: TrackerStoreDelegate?
+    private let transformer = TrackerEntityTransformer()
     
     private var insertedSections: IndexSet?
     private var insertedItemIndexPaths: Set<IndexPath>?
     
+    // MARK: - Initializers
+    
     init(context: NSManagedObjectContext) {
         self.context = context
+    }
+    
+    // MARK: - Internal Properties
+    
+    func numberOfItems(in section: Int) -> Int {
+        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
+    }
+    
+    func tracker(at indexPath: IndexPath) throws -> Tracker {
+        guard let trackerEntity = fetchedResultsController?.object(at: indexPath) else {
+            throw TrackerStoreError.trackerNotFound(atIndexPath: indexPath)
+        }
+        return try transformer.tracker(from: trackerEntity)
     }
     
     func add(_ tracker: Tracker) throws {
@@ -34,9 +59,15 @@ final class TrackerStore: NSObject {
         try context.save()
     }
     
+    func set(date: Date) throws {
+        fetchedResultsController = try fetchedResultsController(for: date)
+    }
+    
+    // MARK: - Private Properties
+    
     private func trackerEntity(from tracker: Tracker) throws -> TrackerEntity {
         let trackerEntity = TrackerEntity(context: context)
-        trackerEntity.category = try categoryEntity(for: tracker)
+        trackerEntity.category = try categoryEntity(with: tracker.categoryID)
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
         trackerEntity.rgbColor = RGBColorBoxedValue(value: tracker.color)
@@ -52,25 +83,31 @@ final class TrackerStore: NSObject {
         return trackerEntity
     }
     
-    private func categoryEntity(for tracker: Tracker) throws -> TrackerCategoryEntity {
+    private func categoryEntity(with id: UUID) throws -> TrackerCategoryEntity {
         let request = TrackerCategoryEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryEntity.title), tracker.category.title)
+        request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let requestResult = try context.fetch(request)
         if let trackerCategoryEntity = requestResult.first {
             return trackerCategoryEntity
         } else {
-            throw TrackerStoreError.categoryNotFount(title: "\(tracker.category.title)")
+            throw TrackerStoreError.categoryNotFound(withID: id)
         }
     }
     
     private func fetchedResultsController(for date: Date, sortBy sort: NSSortDescriptor? = nil) throws -> NSFetchedResultsController<TrackerEntity> {
         let fetchRequest = TrackerEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerEntity.title, ascending: true)]
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \TrackerEntity.category?.title, ascending: true),
+            NSSortDescriptor(keyPath: \TrackerEntity.title, ascending: true)
+        ]
         fetchRequest.predicate = try fetchRequestPredicate(for: date)
-        return NSFetchedResultsController(fetchRequest: fetchRequest,
+        let resultController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                           managedObjectContext: context,
                                           sectionNameKeyPath: #keyPath(TrackerEntity.category),
                                           cacheName: nil)
+        resultController.delegate = self
+        try resultController.performFetch()
+        return  resultController
     }
     
     private func fetchRequestPredicate(for date: Date) throws -> NSCompoundPredicate {
@@ -94,14 +131,21 @@ final class TrackerStore: NSObject {
             result | 1 << weekday.rawValue
         }
     }
-    
-    enum TrackerStoreError: Error {
-        case categoryNotFount(title: String)
-        case unexpected(message: String)
-    }
+
 }
 
 
+// MARK: - TrackerStoreError
+enum TrackerStoreError: Error {
+    case categoryNotFound(withID: UUID)
+    case trackerNotFound(withID: UUID)
+    case trackerNotFound(atIndexPath: IndexPath)
+    case trackerPropertiesNotInitialized(forObjectId: NSManagedObjectID)
+    case unexpected(message: String)
+}
+
+
+// MARK: - NSFetchedResultsControllerDelegate
 extension TrackerStore: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
