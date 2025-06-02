@@ -272,6 +272,18 @@ extension CategorySelectionViewController: UITableViewDelegate {
 }
 
 
+extension CategorySelectionViewController: TrackerCategoryStoreDelegate {
+    func didUpdate(with update: TrackerCategoryUpdate) {
+        let insertedIndices = update.insertedIndices
+        table.performBatchUpdates {
+            table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .automatic)
+        }
+    }
+    
+    
+}
+
+
 // MARK: - LayoutConstants
 extension CategorySelectionViewController {
     enum LayoutConstants {
