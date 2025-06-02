@@ -23,7 +23,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     private let recordStore: TrackerRecordStore
     
     private var shouldShowStubView: Bool {
-        trackerStore.numberOfSections != 0
+        trackerStore.numberOfSections == 0
     }
     
     private var selectedDate: Date {
