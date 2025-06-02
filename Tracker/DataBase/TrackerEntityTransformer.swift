@@ -13,7 +13,7 @@ struct TrackerEntityTransformer {
                 let color = trackerEntity.rgbColor?.value,
                 let emoji = trackerEntity.emoji,
               let categoryID = trackerEntity.category?.id else {
-            throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectId: trackerEntity.objectID)
+            throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
         }
         let schedule = try schedule(of: trackerEntity)
         return Tracker(id: id,
@@ -25,7 +25,6 @@ struct TrackerEntityTransformer {
     }
     
     private func schedule(of trackerEntity: TrackerEntity) throws -> Schedule {
-        let schedule: Schedule
         if trackerEntity.isRegular {
             var weekdaysMask = trackerEntity.weekdaysMask
             var weekdays = Set<Weekday>()
@@ -42,7 +41,7 @@ struct TrackerEntityTransformer {
             return .regular(weekdays)
         } else {
             guard let date = trackerEntity.date else {
-                throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectId: trackerEntity.objectID)
+                throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
             }
             return .irregular(date)
         }

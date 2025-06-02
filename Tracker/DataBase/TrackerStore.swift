@@ -69,7 +69,7 @@ final class TrackerStore: NSObject {
     }
     
     func add(_ tracker: Tracker) throws {
-        let trackerEntity = try self.trackerEntity(from: tracker)
+        _ = try self.trackerEntity(from: tracker)
         try context.save()
     }
     

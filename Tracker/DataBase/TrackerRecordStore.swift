@@ -63,6 +63,7 @@ final class TrackerRecordStore {
                                         trackerID as NSUUID)
         let dayPredicate = try fetchRequestPredicate(for: date)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
+        request.predicate = compoundPredicate
         let requestResult = try context.fetch(request)
         return !requestResult.isEmpty
     }

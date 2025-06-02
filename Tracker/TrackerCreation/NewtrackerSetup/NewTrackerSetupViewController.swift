@@ -368,13 +368,20 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             return
         }
         let schedule: Schedule = trackerIsRegular ? .regular(weekdays) : .irregular(selectedDate)
-        let tracker = Tracker(id: UUID(), title: trackerTitle, color: rgbColor, emoji: Character(emoji), schedule: schedule, categoryID: trackerCategory.id)
+        let tracker = Tracker(id: UUID(),
+                              title: trackerTitle,
+                              color: rgbColor,
+                              emoji: Character(emoji),
+                              schedule: schedule,
+                              categoryID: trackerCategory.id)
         delegate?.newTrackerSetupViewController(self, DidCreateTracker: tracker)
     }
     
     private func chooseCategoryTapped() {
         nameTextField.resignFirstResponder()
-        let vc = CategorySelectionViewController()
+        let vc = CategorySelectionViewController(delegate: self,
+                                                 categoryStore: categoryStore,
+                                                 initialCategory: trackerCategory)
         present(vc, animated: true)
     }
     

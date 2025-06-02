@@ -311,7 +311,6 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
             return
         }
-        let isCompleted: Bool
         do {
             let tracker = try trackerStore.tracker(at: indexPath)
             let trackerID = tracker.id
