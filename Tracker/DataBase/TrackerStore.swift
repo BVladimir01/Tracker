@@ -43,14 +43,28 @@ final class TrackerStore: NSObject {
     
     // MARK: - Internal Properties
     
-    func numberOfItems(in section: Int) -> Int {
-        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
+    func numberOfItemsInSection(_ section: Int) throws -> Int {
+        guard let fetchedResultsController else {
+            throw TrackerStoreError.fetchedResultsControllerIsNil
+        }
+        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
+    }
+    
+    func sectionTitle(of section: Int) throws -> String {
+        guard let fetchedResultsController else {
+            throw TrackerStoreError.fetchedResultsControllerIsNil
+        }
+        guard let sectionInfo = fetchedResultsController.sections?[section] else {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.sectionTitle: Failed to get sections")
+        }
+        return sectionInfo.name
     }
     
     func tracker(at indexPath: IndexPath) throws -> Tracker {
-        guard let trackerEntity = fetchedResultsController?.object(at: indexPath) else {
-            throw TrackerStoreError.trackerNotFound(atIndexPath: indexPath)
+        guard let fetchedResultsController else {
+            throw TrackerStoreError.fetchedResultsControllerIsNil
         }
+        let trackerEntity = fetchedResultsController.object(at: indexPath)
         return try transformer.tracker(from: trackerEntity)
     }
     
@@ -116,9 +130,9 @@ final class TrackerStore: NSObject {
         ]
         fetchRequest.predicate = try fetchRequestPredicate(for: date)
         let resultController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                          managedObjectContext: context,
-                                          sectionNameKeyPath: #keyPath(TrackerEntity.category),
-                                          cacheName: nil)
+                                                          managedObjectContext: context,
+                                                          sectionNameKeyPath: #keyPath(TrackerEntity.category.title),
+                                                          cacheName: nil)
         resultController.delegate = self
         try resultController.performFetch()
         return  resultController
@@ -156,6 +170,7 @@ enum TrackerStoreError: Error {
     case trackerNotFound(atIndexPath: IndexPath)
     case trackerPropertiesNotInitialized(forObjectID: NSManagedObjectID)
     case recordPropertiesNotInitialized(forObjectID: NSManagedObjectID)
+    case fetchedResultsControllerIsNil
     case unexpected(message: String)
 }
 
