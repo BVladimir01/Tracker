@@ -19,7 +19,7 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 
 final class TrackerCategoryStore: NSObject {
     
-    weak var delegate:TrackerCategoryStoreDelegate?
+    weak var delegate: TrackerCategoryStoreDelegate?
     
     var numberOfRows: Int {
         fetchedResultsController.sections?.first?.numberOfObjects ?? 0
@@ -101,12 +101,8 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
             assertionFailure("TrackerCategoryStore.controllerDidChangeContent: changed indices are nil on update")
             return
         }
-        guard let delegate else {
-            assertionFailure("TrackerCategoryStore.controllerDidChangeContent: delegate is nil")
-            return
-        }
         let update = TrackerCategoryUpdate(insertedIndices: insertedIndices)
-        delegate.didUpdate(with: update)
+        delegate?.didUpdate(with: update)
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {

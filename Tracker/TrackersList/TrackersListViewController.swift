@@ -38,6 +38,11 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         self.recordStore = trackerDataStores.trackerRecordStore
         super.init(nibName: nil, bundle: nil)
         trackerStore.delegate = self
+        do {
+            try trackerStore.set(date: datePicker.date)
+        } catch {
+            assertionFailure("TrackersListViewController.init: error \(error)")
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -58,8 +63,11 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     // MARK: - Internal Methods
     
     func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
-        collectionView.reloadData()
-        updateStubViewState()
+        do {
+            try trackerStore.add(tracker)
+        } catch {
+            assertionFailure("TrackersListViewController.newTrackerViewController: error \(error)")
+        }
         vc.dismiss(animated: true)
     }
     
@@ -199,15 +207,12 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     }
     
     @objc private func dateChanged() {
-        // I do not think, new page should be shown
-        // with batch updates, since there are too many changes.
-        // Some categories may even disappear, since their trackers
-        // should not be shown on this day. Thus reloading whole view
         do {
             try trackerStore.set(date: selectedDate)
         } catch {
             assertionFailure("TrackersListViewController.dateChanged: error \(error)")
         }
+        collectionView.reloadData()
         updateStubViewState()
     }
     

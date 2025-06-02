@@ -53,7 +53,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: - Internal Methods
     
-    func newTrackerSetupViewController(_ vc: UIViewController, DidCreateTracker tracker: Tracker) {
+    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
         vc.dismiss(animated: true)
         delegate?.newTrackerViewController(self, didCreateTracker: tracker)
     }

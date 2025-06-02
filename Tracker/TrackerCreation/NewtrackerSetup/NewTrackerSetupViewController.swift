@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: NewTrackerSetupViewControllerDelegate
 protocol NewTrackerSetupViewControllerDelegate: AnyObject {
-    func newTrackerSetupViewController(_ vc: UIViewController, DidCreateTracker tracker: Tracker)
+    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker)
     func newTrackerSetupViewControllerDidCancelCreation(_ vc: UIViewController)
 }
 
@@ -374,7 +374,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
                               emoji: Character(emoji),
                               schedule: schedule,
                               categoryID: trackerCategory.id)
-        delegate?.newTrackerSetupViewController(self, DidCreateTracker: tracker)
+        delegate?.newTrackerSetupViewController(self, didCreateTracker: tracker)
     }
     
     private func chooseCategoryTapped() {
