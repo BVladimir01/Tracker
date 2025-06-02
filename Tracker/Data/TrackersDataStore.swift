@@ -96,7 +96,7 @@ final class TrackersDataStore: TrackersDataSource {
     func removeRecord(for trackerID: UUID, on date: Date) {
         // alter completedTrackers
         completedTrackers.removeAll(where: { record in
-            record.trackerId == trackerID && calendar.isDate(record.date, inSameDayAs: date)
+            record.trackerID == trackerID && calendar.isDate(record.date, inSameDayAs: date)
         })
         // alter completedTrackersDict
         completedTrackersDict[trackerID]?.removeAll(where: { calendar.isDate($0, inSameDayAs: date) })

@@ -26,7 +26,7 @@ final class TrackerRecordStore {
     
     func add(_ record: TrackerRecord) throws {
         let recordEntity = TrackerRecordEntity(context: context)
-        recordEntity.tracker = try trackerEntity(with: record.trackerId)
+        recordEntity.tracker = try trackerEntity(with: record.trackerID)
         recordEntity.date = record.date
         recordEntity.id = record.id
         context.insert(recordEntity)
@@ -44,6 +44,16 @@ final class TrackerRecordStore {
         request.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
         let requestResult = try context.fetch(request)
         return requestResult.count
+    }
+    
+    func isCompleted(tracker: Tracker, on date: Date) throws -> Bool {
+        let request = TrackerEntity.fetchRequest()
+        let idPredicate = NSPredicate(format: "id == %@",
+                                        tracker.id as NSUUID)
+        let dayPredicate = try fetchRequestPredicate(for: date)
+        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
+        let requestResult = try context.fetch(request)
+        return !requestResult.isEmpty
     }
     
     // MARK: - Private Methods
@@ -97,9 +107,11 @@ final class TrackerRecordStore {
         }
     }
     
-    enum TrackerRecordStoreError: Error {
-        case unknown(message: String)
-        case TrackerNotFound(id: UUID)
-        case TrackerRecordNotFound(id: UUID)
-    }
+}
+
+enum TrackerRecordStoreError: Error {
+    case unknown(message: String)
+    case TrackerNotFound(id: UUID)
+    case TrackerRecordNotFound(id: UUID)
+    case fetchedResultsControllerIsNil
 }
