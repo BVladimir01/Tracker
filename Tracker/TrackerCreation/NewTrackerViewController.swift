@@ -31,7 +31,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: Initializers
     
-    init(delegate: NewTrackerViewControllerDelegate? = nil, selectedDate: Date, categoryStore: TrackerCategoryStore) {
+    init(delegate: NewTrackerViewControllerDelegate, selectedDate: Date, categoryStore: TrackerCategoryStore) {
         self.delegate = delegate
         self.selectedDate = selectedDate
         self.categoryStore = categoryStore

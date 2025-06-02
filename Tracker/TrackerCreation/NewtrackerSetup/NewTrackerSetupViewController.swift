@@ -76,7 +76,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     // MARK: - Initializers
     
-    init(trackerIsRegular: Bool, categoryStore: TrackerCategoryStore, selectedDate: Date, delegate: NewTrackerSetupViewControllerDelegate?) {
+    init(trackerIsRegular: Bool, categoryStore: TrackerCategoryStore, selectedDate: Date, delegate: NewTrackerSetupViewControllerDelegate) {
         self.trackerIsRegular = trackerIsRegular
         self.categoryStore = categoryStore
         self.selectedDate = selectedDate

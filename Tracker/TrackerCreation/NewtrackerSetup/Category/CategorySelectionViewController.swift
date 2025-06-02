@@ -36,7 +36,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         table.contentSize.height > LayoutConstants.Table.maxHeight
     }
     
-    init(delegate: CategorySelectionViewControllerDelegate?, categoryStore: TrackerCategoryStore, initialCategory: TrackerCategory?) {
+    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: TrackerCategoryStore, initialCategory: TrackerCategory?) {
         self.delegate = delegate
         self.categoryStore = categoryStore
         if let initialCategory {
