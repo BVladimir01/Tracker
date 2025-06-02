@@ -17,13 +17,11 @@ protocol NewTrackerViewControllerDelegate: AnyObject {
 // MARK: - NewTracerViewController
 final class NewTrackerViewController: UIViewController, NewTrackerSetupViewControllerDelegate {
     
-    // MARK: - Internal Properties
-    
-    weak var delegate: NewTrackerViewControllerDelegate?
-    var dataStorage: TrackersDataSource!
-    var selectedDate: Date?
-    
     // MARK: - Private Properties
+    
+    private weak var delegate: NewTrackerViewControllerDelegate?
+    private var selectedDate: Date
+    private var categoryStore: TrackerCategoryStore
     
     private let regularTrackerButton = UIButton(type: .system)
     private let irregularTrackerButton = UIButton(type: .system)
@@ -31,6 +29,18 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     private let irregularTrackerTitle = "Нерегулярное событие"
     private let regularTrackerTitle = "Привычка"
     
+    // MARK: Initializers
+    
+    init(delegate: NewTrackerViewControllerDelegate? = nil, selectedDate: Date, categoryStore: TrackerCategoryStore) {
+        self.delegate = delegate
+        self.selectedDate = selectedDate
+        self.categoryStore = categoryStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init not implemented")
+    }
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -129,10 +139,6 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
             return
         }
         let newTrackerSetupVC = NewTrackerSetupViewController()
-        newTrackerSetupVC.trackerIsRegular = createRegularTracker
-        newTrackerSetupVC.dataStorage = dataStorage
-        newTrackerSetupVC.delegate = self
-        newTrackerSetupVC.selectedDate = selectedDate
         present(newTrackerSetupVC, animated: true)
     }
     

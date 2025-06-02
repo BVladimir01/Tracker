@@ -95,7 +95,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E70556012DE6F55500A43EF6 /* NewtrackerSetup */ = {
+		E70556012DE6F55500A43EF6 /* NewTrackerSetup */ = {
 			isa = PBXGroup;
 			children = (
 				E7C3A8D42DE7439400096105 /* ColorsHandler.swift */,
@@ -106,7 +106,7 @@
 				E7D037C52DD0FE86007819A8 /* Schedule */,
 				E7D037C42DD0FE76007819A8 /* Category */,
 			);
-			path = NewtrackerSetup;
+			path = NewTrackerSetup;
 			sourceTree = "<group>";
 		};
 		E7C3A8E92DE81EEA00096105 /* DataBase */ = {
@@ -211,7 +211,7 @@
 			isa = PBXGroup;
 			children = (
 				E7D037B02DCF1E59007819A8 /* NewTrackerViewController.swift */,
-				E70556012DE6F55500A43EF6 /* NewtrackerSetup */,
+				E70556012DE6F55500A43EF6 /* NewTrackerSetup */,
 			);
 			path = TrackerCreation;
 			sourceTree = "<group>";

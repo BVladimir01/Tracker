@@ -193,9 +193,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     // MARK: - Private Methods - User Intentions
 
     @objc private func addTrackerTapped() {
-        let creatorVC = NewTrackerViewController()
-        creatorVC.delegate = self
-        creatorVC.selectedDate = selectedDate
+        let creatorVC = NewTrackerViewController(delegate: self, selectedDate: selectedDate, categoryStore: categoryStore)
         present(creatorVC, animated: true)
     }
     
