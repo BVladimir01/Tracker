@@ -12,11 +12,18 @@ import CoreData
 final class TrackerCategoryStore {
     
     private let context: NSManagedObjectContext
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
+    private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
     
     init(context: NSManagedObjectContext) throws {
         self.context = context
-        self.fetchedResultsController = try initializeFetchedResultsController()
+        let request = TrackerCategoryEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryEntity.title, ascending: true)]
+        let resultsController =  NSFetchedResultsController(fetchRequest: request,
+                                                            managedObjectContext: context,
+                                                            sectionNameKeyPath: nil,
+                                                            cacheName: nil)
+        try resultsController.performFetch()
+        fetchedResultsController = resultsController
     }
     
     func add(_ category: TrackerCategory) throws {
@@ -25,14 +32,4 @@ final class TrackerCategoryStore {
         try context.save()
     }
     
-    private func initializeFetchedResultsController() throws -> NSFetchedResultsController<TrackerCategoryEntity> {
-        let request = TrackerCategoryEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryEntity.title, ascending: true)]
-        let resultsController =  NSFetchedResultsController(fetchRequest: request,
-                                                            managedObjectContext: context,
-                                                            sectionNameKeyPath: nil,
-                                                            cacheName: nil)
-        try resultsController.performFetch()
-        return resultsController
-    }
 }
