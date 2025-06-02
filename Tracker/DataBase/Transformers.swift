@@ -39,6 +39,5 @@ final class RGBColorValueTransformer: SimpleCodableValueTransformer<RGBColorBoxe
 enum TransformersRegistry {
     static func registerAll() {
         RGBColorValueTransformer.register()
-        ScheduleValueTransformer.register()
     }
 }

@@ -14,7 +14,6 @@
 		E7C3A8EF2DE8203900096105 /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */; };
 		E7C3A8F12DE823F000096105 /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8F02DE823E100096105 /* Transformers.swift */; };
 		E7C3A9332DECA35000096105 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9322DECA34D00096105 /* TrackerStore.swift */; };
-		E7C3A9352DECBA3100096105 /* BoxedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9342DECBA2D00096105 /* BoxedValue.swift */; };
 		E7C3A93A2DECEAAE00096105 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */; };
 		E7C3A93C2DED62D700096105 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */; };
 		E7C3A9422DED9AEE00096105 /* TrackerDataStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9412DED9AD300096105 /* TrackerDataStores.swift */; };
@@ -52,7 +51,6 @@
 		E7C3A8EE2DE8203900096105 /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E7C3A8F02DE823E100096105 /* Transformers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
 		E7C3A9322DECA34D00096105 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
-		E7C3A9342DECBA2D00096105 /* BoxedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxedValue.swift; sourceTree = "<group>"; };
 		E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		E7C3A9412DED9AD300096105 /* TrackerDataStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataStores.swift; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 				E7C3A9322DECA34D00096105 /* TrackerStore.swift */,
 				E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */,
 				E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */,
-				E7C3A9342DECBA2D00096105 /* BoxedValue.swift */,
 				E7C3A8F02DE823E100096105 /* Transformers.swift */,
 				E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */,
 			);
@@ -343,7 +340,6 @@
 				E7D037112DC3B80E007819A8 /* SceneDelegate.swift in Sources */,
 				E7C3A9422DED9AEE00096105 /* TrackerDataStores.swift in Sources */,
 				E7D037C12DD07A7D007819A8 /* TrackerCellViewModel.swift in Sources */,
-				E7C3A9352DECBA3100096105 /* BoxedValue.swift in Sources */,
 				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
