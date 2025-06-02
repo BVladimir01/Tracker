@@ -23,8 +23,9 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     private let recordStore: TrackerRecordStore
     
     private var shouldShowStubView: Bool {
-        trackerStore.
+        trackerStore.numberOfSections != 0
     }
+    
     private var selectedDate: Date {
         datePicker.date
     }
@@ -153,7 +154,13 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         let recordText: String
         let daysEnding = ["дней", "день", "дня", "дня", "дня",
                           "дней", "дней", "дней", "дней", "дней"]
-        let daysDone = dataStorage.daysDone(of: tracker.id)
+        let daysDone: Int
+        do {
+            daysDone = try recordStore.daysDone(of: tracker)
+        } catch {
+            assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
+            daysDone = 0
+        }
         switch tracker.schedule {
         case .regular:
             if (10..<20).contains(daysDone) {
@@ -169,7 +176,13 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
                 recordText = "Выполнен"
             }
         }
-        let isCompleted = dataStorage.isCompleted(trackerID: tracker.id, on: selectedDate)
+        let isCompleted: Bool
+        do {
+            isCompleted = try recordStore.isCompleted(trackerID: tracker.id, on: selectedDate)
+        } catch {
+            assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
+            isCompleted = false
+        }
         return TrackerCellViewModel(title: tracker.title,
                                     color: UIColor.from(RGBColor: tracker.color),
                                     emoji: tracker.emoji,
@@ -182,7 +195,6 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     @objc private func addTrackerTapped() {
         let creatorVC = NewTrackerViewController()
         creatorVC.delegate = self
-        creatorVC.dataStorage = dataStorage
         creatorVC.selectedDate = selectedDate
         present(creatorVC, animated: true)
     }
@@ -192,7 +204,11 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         // with batch updates, since there are too many changes.
         // Some categories may even disappear, since their trackers
         // should not be shown on this day. Thus reloading whole view
-        collectionView.reloadData()
+        do {
+            try trackerStore.set(date: selectedDate)
+        } catch {
+            assertionFailure("TrackersListViewController.dateChanged: error \(error)")
+        }
         updateStubViewState()
     }
     
@@ -203,11 +219,16 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
 extension TrackersListViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        dataStorage.trackerCategories(on: selectedDate).count
+        trackerStore.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataStorage.trackerCategories(on: selectedDate)[section].trackers.count
+        do {
+            return try trackerStore.numberOfItemsInSection(section)
+        } catch {
+            assertionFailure("TrackerViewController.collectionView: error \(error)")
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, 
@@ -216,14 +237,18 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue or typecast cell")
             return UICollectionViewCell()
         }
-        let categories = dataStorage.trackerCategories(on: selectedDate)
-        let trackerToShow = categories[indexPath.section].trackers[indexPath.item]
         let buttonEnabled = !(selectedDate > Date())
-        cell.configure(with: trackerCellViewModel(from: trackerToShow))
-        cell.set(trackerID: trackerToShow.id)
-        cell.setRecordButton(enabled: buttonEnabled)
-        cell.delegate = self
-        return cell
+        do {
+            let tracker = try trackerStore.tracker(at: indexPath)
+            cell.configure(with: trackerCellViewModel(from: tracker))
+            cell.setTrackerID(tracker.id)
+            cell.setRecordButton(enabled: buttonEnabled)
+            cell.delegate = self
+            return cell
+        } catch {
+            assertionFailure("TrackerViewController.collectionView: error \(error)")
+            return UICollectionViewCell()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -231,8 +256,12 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return   UICollectionReusableView()
         }
-        let categories = dataStorage.trackerCategories(on: selectedDate)
-        view.changeTitleText(categories[indexPath.section].title)
+        do {
+            let title = try trackerStore.sectionTitle(atSectionIndex: indexPath.section)
+            view.changeTitleText(title)
+        } catch {
+            assertionFailure("TrackerViewController.collectionView: error \(error)")
+        }
         return view
     }
     
@@ -260,8 +289,14 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let dummyView = CategoryTitleView()
-        let text = dataStorage.trackerCategories(on: selectedDate)[section].title
-        dummyView.changeTitleText(text)
+        let title: String
+        do {
+            title = try trackerStore.sectionTitle(atSectionIndex: section)
+        } catch {
+            assertionFailure("TrackerViewController.collectionView: error \(error)")
+            title = ""
+        }
+        dummyView.changeTitleText(title)
         let width = collectionView.frame.width - 2*LayoutConstants.CollectionView.headerLateralPadding
         let targetSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
         return dummyView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
@@ -274,22 +309,24 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersListViewController: TrackerCollectionViewCellDelegate {
     
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
-        guard let trackerID = cell.trackerID else {
-            assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get tracker id of the cell")
-            return
-        }
         guard let indexPath = collectionView.indexPath(for: cell) else {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
             return
         }
-        if dataStorage.isCompleted(trackerID: trackerID, on: selectedDate) {
-            dataStorage.removeRecord(for: trackerID, on: selectedDate)
-        } else {
-            dataStorage.addRecord(for: trackerID, on: selectedDate)
+        let isCompleted: Bool
+        do {
+            let tracker = try trackerStore.tracker(at: indexPath)
+            let trackerID = tracker.id
+            if try recordStore.isCompleted(trackerID: trackerID, on: selectedDate) {
+                try recordStore.add(TrackerRecord(id: UUID(), trackerID: trackerID, date: selectedDate))
+            } else {
+                try recordStore.removeRecord(fromTrackerWithID: trackerID, on: selectedDate)
+            }
+        } catch {
+            assertionFailure("TrackerViewController.collectionView: error \(error)")
+            return
         }
-        collectionView.reloadItems(at: [indexPath])
     }
-    
 }
 
 
