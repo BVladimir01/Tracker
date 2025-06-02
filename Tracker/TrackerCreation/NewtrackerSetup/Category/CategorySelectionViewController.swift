@@ -83,6 +83,10 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
         do {
             try categoryStore.add(category)
+            let selectedRow = try categoryStore.indexPath(for: category).row
+            table.reloadRows(at: [IndexPath(row: selectedRow, section: 0)], with: .automatic)
+            table.selectRow(at: IndexPath(row: selectedRow, section: 0), animated: false, scrollPosition: .none)
+            self.selectedRow = selectedRow
         } catch {
             assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: error \(error)")
         }
@@ -200,9 +204,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     
     @objc
     private func addButtonTapped() {
-        // TODO: - Implement button tap
-        let vc = CategoryCreationViewController()
-        vc.delegate = self
+        let vc = CategoryCreationViewController(categoryStore: categoryStore, delegate: self)
         present(vc, animated: true)
     }
     
