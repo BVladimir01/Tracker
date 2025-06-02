@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: NewTrackerViewControllerDelegate
 protocol NewTrackerViewControllerDelegate: AnyObject {
-    func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController)
+    func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker)
     func newTrackerViewControllerDidCancelCreation(_ vc: UIViewController)
 }
 
@@ -53,9 +53,9 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: - Internal Methods
     
-    func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController) {
+    func newTrackerSetupViewController(_ vc: UIViewController, DidCreateTracker tracker: Tracker) {
         vc.dismiss(animated: true)
-        delegate?.newTrackerViewControllerDidCreateTracker(self)
+        delegate?.newTrackerViewController(self, didCreateTracker: tracker)
     }
     
     func newTrackerSetupViewControllerDidCancelCreation(_ vc: UIViewController) {
@@ -138,7 +138,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
             assertionFailure("NewTrackerViewController.didTapCreate: unknown title")
             return
         }
-        let newTrackerSetupVC = NewTrackerSetupViewController()
+        let newTrackerSetupVC = NewTrackerSetupViewController(trackerIsRegular: createRegularTracker, categoryStore: categoryStore, selectedDate: selectedDate, delegate: self)
         present(newTrackerSetupVC, animated: true)
     }
     

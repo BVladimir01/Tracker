@@ -56,7 +56,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     
     // MARK: - Internal Methods
     
-    func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController) {
+    func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
         collectionView.reloadData()
         updateStubViewState()
         vc.dismiss(animated: true)
