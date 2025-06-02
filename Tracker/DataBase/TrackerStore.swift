@@ -21,6 +21,8 @@ final class TrackerStore: NSObject {
     
     // MARK: Internal Properties
     
+    weak var delegate: TrackerStoreDelegate?
+    
     var numberOfSections: Int {
         fetchedResultsController?.sections?.count ?? 0
     }
@@ -29,7 +31,6 @@ final class TrackerStore: NSObject {
     
     private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
-    private weak var delegate: TrackerStoreDelegate?
     private let transformer = TrackerEntityTransformer()
     
     private var insertedSections: IndexSet?

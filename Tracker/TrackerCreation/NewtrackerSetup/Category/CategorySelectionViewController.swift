@@ -47,6 +47,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
             }
         }
         super.init(nibName: nil, bundle: nil)
+        categoryStore.delegate = self
     }
     
     required init?(coder: NSCoder) {

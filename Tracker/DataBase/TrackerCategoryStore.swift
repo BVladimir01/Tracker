@@ -19,13 +19,14 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 
 final class TrackerCategoryStore: NSObject {
     
+    weak var delegate:TrackerCategoryStoreDelegate?
+    
     var numberOfRows: Int {
         fetchedResultsController.sections?.first?.numberOfObjects ?? 0
     }
     
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
-    weak private var delegate:TrackerCategoryStoreDelegate?
     
     private var insertedIndices: IndexSet?
     

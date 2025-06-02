@@ -37,6 +37,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         self.categoryStore = trackerDataStores.trackerCategoryStore
         self.recordStore = trackerDataStores.trackerRecordStore
         super.init(nibName: nil, bundle: nil)
+        trackerStore.delegate = self
     }
     
     required init?(coder: NSCoder) {
