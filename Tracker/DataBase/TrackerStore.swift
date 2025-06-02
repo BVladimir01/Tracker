@@ -50,11 +50,11 @@ final class TrackerStore: NSObject {
         return fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
-    func sectionTitle(of section: Int) throws -> String {
+    func sectionTitle(atSectionIndex index: Int) throws -> String {
         guard let fetchedResultsController else {
             throw TrackerStoreError.fetchedResultsControllerIsNil
         }
-        guard let sectionInfo = fetchedResultsController.sections?[section] else {
+        guard let sectionInfo = fetchedResultsController.sections?[index] else {
             throw TrackerStoreError.unexpected(message: "TrackerStore.sectionTitle: Failed to get sections")
         }
         return sectionInfo.name
