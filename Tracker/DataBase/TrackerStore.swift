@@ -12,7 +12,7 @@ struct TrackerStoreUpdate {
     let insertedSections: IndexSet
 }
 
-protocol TrackerStoreDelegate {
+protocol TrackerStoreDelegate: AnyObject {
     func didUpdate(with update: TrackerStoreUpdate)
 }
 
@@ -20,7 +20,7 @@ final class TrackerStore: NSObject {
     
     private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
-    private let delegate: TrackerStoreDelegate
+    weak private var delegate: TrackerStoreDelegate?
     
     private var insertedSections: IndexSet?
     private var insertedItemIndexPaths: Set<IndexPath>?
@@ -112,7 +112,11 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         guard let insertedItemIndexPaths, let insertedSections else {
-            assertionFailure("TrackerStore.controllerDidChangeContent: inserted indices are nil")
+            assertionFailure("TrackerStore.controllerDidChangeContent: Changed indices are nil on update")
+            return
+        }
+        guard let delegate else {
+            assertionFailure("TrackerStore.controllerDidChangeContent: delegate is nil")
             return
         }
         let update = TrackerStoreUpdate(insertedItemIndexPaths: insertedItemIndexPaths,

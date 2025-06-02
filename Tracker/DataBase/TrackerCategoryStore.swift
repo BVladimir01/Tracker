@@ -13,7 +13,7 @@ struct TrackerCategoryUpdate {
     let insertedIndices: IndexSet
 }
 
-protocol TrackerCategoryStoreDelegate {
+protocol TrackerCategoryStoreDelegate: AnyObject {
     func didUpdate(with update: TrackerCategoryUpdate)
 }
 
@@ -21,7 +21,7 @@ final class TrackerCategoryStore: NSObject {
     
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
-    private let delegate:TrackerCategoryStoreDelegate
+    weak private var delegate:TrackerCategoryStoreDelegate?
     
     private var insertedIndices: IndexSet?
     
@@ -56,6 +56,10 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         guard let insertedIndices else {
             assertionFailure("TrackerCategoryStore.controllerDidChangeContent: changed indices are nil on update")
+            return
+        }
+        guard let delegate else {
+            assertionFailure("TrackerCategoryStore.controllerDidChangeContent: delegate is nil")
             return
         }
         let update = TrackerCategoryUpdate(insertedIndices: insertedIndices)
