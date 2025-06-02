@@ -10,7 +10,18 @@ import UIKit
 
 class TabBarController: UITabBarController {
     
+    let stores: TrackerDataStores
+    
     // MARK: - Lifecycle
+    
+    init(stores: TrackerDataStores) {
+        self.stores = stores
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Not Implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +39,7 @@ class TabBarController: UITabBarController {
     }
     
     private func setUpAndReturnTrackerNavStack() -> UIViewController {
-        let trackersVC = TrackersListViewController()
-        trackersVC.dataStorage = TrackersDataStore.shared
+        let trackersVC = TrackersListViewController(trackerDataStores: stores)
         let trackerNavController = UINavigationController(rootViewController: trackersVC)
         trackerNavController.navigationBar.prefersLargeTitles = true
         trackerNavController.tabBarItem = UITabBarItem(title: "Трекеры", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))

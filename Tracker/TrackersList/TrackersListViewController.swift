@@ -11,18 +11,16 @@ import UIKit
 // MARK: - TrackersListViewController
 final class TrackersListViewController: UIViewController, NewTrackerViewControllerDelegate {
     
-    // MARK: - Internal Properties
-    
-    // isn't implicit unwrap conventional solution here?
-    // if it is nil, the app SHOULD crash
-    var dataStorage: TrackersDataSource!
-    
     // MARK: - Private Properties
 
     private let collectionView = UICollectionView(frame: .zero,
                                                   collectionViewLayout: UICollectionViewFlowLayout())
     private let stubView = UIView()
     private let datePicker = UIDatePicker()
+    
+    private let trackerStore: TrackerStore
+    private let categoryStore: TrackerCategoryStore
+    private let recordStore: TrackerRecordStore
     
     private var shouldShowStubView: Bool {
         dataStorage.trackerCategories(on: selectedDate).isEmpty
@@ -32,6 +30,17 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     }
     
     // MARK: - Lifecycle
+    
+    init(trackerDataStores: TrackerDataStores) {
+        self.trackerStore = trackerDataStores.trackerStore
+        self.categoryStore = trackerDataStores.trackerCategoryStore
+        self.recordStore = trackerDataStores.trackerRecordStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("not implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
