@@ -46,10 +46,10 @@ final class TrackerRecordStore {
         return requestResult.count
     }
     
-    func isCompleted(tracker: Tracker, on date: Date) throws -> Bool {
+    func isCompleted(trackerID: UUID, on date: Date) throws -> Bool {
         let request = TrackerEntity.fetchRequest()
         let idPredicate = NSPredicate(format: "id == %@",
-                                        tracker.id as NSUUID)
+                                        trackerID as NSUUID)
         let dayPredicate = try fetchRequestPredicate(for: date)
         let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
         let requestResult = try context.fetch(request)
