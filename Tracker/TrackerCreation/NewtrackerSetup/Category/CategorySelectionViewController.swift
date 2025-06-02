@@ -196,6 +196,30 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         table.isScrollEnabled = tableShouldScroll
     }
     
+    private func configureCell(_ cell: UITableViewCell, with viewModel: CategorySelectionCellViewModel) {
+        cell.backgroundColor = viewModel.backgroundColor
+        cell.textLabel?.text = viewModel.text
+        cell.textLabel?.font = viewModel.textFont
+        cell.textLabel?.textColor = viewModel.textColor
+        cell.accessoryType = viewModel.isSelected ? .checkmark : .none
+        cell.layer.cornerRadius = viewModel.cornerRadius
+        cell.layer.masksToBounds = true
+        switch (viewModel.isFirst, viewModel.isLast) {
+        case (true, true):
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        case (true, false):
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        case (false, true):
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        case (false, false):
+            cell.layer.masksToBounds = false
+            cell.layer.cornerRadius = 0
+        }
+        cell.selectedBackgroundView?.layer.masksToBounds = true
+        cell.selectedBackgroundView?.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+    }
+    
     // MARK: - Private Methods - Intentions
     
     @objc
@@ -229,33 +253,23 @@ extension CategorySelectionViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
-        let cellIsFirst = indexPath.row == 0
         let cellIsLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
-        cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
-        cell.textLabel?.text = category.title
-        cell.textLabel?.font = LayoutConstants.Table.cellTextFont
-        cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
-        if let selectedRow {
-            cell.accessoryType = (indexPath.row == selectedRow) ? .checkmark : .none
+        let cellIsSelected: Bool
+        if let selectedRow, selectedRow == indexPath.row {
+            cellIsSelected = true
         } else {
-            cell.accessoryType = .none
+            cellIsSelected = false
         }
-        cell.layer.cornerRadius = LayoutConstants.Table.cornerRadius
-        cell.layer.masksToBounds = true
-        switch (cellIsFirst, cellIsLast) {
-        case (true, true):
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        case (true, false):
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case (false, true):
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        case (false, false):
-            cell.layer.masksToBounds = false
-            cell.layer.cornerRadius = 0
-        }
-        cell.selectedBackgroundView?.layer.masksToBounds = true
-        cell.selectedBackgroundView?.layer.cornerRadius = LayoutConstants.Table.cornerRadius
+        let viewModel = CategorySelectionCellViewModel(isFirst: indexPath.row == 0,
+                                                       isLast: cellIsLast,
+                                                       isSelected: cellIsSelected,
+                                                       text: category.title,
+                                                       textFont: LayoutConstants.Table.cellTextFont,
+                                                       textColor: LayoutConstants.Table.cellTextColor,
+                                                       cornerRadius: LayoutConstants.Table.cornerRadius,
+                                                       backgroundColor: LayoutConstants.Table.cellBackgroundColor
+                                                       )
+        configureCell(cell, with: viewModel)
         return cell
     }
     
@@ -291,8 +305,6 @@ extension CategorySelectionViewController: TrackerCategoryStoreDelegate {
             table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .none)
         }
     }
-    
-    
 }
 
 
