@@ -25,9 +25,8 @@ final class TrackerStore: NSObject {
     private var insertedSections: IndexSet?
     private var insertedItemIndexPaths: Set<IndexPath>?
     
-    init(context: NSManagedObjectContext, delegate: TrackerStoreDelegate) {
+    init(context: NSManagedObjectContext) {
         self.context = context
-        self.delegate = delegate
     }
     
     func add(_ tracker: Tracker) throws {

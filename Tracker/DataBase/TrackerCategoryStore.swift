@@ -25,9 +25,8 @@ final class TrackerCategoryStore: NSObject {
     
     private var insertedIndices: IndexSet?
     
-    init(context: NSManagedObjectContext, delegate: TrackerCategoryStoreDelegate) throws {
+    init(context: NSManagedObjectContext) throws {
         self.context = context
-        self.delegate = delegate
         let request = TrackerCategoryEntity.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryEntity.title, ascending: true)]
         let resultsController =  NSFetchedResultsController(fetchRequest: request,
