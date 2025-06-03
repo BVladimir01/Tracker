@@ -90,7 +90,7 @@ final class TrackerStore: NSObject {
     }
     
     func indexPath(for tracker: Tracker) throws -> IndexPath? {
-        guard let entity = try fetchTrackerEntity(ofTrackerWithID: tracker.id) else {
+        guard let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else {
             return nil
         }
         return fetchedResultsController.indexPath(forObject: entity)
@@ -106,7 +106,7 @@ final class TrackerStore: NSObject {
         colorEntity.green = tracker.color.green
         colorEntity.alpha = tracker.color.alpha
         trackerEntity.color = colorEntity
-        trackerEntity.category = try fetchCategoryEntity(ofCategoryWithID: tracker.categoryID)
+        trackerEntity.category = try fetchCategoryEntity(forCategoryWithID: tracker.categoryID)
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
         trackerEntity.title = tracker.title
@@ -121,7 +121,7 @@ final class TrackerStore: NSObject {
         return trackerEntity
     }
     
-    private func fetchTrackerEntity(ofTrackerWithID id: UUID) throws -> TrackerEntity? {
+    private func fetchTrackerEntity(forTrackerWithID id: UUID) throws -> TrackerEntity? {
         let request = TrackerEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
@@ -131,7 +131,7 @@ final class TrackerStore: NSObject {
         return entities.first
     }
     
-    private func fetchCategoryEntity(ofCategoryWithID id: UUID) throws -> TrackerCategoryEntity? {
+    private func fetchCategoryEntity(forCategoryWithID id: UUID) throws -> TrackerCategoryEntity? {
         let request = TrackerCategoryEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)

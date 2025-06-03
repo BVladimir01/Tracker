@@ -21,7 +21,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     private weak var delegate: NewTrackerViewControllerDelegate?
     private var selectedDate: Date
-    private var categoryStore: TrackerCategoryStore
+    private var categoryStore: CategoryStore
     
     private let regularTrackerButton = UIButton(type: .system)
     private let irregularTrackerButton = UIButton(type: .system)
@@ -31,7 +31,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: Initializers
     
-    init(delegate: NewTrackerViewControllerDelegate, selectedDate: Date, categoryStore: TrackerCategoryStore) {
+    init(delegate: NewTrackerViewControllerDelegate, selectedDate: Date, categoryStore: CategoryStore) {
         self.delegate = delegate
         self.selectedDate = selectedDate
         self.categoryStore = categoryStore

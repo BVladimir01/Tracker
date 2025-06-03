@@ -9,26 +9,36 @@
 import CoreData
 
 
-struct TrackerCategoryUpdate {
+// MARK: - CategoryUpdate
+struct CategoryUpdate {
     let insertedIndices: IndexSet
 }
 
-protocol TrackerCategoryStoreDelegate: AnyObject {
-    func didUpdate(with update: TrackerCategoryUpdate)
+
+// MARK: - CategoryStoreDelegate
+protocol CategoryStoreDelegate: AnyObject {
+    func categoryStoreDidUpdate(with update: CategoryUpdate)
 }
 
-final class TrackerCategoryStore: NSObject {
+
+// MARK: - CategoryStore
+final class CategoryStore: NSObject {
     
-    weak var delegate: TrackerCategoryStoreDelegate?
+    // MARK: - Internal Properties
     
-    var numberOfRows: Int {
-        fetchedResultsController.sections?.first?.numberOfObjects ?? 0
+    weak var delegate: CategoryStoreDelegate?
+    
+    var numberOfRows: Int? {
+        fetchedResultsController.sections?.first?.numberOfObjects
     }
+    // MARK: - Private Properties
     
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
     
     private var insertedIndices: IndexSet?
+    
+    // MARK: - Initializers
     
     init(context: NSManagedObjectContext) throws {
         self.context = context
@@ -44,6 +54,8 @@ final class TrackerCategoryStore: NSObject {
         try resultsController.performFetch()
     }
     
+    // MARK: - Internal Methods
+    
     func add(_ category: TrackerCategory) throws {
         let categoryEntity = TrackerCategoryEntity(context: context)
         categoryEntity.title = category.title
@@ -51,12 +63,11 @@ final class TrackerCategoryStore: NSObject {
         try context.save()
     }
     
-    func indexPath(for category: TrackerCategory) throws -> IndexPath {
-        let entity = try trackerCategoryEntity(from: category)
-        guard let indexPath = fetchedResultsController.indexPath(forObject: entity) else {
-            throw TrackerCategoryStoreError.categoryEntityDoesNotExist(forID: category.id)
+    func indexPath(for category: TrackerCategory) throws -> IndexPath? {
+        guard let entity = try fetchCategoryEntity(forCategoryWithID: category.id) else {
+            return nil
         }
-        return indexPath
+        return fetchedResultsController.indexPath(forObject: entity)
     }
     
     func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory {
@@ -64,33 +75,38 @@ final class TrackerCategoryStore: NSObject {
         return try trackerCategory(from: categoryEntity)
     }
     
+    // MARK: - Private Methods
+    
     private func trackerCategory(from categoryEntity: TrackerCategoryEntity) throws -> TrackerCategory {
         guard let id = categoryEntity.id, let title = categoryEntity.title else {
-            throw TrackerCategoryStoreError.propertyIsNil(ofObjectWithID: categoryEntity.objectID)
+            throw CategoryStoreError.propertyIsNil(ofObjectWithID: categoryEntity.objectID)
         }
         return TrackerCategory(id: id, title: title)
     }
     
-    private func trackerCategoryEntity(from category: TrackerCategory) throws -> TrackerCategoryEntity {
+    private func fetchCategoryEntity(forCategoryWithID id: UUID) throws -> TrackerCategoryEntity? {
         let request = TrackerCategoryEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", category.id as NSUUID)
-        let categoryEntities = try context.fetch(request)
-        guard let entity = categoryEntities.first else {
-            throw TrackerCategoryStoreError.categoryEntityDoesNotExist(forID: category.id)
+        request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
+        let entities = try context.fetch(request)
+        if entities.count > 1 {
+            throw CategoryStoreError.unexpected(message: "CategoryStore.fetchCategoryEntity: Several entities for category with id \(id)")
         }
-        return entity
+        return entities.first
     }
     
 }
 
 
-enum TrackerCategoryStoreError: Error {
+// MARK: - CategoryStoreError
+enum CategoryStoreError: Error {
     case propertyIsNil(ofObjectWithID: NSManagedObjectID)
     case categoryEntityDoesNotExist(forID: UUID)
+    case unexpected(message: String)
 }
 
 
-extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+// MARK: - NSFetchedResultsControllerDelegate
+extension CategoryStore: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         insertedIndices = IndexSet()
@@ -98,18 +114,22 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         guard let insertedIndices else {
-            assertionFailure("TrackerCategoryStore.controllerDidChangeContent: changed indices are nil on update")
+            assertionFailure("CategoryStore.controllerDidChangeContent: changed indices are nil on update")
             return
         }
-        let update = TrackerCategoryUpdate(insertedIndices: insertedIndices)
-        delegate?.didUpdate(with: update)
+        guard let delegate else {
+            assertionFailure("CategoryStore.controllerDidChangeContent: delegate is nil")
+            return
+        }
+        let update = CategoryUpdate(insertedIndices: insertedIndices)
+        delegate.categoryStoreDidUpdate(with: update)
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             guard let newIndexPath else {
-                assertionFailure("TrackerCategoryStore.controller: Failed to unwrap newIndexPath for insertion")
+                assertionFailure("CategoryStore.controller: Failed to unwrap newIndexPath for insertion")
                 return
             }
             insertedIndices?.insert(newIndexPath.item)

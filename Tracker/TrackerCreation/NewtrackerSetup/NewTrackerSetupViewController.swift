@@ -21,7 +21,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     // MARK: - Private Properties
     
     private var trackerIsRegular: Bool
-    private var categoryStore: TrackerCategoryStore
+    private var categoryStore: CategoryStore
     private var selectedDate: Date
     private weak var delegate: NewTrackerSetupViewControllerDelegate?
     
@@ -76,7 +76,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     // MARK: - Initializers
     
-    init(trackerIsRegular: Bool, categoryStore: TrackerCategoryStore, selectedDate: Date, delegate: NewTrackerSetupViewControllerDelegate) {
+    init(trackerIsRegular: Bool, categoryStore: CategoryStore, selectedDate: Date, delegate: NewTrackerSetupViewControllerDelegate) {
         self.trackerIsRegular = trackerIsRegular
         self.categoryStore = categoryStore
         self.selectedDate = selectedDate

@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         let context = appDelegate.persistentContainer.viewContext
-        guard let categoryStore = try? TrackerCategoryStore(context: context) else {
+        guard let categoryStore = try? CategoryStore(context: context) else {
             assertionFailure("SceneDelegate.scene: Failed to initialize trackerCategoryStore")
             return
         }

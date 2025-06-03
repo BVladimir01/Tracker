@@ -13,7 +13,7 @@
 		E7C3A8D52DE7439400096105 /* ColorsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D42DE7439400096105 /* ColorsHandler.swift */; };
 		E7C3A8EF2DE8203900096105 /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */; };
 		E7C3A9332DECA35000096105 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9322DECA34D00096105 /* TrackerStore.swift */; };
-		E7C3A93A2DECEAAE00096105 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */; };
+		E7C3A93A2DECEAAE00096105 /* CategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9392DECEAA400096105 /* CategoryStore.swift */; };
 		E7C3A93C2DED62D700096105 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */; };
 		E7C3A9422DED9AEE00096105 /* TrackerDataStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9412DED9AD300096105 /* TrackerDataStores.swift */; };
 		E7C3A9462DEDC44800096105 /* TrackerEntityTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9452DEDC44400096105 /* TrackerEntityTransformer.swift */; };
@@ -49,7 +49,7 @@
 		E7C3A8D42DE7439400096105 /* ColorsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsHandler.swift; sourceTree = "<group>"; };
 		E7C3A8EE2DE8203900096105 /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
 		E7C3A9322DECA34D00096105 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
-		E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
+		E7C3A9392DECEAA400096105 /* CategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryStore.swift; sourceTree = "<group>"; };
 		E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		E7C3A9412DED9AD300096105 /* TrackerDataStores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerDataStores.swift; sourceTree = "<group>"; };
 		E7C3A9452DEDC44400096105 /* TrackerEntityTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEntityTransformer.swift; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 				E7C3A9412DED9AD300096105 /* TrackerDataStores.swift */,
 				E7C3A9322DECA34D00096105 /* TrackerStore.swift */,
 				E7C3A9452DEDC44400096105 /* TrackerEntityTransformer.swift */,
-				E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */,
+				E7C3A9392DECEAA400096105 /* CategoryStore.swift */,
 				E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */,
 				E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */,
 			);
@@ -307,7 +307,7 @@
 				E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */,
 				E7D037132DC3B80E007819A8 /* TabBarController.swift in Sources */,
 				E7D037982DC8AD80007819A8 /* RGBColor.swift in Sources */,
-				E7C3A93A2DECEAAE00096105 /* TrackerCategoryStore.swift in Sources */,
+				E7C3A93A2DECEAAE00096105 /* CategoryStore.swift in Sources */,
 				E7C3A8D52DE7439400096105 /* ColorsHandler.swift in Sources */,
 				E7D037A22DC8B2C9007819A8 /* TrackerRecord.swift in Sources */,
 				E7D0379E2DC8B082007819A8 /* TrackerCategory.swift in Sources */,

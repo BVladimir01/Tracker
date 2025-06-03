@@ -20,7 +20,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     // MARK: - Private Properties
     
     private weak var delegate: CategorySelectionViewControllerDelegate?
-    private let categoryStore: TrackerCategoryStore
+    private let categoryStore: CategoryStore
     private var selectedCategory: TrackerCategory?
     
     private let stubView = UIView()
@@ -36,7 +36,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         CGFloat(table.numberOfRows(inSection: 0))*LayoutConstants.Table.rowHeight > LayoutConstants.Table.maxHeight
     }
     
-    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: TrackerCategoryStore, initialCategory: TrackerCategory?) {
+    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: CategoryStore, initialCategory: TrackerCategory?) {
         self.delegate = delegate
         self.categoryStore = categoryStore
         selectedCategory = initialCategory
@@ -71,9 +71,17 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     // MARK: - Internal Methods
     
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
+        defer {
+            updateStubViewState()
+            updateTableViewState()
+            vc.dismiss(animated: true)
+        }
         do {
             try categoryStore.add(category)
-            let newSelectedRow = try categoryStore.indexPath(for: category).row
+            guard let newSelectedRow = try categoryStore.indexPath(for: category)?.row else {
+                assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: failed to get indexPath of new category \(category)")
+                return
+            }
             let previousRow = newSelectedRow - 1
             let nextRow = newSelectedRow + 1
             tableView(table, didSelectRowAt: IndexPath(row: newSelectedRow, section: 0))
@@ -83,12 +91,11 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
             if nextRow <= table.numberOfRows(inSection: 0) - 1 {
                 table.reloadRows(at: [IndexPath(row: nextRow, section: 0)], with: .none)
             }
+            table.scrollToRow(at: IndexPath(row: newSelectedRow, section: 0),
+                              at: .middle, animated: true)
         } catch {
             assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: error \(error)")
         }
-        updateStubViewState()
-        updateTableViewState()
-        vc.dismiss(animated: true)
     }
     
     // MARK: - Private Methods - Setup
@@ -235,7 +242,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
 extension CategorySelectionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categoryStore.numberOfRows
+        categoryStore.numberOfRows ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -243,7 +250,10 @@ extension CategorySelectionViewController: UITableViewDataSource {
         let selectedRow: Int?
         do {
             if let selectedCategory {
-                selectedRow = try categoryStore.indexPath(for: selectedCategory).row
+                selectedRow = try categoryStore.indexPath(for: selectedCategory)?.row
+                if selectedRow == nil {
+                    assertionFailure("CategorySelectionViewController.tableView: failed to get indexPath of category \(selectedCategory)")
+                }
             } else {
                 selectedRow = nil
             }
@@ -284,8 +294,12 @@ extension CategorySelectionViewController: UITableViewDelegate {
         updatedRows.append(indexPath)
         do {
             if let oldSelectedCategory = selectedCategory {
-                let oldSelectedRow = try categoryStore.indexPath(for: oldSelectedCategory).row
-                updatedRows.append(IndexPath(row: oldSelectedRow, section: 0))
+                let oldSelectedRow = try categoryStore.indexPath(for: oldSelectedCategory)?.row
+                if let oldSelectedRow {
+                    updatedRows.append(IndexPath(row: oldSelectedRow, section: 0))
+                } else {
+                    assertionFailure("CategorySelectionViewController.tableView: failed to get indexPath of category \(oldSelectedCategory)")
+                }
             }
             selectedCategory = try categoryStore.trackerCategory(at: indexPath)
         } catch {
@@ -298,11 +312,11 @@ extension CategorySelectionViewController: UITableViewDelegate {
 }
 
 
-extension CategorySelectionViewController: TrackerCategoryStoreDelegate {
-    func didUpdate(with update: TrackerCategoryUpdate) {
-        let insertedIndices = update.insertedIndices
+extension CategorySelectionViewController: CategoryStoreDelegate {
+    func categoryStoreDidUpdate(with update: CategoryUpdate) {
+        let insertedIndices = Array(update.insertedIndices)
         table.performBatchUpdates {
-            table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .none)
+            table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .automatic)
         }
     }
 }

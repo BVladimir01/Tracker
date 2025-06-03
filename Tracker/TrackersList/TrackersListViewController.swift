@@ -19,7 +19,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     private let datePicker = UIDatePicker()
     
     private let trackerStore: TrackerStore
-    private let categoryStore: TrackerCategoryStore
+    private let categoryStore: CategoryStore
     private let recordStore: TrackerRecordStore
     
     private var shouldShowStubView: Bool {
