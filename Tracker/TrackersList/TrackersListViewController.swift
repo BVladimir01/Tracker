@@ -38,6 +38,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         self.recordStore = trackerDataStores.trackerRecordStore
         super.init(nibName: nil, bundle: nil)
         trackerStore.delegate = self
+        recordStore.delegate = self
         do {
             try trackerStore.set(date: datePicker.date)
         } catch {
@@ -345,6 +346,17 @@ extension TrackersListViewController: TrackerStoreDelegate {
     }
 }
 
+
+extension TrackersListViewController: TrackerRecordStoreDelegate {
+    func trackerRecordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
+        do {
+            let indexPath = try trackerStore.indexPath(for: tracker)
+            collectionView.reloadItems(at: [indexPath])
+        } catch {
+            assertionFailure("TrackerListViewController.trackerRecordStoreDidChangeRecordForTracker: error \(error)")
+        }
+    }
+}
 
 // MARK: - LayoutConstants
 extension TrackersListViewController {

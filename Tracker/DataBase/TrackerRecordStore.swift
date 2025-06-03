@@ -8,13 +8,22 @@
 import CoreData
 
 
+// MARK: - TrackerRecordStoreDelegate
+protocol TrackerRecordStoreDelegate: AnyObject {
+    func trackerRecordStoreDidChangeRecordForTracker(_ tracker: Tracker)
+}
+
+
 // MARK: - TrackerRecordStore
 final class TrackerRecordStore {
+    
+    // MARK: - Internal Properties
+    
+    weak var delegate: TrackerRecordStoreDelegate?
     
     // MARK: - Private Properties
     
     private var context: NSManagedObjectContext
-    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordEntity>?
     
     // MARK: - Initializers
     
@@ -25,19 +34,30 @@ final class TrackerRecordStore {
     // MARK: - Internal Methods
     
     func add(_ record: TrackerRecord) throws {
+        guard let delegate else {
+            throw TrackerRecordStoreError.delegateIsNil
+        }
         let recordEntity = TrackerRecordEntity(context: context)
         recordEntity.tracker = try trackerEntity(withID: record.trackerID)
         recordEntity.date = record.date
         recordEntity.trackerID = record.trackerID
         recordEntity.id = record.id
         try context.save()
+        let trackerEntity = try trackerEntity(withID: record.trackerID)
+        let tracker = try TrackerEntityTransformer().tracker(from: trackerEntity)
+        delegate.trackerRecordStoreDidChangeRecordForTracker(tracker)
     }
     
     func removeRecord(from tracker: Tracker, on date: Date) throws {
+        guard let delegate else {
+            throw TrackerRecordStoreError.delegateIsNil
+        }
         guard let recordEntity = try trackerRecordEntity(for: tracker, on: date) else {
             throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(tracker.id) has no record for this day \(date)")
         }
         context.delete(recordEntity)
+        try context.save()
+        delegate.trackerRecordStoreDidChangeRecordForTracker(tracker)
     }
     
     func daysDone(of tracker: Tracker) throws -> Int {
@@ -54,20 +74,6 @@ final class TrackerRecordStore {
     }
     
     // MARK: - Private Methods
-    
-    private func fetchedResultsController(for date: Date?) throws -> NSFetchedResultsController<TrackerRecordEntity> {
-        let request = TrackerRecordEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerRecordEntity.date, ascending: true)]
-        if let date {
-            request.predicate = try fetchRequestPredicate(for: date)
-        }
-        let resultsController = NSFetchedResultsController(fetchRequest: request,
-                                                           managedObjectContext: context,
-                                                           sectionNameKeyPath: nil,
-                                                           cacheName: nil)
-        try resultsController.performFetch()
-        return resultsController
-    }
     
     private func fetchRequestPredicate(for date: Date) throws -> NSPredicate {
         let dayStart = Calendar.current.startOfDay(for: date)
@@ -131,6 +137,13 @@ final class TrackerRecordStore {
         return try context.fetch(request)
     }
     
+    private func trackerRecord(fromEntity recordEntity: TrackerRecordEntity) throws -> TrackerRecord {
+        guard let id = recordEntity.id, let trackerID = recordEntity.trackerID, let date = recordEntity.date else {
+            throw TrackerRecordStoreError.recordPropertiesNotInitialized(forObjectID: recordEntity.objectID)
+        }
+        return TrackerRecord(id: id, trackerID: trackerID, date: date)
+    }
+    
 }
 
 enum TrackerRecordStoreError: Error {
@@ -140,4 +153,5 @@ enum TrackerRecordStoreError: Error {
     case fetchedResultsControllerIsNil
     case trackerPropertiesNotInitialized(forObjectID: NSManagedObjectID)
     case recordPropertiesNotInitialized(forObjectID: NSManagedObjectID)
+    case delegateIsNil
 }

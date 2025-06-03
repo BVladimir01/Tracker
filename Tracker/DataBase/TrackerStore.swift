@@ -80,6 +80,17 @@ final class TrackerStore: NSObject {
         fetchedResultsController = try fetchedResultsController(for: date)
     }
     
+    func indexPath(for tracker: Tracker) throws -> IndexPath {
+        guard let fetchedResultsController else {
+            throw TrackerStoreError.fetchedResultsControllerIsNil
+        }
+        let entity = try trackerEntity(for: tracker)
+        guard let indexPath = fetchedResultsController.indexPath(forObject: entity) else {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.indexPath: Failed to find indexPath for tracker \(tracker)")
+        }
+        return indexPath
+    }
+    
     // MARK: - Private Properties
     
     private func trackerEntity(from tracker: Tracker) throws -> TrackerEntity {
@@ -103,6 +114,19 @@ final class TrackerStore: NSObject {
             trackerEntity.weekdaysMask = weekdaysMask(from: weekdays)
         }
         return trackerEntity
+    }
+    
+    private func trackerEntity(for tracker: Tracker) throws -> TrackerEntity {
+        let request = TrackerEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
+        let entities = try context.fetch(request)
+        guard entities.count <= 1 else {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.trackerEntity: number of entities for tracker \(tracker) is more than 1")
+        }
+        guard let entity = entities.first else {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.trackerEntity: no entities for tracker \(tracker)")
+        }
+        return entity
     }
     
     private func categoryEntity(with id: UUID) throws -> TrackerCategoryEntity {
