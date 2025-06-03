@@ -229,12 +229,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        do {
-            return try trackerStore.numberOfItemsInSection(section)
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
-            return 0
-        }
+        return trackerStore.numberOfItemsInSection(section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, 
@@ -260,14 +255,13 @@ extension TrackersListViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategoryTitleView.reuseID, for: indexPath) as? CategoryTitleView else {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
-            return   UICollectionReusableView()
+            return UICollectionReusableView()
         }
-        do {
-            let title = try trackerStore.sectionTitle(atSectionIndex: indexPath.section)
-            view.changeTitleText(title)
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
+        let title = trackerStore.sectionTitle(atSectionIndex: indexPath.section)
+        if title == nil {
+            assertionFailure("TrackerViewController.collectionView: Failed to get title for supplementary view at \(indexPath)")
         }
+        view.changeTitleText(title ?? "" )
         return view
     }
     
@@ -294,15 +288,12 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let dummyView = CategoryTitleView()
-        let title: String
-        do {
-            title = try trackerStore.sectionTitle(atSectionIndex: section)
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
-            title = ""
+        let title = trackerStore.sectionTitle(atSectionIndex: section)
+        if title == nil {
+            assertionFailure("TrackerViewController.collectionView: Failed to get title for supplementary view for section \(section)")
         }
-        dummyView.changeTitleText(title)
+        let dummyView = CategoryTitleView()
+        dummyView.changeTitleText(title ?? "")
         let width = collectionView.frame.width - 2*LayoutConstants.CollectionView.headerLateralPadding
         let targetSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
         return dummyView.systemLayoutSizeFitting(targetSize, withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
@@ -336,7 +327,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
 
 
 extension TrackersListViewController: TrackerStoreDelegate {
-    func didUpdate(with update: TrackerStoreUpdate) {
+    func trackerStoreDidUpdate(with update: TrackerStoreUpdate) {
         let insertedItemIndexPaths = update.insertedItemIndexPaths
         let insertedSections = update.insertedSections
         let removedSections = update.removedSections
@@ -354,7 +345,10 @@ extension TrackersListViewController: TrackerStoreDelegate {
 extension TrackersListViewController: TrackerRecordStoreDelegate {
     func trackerRecordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
         do {
-            let indexPath = try trackerStore.indexPath(for: tracker)
+            guard let indexPath = try trackerStore.indexPath(for: tracker) else {
+                assertionFailure("TrackersListViewController.trackerRecordStoreDidChangeRecordForTracker: indexPath for \(tracker) is nil")
+                return
+            }
             collectionView.reloadItems(at: [indexPath])
         } catch {
             assertionFailure("TrackerListViewController.trackerRecordStoreDidChangeRecordForTracker: error \(error)")

@@ -7,6 +7,8 @@
 
 import CoreData
 
+
+// MARK: - TrackerStoreUpdate
 struct TrackerStoreUpdate {
     let insertedItemIndexPaths: Set<IndexPath>
     let insertedSections: IndexSet
@@ -14,9 +16,12 @@ struct TrackerStoreUpdate {
     let removedSections: IndexSet
 }
 
+
+// MARK: - TrackerStoreDelegate
 protocol TrackerStoreDelegate: AnyObject {
-    func didUpdate(with update: TrackerStoreUpdate)
+    func trackerStoreDidUpdate(with update: TrackerStoreUpdate)
 }
+
 
 // MARK: - TrackerStore
 final class TrackerStore: NSObject {
@@ -61,15 +66,12 @@ final class TrackerStore: NSObject {
     
     // MARK: - Internal Properties
     
-    func numberOfItemsInSection(_ section: Int) throws -> Int {
-        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
+    func numberOfItemsInSection(_ section: Int) -> Int? {
+        return fetchedResultsController.sections?[section].numberOfObjects
     }
     
-    func sectionTitle(atSectionIndex index: Int) throws -> String {
-        guard let sectionInfo = fetchedResultsController.sections?[index] else {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.sectionTitle: Failed to get sections")
-        }
-        return sectionInfo.name
+    func sectionTitle(atSectionIndex index: Int) -> String? {
+        return fetchedResultsController.sections?[index].name
     }
     
     func tracker(at indexPath: IndexPath) throws -> Tracker {
@@ -78,7 +80,7 @@ final class TrackerStore: NSObject {
     }
     
     func add(_ tracker: Tracker) throws {
-        _ = try self.trackerEntity(from: tracker)
+        _ = try self.createTrackerEntity(from: tracker)
         try context.save()
     }
     
@@ -87,17 +89,16 @@ final class TrackerStore: NSObject {
         try fetchedResultsController.performFetch()
     }
     
-    func indexPath(for tracker: Tracker) throws -> IndexPath {
-        let entity = try trackerEntity(for: tracker)
-        guard let indexPath = fetchedResultsController.indexPath(forObject: entity) else {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.indexPath: Failed to find indexPath for tracker \(tracker)")
+    func indexPath(for tracker: Tracker) throws -> IndexPath? {
+        guard let entity = try fetchTrackerEntity(ofTrackerWithID: tracker.id) else {
+            return nil
         }
-        return indexPath
+        return fetchedResultsController.indexPath(forObject: entity)
     }
     
     // MARK: - Private Properties
     
-    private func trackerEntity(from tracker: Tracker) throws -> TrackerEntity {
+    private func createTrackerEntity(from tracker: Tracker) throws -> TrackerEntity {
         let trackerEntity = TrackerEntity(context: context)
         let colorEntity = ColorEntity(context: context)
         colorEntity.red = tracker.color.red
@@ -105,7 +106,7 @@ final class TrackerStore: NSObject {
         colorEntity.green = tracker.color.green
         colorEntity.alpha = tracker.color.alpha
         trackerEntity.color = colorEntity
-        trackerEntity.category = try categoryEntity(with: tracker.categoryID)
+        trackerEntity.category = try fetchCategoryEntity(ofCategoryWithID: tracker.categoryID)
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
         trackerEntity.title = tracker.title
@@ -120,28 +121,24 @@ final class TrackerStore: NSObject {
         return trackerEntity
     }
     
-    private func trackerEntity(for tracker: Tracker) throws -> TrackerEntity {
+    private func fetchTrackerEntity(ofTrackerWithID id: UUID) throws -> TrackerEntity? {
         let request = TrackerEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
+        request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
-        guard entities.count <= 1 else {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.trackerEntity: number of entities for tracker \(tracker) is more than 1")
+        if entities.count > 1 {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchTrackerEntity: Several entities for tracker with id \(id)")
         }
-        guard let entity = entities.first else {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.trackerEntity: no entities for tracker \(tracker)")
-        }
-        return entity
+        return entities.first
     }
     
-    private func categoryEntity(with id: UUID) throws -> TrackerCategoryEntity {
+    private func fetchCategoryEntity(ofCategoryWithID id: UUID) throws -> TrackerCategoryEntity? {
         let request = TrackerCategoryEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
-        let requestResult = try context.fetch(request)
-        if let trackerCategoryEntity = requestResult.first {
-            return trackerCategoryEntity
-        } else {
-            throw TrackerStoreError.categoryNotFound(withID: id)
+        let entities = try context.fetch(request)
+        if entities.count > 1 {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchCategoryEntity: Several entities for category with id \(id)")
         }
+        return entities.first
     }
     
     private func fetchRequestPredicate(for date: Date) throws -> NSCompoundPredicate {
@@ -178,14 +175,8 @@ final class TrackerStore: NSObject {
 
 // MARK: - TrackerStoreError
 enum TrackerStoreError: Error {
-    case categoryNotFound(withID: UUID)
-    case trackerNotFound(withID: UUID)
-    case trackerNotFound(atIndexPath: IndexPath)
     case trackerPropertiesNotInitialized(forObjectID: NSManagedObjectID)
-    case recordPropertiesNotInitialized(forObjectID: NSManagedObjectID)
-    case fetchedResultsControllerIsNil
     case unexpected(message: String)
-    case delegateIsNil
 }
 
 
@@ -212,7 +203,7 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
                                         insertedSections: insertedSections,
                                         removedItemIndexPaths: removedItemIndexPaths,
                                         removedSections: removedSections)
-        delegate.didUpdate(with: update)
+        delegate.trackerStoreDidUpdate(with: update)
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange sectionInfo: any NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
