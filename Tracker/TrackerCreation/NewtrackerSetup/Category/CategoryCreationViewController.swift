@@ -159,11 +159,7 @@ final class CategoryCreationViewController: UIViewController {
             return
         }
         let newCategory = TrackerCategory(id: UUID(), title: categoryTitle)
-        do {
-            delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
-        } catch {
-            assertionFailure("CategoryCreationViewController.doneButtonTapped: error \(error)")
-        }
+        delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
     }
 }
 
