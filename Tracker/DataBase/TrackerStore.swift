@@ -80,20 +80,6 @@ final class TrackerStore: NSObject {
         fetchedResultsController = try fetchedResultsController(for: date)
     }
     
-    func isCompleted(tracker: Tracker, on date: Date) throws -> Bool {
-        let trackerEntity = try trackerEntity(from: tracker)
-        guard let records = trackerEntity.records as? Set<TrackerRecordEntity> else {
-            return false
-        }
-        for recordEntity in records {
-            guard let recordDate = recordEntity.date else {
-                throw TrackerStoreError.recordPropertiesNotInitialized(forObjectID: recordEntity.objectID)
-            }
-            if Calendar.current.isDate(recordDate, inSameDayAs: date) { return true }
-        }
-        return false
-    }
-    
     // MARK: - Private Properties
     
     private func trackerEntity(from tracker: Tracker) throws -> TrackerEntity {
@@ -155,10 +141,17 @@ final class TrackerStore: NSObject {
                                            #keyPath(TrackerEntity.isRegular),
                                            #keyPath(TrackerEntity.weekdaysMask),
                                            weekdayBit as NSNumber)
-        let irregularPredicate = NSPredicate(format: "%K == NO AND %K == %@",
+        let dayStart = Calendar.current.startOfDay(for: date)
+        guard let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: date) else {
+            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create nextDay date")
+        }
+        let nextDayStart = Calendar.current.startOfDay(for: nextDay)
+        let irregularPredicate = NSPredicate(format: "%K == NO AND (%K >= %@ AND %K < %@)",
                                              #keyPath(TrackerEntity.isRegular),
                                              #keyPath(TrackerEntity.date),
-                                             date as NSDate)
+                                             dayStart as NSDate,
+                                             #keyPath(TrackerEntity.date),
+                                             nextDayStart as NSDate)
         return NSCompoundPredicate(orPredicateWithSubpredicates: [regularPredicate, irregularPredicate])
     }
     
