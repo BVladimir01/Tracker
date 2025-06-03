@@ -26,37 +26,46 @@ final class TrackerStore: NSObject {
     weak var delegate: TrackerStoreDelegate?
     
     var numberOfSections: Int {
-        return fetchedResultsController?.sections?.count ?? 0
+        return fetchedResultsController.sections?.count ?? 0
     }
     
     // MARK: - Private Properties
     
     private let context: NSManagedObjectContext
-    private var fetchedResultsController: NSFetchedResultsController<TrackerEntity>?
+    private let fetchedResultsController: NSFetchedResultsController<TrackerEntity>
     private let transformer = TrackerEntityTransformer()
     
     private var insertedSections: IndexSet?
     private var insertedItemIndexPaths: Set<IndexPath>?
+    private var removedSections: IndexSet?
+    private var removedItemIndexPaths: Set<IndexPath>?
     
     // MARK: - Initializers
     
-    init(context: NSManagedObjectContext) {
+    init(context: NSManagedObjectContext) throws {
         self.context = context
+        let fetchRequest = TrackerEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \TrackerEntity.category?.title, ascending: true),
+            NSSortDescriptor(keyPath: \TrackerEntity.title, ascending: true)
+        ]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                          managedObjectContext: context,
+                                                          sectionNameKeyPath: #keyPath(TrackerEntity.category.title),
+                                                          cacheName: nil)
+        
+        super.init()
+        fetchedResultsController.delegate = self
+        try fetchedResultsController.performFetch()
     }
     
     // MARK: - Internal Properties
     
     func numberOfItemsInSection(_ section: Int) throws -> Int {
-        guard let fetchedResultsController else {
-            throw TrackerStoreError.fetchedResultsControllerIsNil
-        }
         return fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     func sectionTitle(atSectionIndex index: Int) throws -> String {
-        guard let fetchedResultsController else {
-            throw TrackerStoreError.fetchedResultsControllerIsNil
-        }
         guard let sectionInfo = fetchedResultsController.sections?[index] else {
             throw TrackerStoreError.unexpected(message: "TrackerStore.sectionTitle: Failed to get sections")
         }
@@ -64,9 +73,6 @@ final class TrackerStore: NSObject {
     }
     
     func tracker(at indexPath: IndexPath) throws -> Tracker {
-        guard let fetchedResultsController else {
-            throw TrackerStoreError.fetchedResultsControllerIsNil
-        }
         let trackerEntity = fetchedResultsController.object(at: indexPath)
         return try transformer.tracker(from: trackerEntity)
     }
@@ -77,13 +83,11 @@ final class TrackerStore: NSObject {
     }
     
     func set(date: Date) throws {
-        fetchedResultsController = try fetchedResultsController(for: date)
+        fetchedResultsController.fetchRequest.predicate = try fetchRequestPredicate(for: date)
+        try fetchedResultsController.performFetch()
     }
     
     func indexPath(for tracker: Tracker) throws -> IndexPath {
-        guard let fetchedResultsController else {
-            throw TrackerStoreError.fetchedResultsControllerIsNil
-        }
         let entity = try trackerEntity(for: tracker)
         guard let indexPath = fetchedResultsController.indexPath(forObject: entity) else {
             throw TrackerStoreError.unexpected(message: "TrackerStore.indexPath: Failed to find indexPath for tracker \(tracker)")
@@ -140,22 +144,6 @@ final class TrackerStore: NSObject {
         }
     }
     
-    private func fetchedResultsController(for date: Date, sortBy sort: NSSortDescriptor? = nil) throws -> NSFetchedResultsController<TrackerEntity> {
-        let fetchRequest = TrackerEntity.fetchRequest()
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerEntity.category?.title, ascending: true),
-            NSSortDescriptor(keyPath: \TrackerEntity.title, ascending: true)
-        ]
-        fetchRequest.predicate = try fetchRequestPredicate(for: date)
-        let resultController = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                          managedObjectContext: context,
-                                                          sectionNameKeyPath: #keyPath(TrackerEntity.category.title),
-                                                          cacheName: nil)
-        resultController.delegate = self
-        try resultController.performFetch()
-        return  resultController
-    }
-    
     private func fetchRequestPredicate(for date: Date) throws -> NSCompoundPredicate {
         guard let weekday = Weekday.fromCalendarComponent(Calendar.current.component(.weekday, from: date)) else {
             throw TrackerStoreError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create weekday for date")
@@ -197,6 +185,7 @@ enum TrackerStoreError: Error {
     case recordPropertiesNotInitialized(forObjectID: NSManagedObjectID)
     case fetchedResultsControllerIsNil
     case unexpected(message: String)
+    case delegateIsNil
 }
 
 
@@ -206,10 +195,12 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         insertedItemIndexPaths = Set()
         insertedSections = IndexSet()
+        removedSections = IndexSet()
+        removedItemIndexPaths = Set()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        guard let insertedItemIndexPaths, let insertedSections else {
+        guard let insertedItemIndexPaths, let insertedSections, let removedSections, let removedItemIndexPaths else {
             assertionFailure("TrackerStore.controllerDidChangeContent: Changed indices are nil on update")
             return
         }
@@ -219,8 +210,8 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         }
         let update = TrackerStoreUpdate(insertedItemIndexPaths: insertedItemIndexPaths,
                                         insertedSections: insertedSections,
-                                        removedItemIndexPaths: Set(),
-                                        removedSections: IndexSet())
+                                        removedItemIndexPaths: removedItemIndexPaths,
+                                        removedSections: removedSections)
         delegate.didUpdate(with: update)
     }
     
@@ -228,6 +219,8 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         switch type {
         case .insert:
             insertedSections?.insert(sectionIndex)
+        case .delete:
+            removedSections?.insert(sectionIndex)
         default:
             break
         }
@@ -240,6 +233,12 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
                 return
             }
             insertedItemIndexPaths?.insert(newIndexPath)
+        case .delete:
+            guard let indexPath else {
+                assertionFailure("TrackerStore.controller: Failed to get indexPath for data change")
+                return
+            }
+            removedItemIndexPaths?.insert(indexPath)
         default:
             break
         }

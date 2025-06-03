@@ -37,8 +37,8 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         self.categoryStore = trackerDataStores.trackerCategoryStore
         self.recordStore = trackerDataStores.trackerRecordStore
         super.init(nibName: nil, bundle: nil)
-        trackerStore.delegate = self
         recordStore.delegate = self
+        trackerStore.delegate = self
         do {
             try trackerStore.set(date: datePicker.date)
         } catch {
@@ -339,9 +339,13 @@ extension TrackersListViewController: TrackerStoreDelegate {
     func didUpdate(with update: TrackerStoreUpdate) {
         let insertedItemIndexPaths = update.insertedItemIndexPaths
         let insertedSections = update.insertedSections
+        let removedSections = update.removedSections
+        let removedItemIndexPaths = update.removedItemIndexPaths
         collectionView.performBatchUpdates {
             collectionView.insertSections(insertedSections)
             collectionView.insertItems(at: Array(insertedItemIndexPaths))
+            collectionView.deleteSections(removedSections)
+            collectionView.deleteItems(at: Array(removedItemIndexPaths))
         }
     }
 }

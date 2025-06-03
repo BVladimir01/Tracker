@@ -22,14 +22,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             assertionFailure("SceneDelegate.scene: Failed to initialize trackerCategoryStore")
             return
         }
-        let trackerStore = TrackerStore(context: context)
-        let recordStore = TrackerRecordStore(context: context)
-        window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = TabBarController(stores:
-                                                        TrackerDataStores(trackerStore: trackerStore,
-                                                                          trackerCategoryStore: categoryStore,
-                                                                          trackerRecordStore: recordStore))
-        window?.makeKeyAndVisible()
+        do {
+            let trackerStore = try TrackerStore(context: context)
+            let recordStore = TrackerRecordStore(context: context)
+            window = UIWindow(windowScene: windowScene)
+            window?.rootViewController = TabBarController(stores:
+                                                            TrackerDataStores(trackerStore: trackerStore,
+                                                                              trackerCategoryStore: categoryStore,
+                                                                              trackerRecordStore: recordStore))
+            window?.makeKeyAndVisible()
+        } catch {
+            assertionFailure("SceneDelegate.scene: error \(error)")
+        }
     }
 
 
