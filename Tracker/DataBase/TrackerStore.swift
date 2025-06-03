@@ -144,9 +144,7 @@ final class TrackerStore: NSObject {
             throw TrackerStoreError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create weekday for date")
         }
         let weekdayBit = 1 << weekday.rawValue
-        let regularPredicate = NSPredicate(format: "%K == YES AND (%K & %@ != 0)",
-                                           #keyPath(TrackerEntity.isRegular),
-                                           #keyPath(TrackerEntity.weekdaysMask),
+        let regularPredicate = NSPredicate(format: "%isRegular == YES AND (weekdaysMask & %@ != 0)",
                                            weekdayBit)
         let irregularPredicate = NSPredicate(format: "%K == NO AND %K == %@",
                                              #keyPath(TrackerEntity.isRegular),
