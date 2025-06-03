@@ -28,31 +28,33 @@ final class TrackerRecordStore {
         let recordEntity = TrackerRecordEntity(context: context)
         recordEntity.tracker = try trackerEntity(withID: record.trackerID)
         recordEntity.date = record.date
+        recordEntity.trackerID = record.trackerID
         recordEntity.id = record.id
-        context.insert(recordEntity)
         try context.save()
     }
     
     func removeRecord(fromTrackerWithID trackerID: UUID, on date: Date) throws {
-        let recordEntities = try trackerRecordEntities(on: date)
-        for recordEntity in recordEntities {
-            guard let trackerEntity = recordEntity.tracker else {
-                throw TrackerRecordStoreError.recordPropertiesNotInitialized(forObjectID: recordEntity.objectID)
-            }
-            guard let id = trackerEntity.id else {
-                throw TrackerRecordStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
-            }
-            if trackerID == id {
-                context.delete(recordEntity)
-                try context.save()
-            }
+        let request = TrackerRecordEntity.fetchRequest()
+        let idPredicate = NSPredicate(format: "%K == %@",
+                                      #keyPath(TrackerRecordEntity.trackerID),
+                                      trackerID as NSUUID)
+        let dayPredicate = try fetchRequestPredicate(for: date)
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
+        let recordEntities = try context.fetch(request)
+        if recordEntities.count > 1 {
+            throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(trackerID) has more than one record for this day \(date)")
         }
-        throw TrackerStoreError.unexpected(message: "TrackerRecordStore: failed to remove record")
+        guard let recordEntity = recordEntities.first else {
+            throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(trackerID) has no record for this day \(date)")
+        }
+        context.delete(recordEntity)
     }
     
     func daysDone(of tracker: Tracker) throws -> Int {
         let request = TrackerRecordEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
+        request.predicate = NSPredicate(format: "%K == %@",
+                                        #keyPath(TrackerRecordEntity.trackerID),
+                                        tracker.id as NSUUID)
         let requestResult = try context.fetch(request)
         return requestResult.count
     }
