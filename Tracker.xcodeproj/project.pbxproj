@@ -12,7 +12,6 @@
 		E7C3A8D32DE7439000096105 /* ColorsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */; };
 		E7C3A8D52DE7439400096105 /* ColorsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D42DE7439400096105 /* ColorsHandler.swift */; };
 		E7C3A8EF2DE8203900096105 /* TrackerDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */; };
-		E7C3A8F12DE823F000096105 /* Transformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8F02DE823E100096105 /* Transformers.swift */; };
 		E7C3A9332DECA35000096105 /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9322DECA34D00096105 /* TrackerStore.swift */; };
 		E7C3A93A2DECEAAE00096105 /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */; };
 		E7C3A93C2DED62D700096105 /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */; };
@@ -49,7 +48,6 @@
 		E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7C3A8D42DE7439400096105 /* ColorsHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsHandler.swift; sourceTree = "<group>"; };
 		E7C3A8EE2DE8203900096105 /* TrackerDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerDataModel.xcdatamodel; sourceTree = "<group>"; };
-		E7C3A8F02DE823E100096105 /* Transformers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformers.swift; sourceTree = "<group>"; };
 		E7C3A9322DECA34D00096105 /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
@@ -115,7 +113,6 @@
 				E7C3A9452DEDC44400096105 /* TrackerEntityTransformer.swift */,
 				E7C3A9392DECEAA400096105 /* TrackerCategoryStore.swift */,
 				E7C3A93B2DED62C900096105 /* TrackerRecordStore.swift */,
-				E7C3A8F02DE823E100096105 /* Transformers.swift */,
 				E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */,
 			);
 			path = DataBase;
@@ -308,7 +305,6 @@
 				E7C3A8CF2DE7428500096105 /* EmojisHandler.swift in Sources */,
 				E7D037B12DCF1E59007819A8 /* NewTrackerViewController.swift in Sources */,
 				E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */,
-				E7C3A8F12DE823F000096105 /* Transformers.swift in Sources */,
 				E7D037132DC3B80E007819A8 /* TabBarController.swift in Sources */,
 				E7D037982DC8AD80007819A8 /* RGBColor.swift in Sources */,
 				E7C3A93A2DECEAAE00096105 /* TrackerCategoryStore.swift in Sources */,

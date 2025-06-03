@@ -51,7 +51,7 @@ final class TrackerRecordStore {
     }
     
     func daysDone(of tracker: Tracker) throws -> Int {
-        let request = TrackerEntity.fetchRequest()
+        let request = TrackerRecordEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", tracker.id as NSUUID)
         let requestResult = try context.fetch(request)
         return requestResult.count

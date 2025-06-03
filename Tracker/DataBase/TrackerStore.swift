@@ -10,6 +10,8 @@ import CoreData
 struct TrackerStoreUpdate {
     let insertedItemIndexPaths: Set<IndexPath>
     let insertedSections: IndexSet
+    let removedItemIndexPaths: Set<IndexPath>
+    let removedSections: IndexSet
 }
 
 protocol TrackerStoreDelegate: AnyObject {
@@ -24,7 +26,7 @@ final class TrackerStore: NSObject {
     weak var delegate: TrackerStoreDelegate?
     
     var numberOfSections: Int {
-        fetchedResultsController?.sections?.count ?? 0
+        return fetchedResultsController?.sections?.count ?? 0
     }
     
     // MARK: - Private Properties
@@ -70,7 +72,7 @@ final class TrackerStore: NSObject {
     }
     
     func add(_ tracker: Tracker) throws {
-        let entity = try self.trackerEntity(from: tracker)
+        _ = try self.trackerEntity(from: tracker)
         try context.save()
     }
     
@@ -96,17 +98,22 @@ final class TrackerStore: NSObject {
     
     private func trackerEntity(from tracker: Tracker) throws -> TrackerEntity {
         let trackerEntity = TrackerEntity(context: context)
+        let colorEntity = ColorEntity(context: context)
+        colorEntity.red = tracker.color.red
+        colorEntity.blue = tracker.color.blue
+        colorEntity.green = tracker.color.green
+        colorEntity.alpha = tracker.color.alpha
+        trackerEntity.color = colorEntity
         trackerEntity.category = try categoryEntity(with: tracker.categoryID)
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
-        trackerEntity.rgbColor = RGBColorBoxedValue(value: tracker.color)
         trackerEntity.title = tracker.title
         switch tracker.schedule {
         case .irregular(let date):
-            trackerEntity.isRegular = true
+            trackerEntity.isRegular = false
             trackerEntity.date = date
         case .regular(let weekdays):
-            trackerEntity.isRegular = false
+            trackerEntity.isRegular = true
             trackerEntity.weekdaysMask = weekdaysMask(from: weekdays)
         }
         return trackerEntity
@@ -144,8 +151,10 @@ final class TrackerStore: NSObject {
             throw TrackerStoreError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create weekday for date")
         }
         let weekdayBit = 1 << weekday.rawValue
-        let regularPredicate = NSPredicate(format: "%isRegular == YES AND (weekdaysMask & %@ != 0)",
-                                           weekdayBit)
+        let regularPredicate = NSPredicate(format: "%K == YES AND (%K & %@ != 0)",
+                                           #keyPath(TrackerEntity.isRegular),
+                                           #keyPath(TrackerEntity.weekdaysMask),
+                                           weekdayBit as NSNumber)
         let irregularPredicate = NSPredicate(format: "%K == NO AND %K == %@",
                                              #keyPath(TrackerEntity.isRegular),
                                              #keyPath(TrackerEntity.date),
@@ -192,7 +201,9 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
             return
         }
         let update = TrackerStoreUpdate(insertedItemIndexPaths: insertedItemIndexPaths,
-                                        insertedSections: insertedSections)
+                                        insertedSections: insertedSections,
+                                        removedItemIndexPaths: Set(),
+                                        removedSections: IndexSet())
         delegate.didUpdate(with: update)
     }
     

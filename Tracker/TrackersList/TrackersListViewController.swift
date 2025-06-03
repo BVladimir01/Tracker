@@ -68,6 +68,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         } catch {
             assertionFailure("TrackersListViewController.newTrackerViewController: error \(error)")
         }
+        updateStubViewState()
         vc.dismiss(animated: true)
     }
     
@@ -321,9 +322,9 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             let tracker = try trackerStore.tracker(at: indexPath)
             let trackerID = tracker.id
             if try recordStore.isCompleted(trackerID: trackerID, on: selectedDate) {
-                try recordStore.add(TrackerRecord(id: UUID(), trackerID: trackerID, date: selectedDate))
-            } else {
                 try recordStore.removeRecord(fromTrackerWithID: trackerID, on: selectedDate)
+            } else {
+                try recordStore.add(TrackerRecord(id: UUID(), trackerID: trackerID, date: selectedDate))
             }
         } catch {
             assertionFailure("TrackerViewController.collectionView: error \(error)")

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RGBColor: Codable {
+struct RGBColor: Codable {
     
     let red: Double
     let green: Double
@@ -21,13 +21,4 @@ public struct RGBColor: Codable {
         self.alpha = alpha
     }
     
-}
-
-
-public final class RGBColorBoxedValue: NSObject, Codable {
-    let value: RGBColor
-    
-    init(value: RGBColor) {
-        self.value = value
-    }
 }

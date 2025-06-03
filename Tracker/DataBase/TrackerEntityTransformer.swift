@@ -7,18 +7,23 @@
 
 
 struct TrackerEntityTransformer {
+    
     func tracker(from trackerEntity: TrackerEntity) throws -> Tracker {
         guard let id = trackerEntity.id,
-                let title = trackerEntity.title,
-                let color = trackerEntity.rgbColor?.value,
-                let emoji = trackerEntity.emoji,
+              let title = trackerEntity.title,
+              let colorEntity = trackerEntity.color,
+              let emoji = trackerEntity.emoji,
               let categoryID = trackerEntity.category?.id else {
             throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
         }
+        let rgbColor = RGBColor(red: colorEntity.red,
+                              green: colorEntity.green,
+                              blue: colorEntity.blue,
+                              alpha: colorEntity.alpha)
         let schedule = try schedule(of: trackerEntity)
         return Tracker(id: id,
                        title: title,
-                       color: color,
+                       color: rgbColor,
                        emoji: Character(emoji),
                        schedule: schedule,
                        categoryID: categoryID)
@@ -36,7 +41,6 @@ struct TrackerEntityTransformer {
                 if weekdaysMask & 1 != 0 {
                     weekdays.insert(newWeekday)
                 }
-                weekdays.insert(newWeekday)
                 weekdayRawValue += 1
                 weekdaysMask >>= 1
             }
@@ -51,4 +55,5 @@ struct TrackerEntityTransformer {
             return .irregular(date)
         }
     }
+    
 }
