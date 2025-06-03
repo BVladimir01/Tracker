@@ -33,7 +33,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         categoryStore.numberOfRows == 0
     }
     private var tableShouldScroll: Bool {
-        table.contentSize.height > LayoutConstants.Table.maxHeight
+        CGFloat(table.numberOfRows(inSection: 0))*LayoutConstants.Table.rowHeight > LayoutConstants.Table.maxHeight
     }
     
     init(delegate: CategorySelectionViewControllerDelegate, categoryStore: TrackerCategoryStore, initialCategory: TrackerCategory?) {
