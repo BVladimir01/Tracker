@@ -316,7 +316,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             if try recordStore.isCompleted(tracker: tracker, on: selectedDate) {
                 try recordStore.removeRecord(from: tracker, on: selectedDate)
             } else {
-                try recordStore.add(TrackerRecord(id: UUID(), trackerID: trackerID, date: selectedDate))
+                try recordStore.add(TrackerRecord(trackerID: trackerID, date: selectedDate))
             }
         } catch {
             assertionFailure("TrackerViewController.collectionView: error \(error)")

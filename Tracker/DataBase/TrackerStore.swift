@@ -131,8 +131,8 @@ final class TrackerStore: NSObject {
         return entities.first
     }
     
-    private func fetchCategoryEntity(forCategoryWithID id: UUID) throws -> TrackerCategoryEntity? {
-        let request = TrackerCategoryEntity.fetchRequest()
+    private func fetchCategoryEntity(forCategoryWithID id: UUID) throws -> CategoryEntity? {
+        let request = CategoryEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
         if entities.count > 1 {

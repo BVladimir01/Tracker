@@ -34,7 +34,7 @@ final class CategoryStore: NSObject {
     // MARK: - Private Properties
     
     private let context: NSManagedObjectContext
-    private let fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>
+    private let fetchedResultsController: NSFetchedResultsController<CategoryEntity>
     
     private var insertedIndices: IndexSet?
     
@@ -42,8 +42,8 @@ final class CategoryStore: NSObject {
     
     init(context: NSManagedObjectContext) throws {
         self.context = context
-        let request = TrackerCategoryEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \TrackerCategoryEntity.title, ascending: true)]
+        let request = CategoryEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CategoryEntity.title, ascending: true)]
         let resultsController =  NSFetchedResultsController(fetchRequest: request,
                                                             managedObjectContext: context,
                                                             sectionNameKeyPath: nil,
@@ -57,7 +57,7 @@ final class CategoryStore: NSObject {
     // MARK: - Internal Methods
     
     func add(_ category: TrackerCategory) throws {
-        let categoryEntity = TrackerCategoryEntity(context: context)
+        let categoryEntity = CategoryEntity(context: context)
         categoryEntity.title = category.title
         categoryEntity.id = category.id
         try context.save()
@@ -77,15 +77,15 @@ final class CategoryStore: NSObject {
     
     // MARK: - Private Methods
     
-    private func trackerCategory(from categoryEntity: TrackerCategoryEntity) throws -> TrackerCategory {
+    private func trackerCategory(from categoryEntity: CategoryEntity) throws -> TrackerCategory {
         guard let id = categoryEntity.id, let title = categoryEntity.title else {
             throw TrackerDataStoresError.categoryPropertiesNotInitialized(forObjectID: categoryEntity.objectID)
         }
         return TrackerCategory(id: id, title: title)
     }
     
-    private func fetchCategoryEntity(forCategoryWithID id: UUID) throws -> TrackerCategoryEntity? {
-        let request = TrackerCategoryEntity.fetchRequest()
+    private func fetchCategoryEntity(forCategoryWithID id: UUID) throws -> CategoryEntity? {
+        let request = CategoryEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
         if entities.count > 1 {

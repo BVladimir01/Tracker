@@ -42,11 +42,10 @@ final class RecordStore {
             assertionFailure("RecordStore.add: failed to get entity for altered tracker (tracker id \(record.trackerID)")
             return
         }
-        let recordEntity = TrackerRecordEntity(context: context)
+        let recordEntity = RecordEntity(context: context)
         recordEntity.date = record.date
         recordEntity.trackerID = record.trackerID
         recordEntity.tracker = trackerEntity
-        recordEntity.id = record.id
         try context.save()
         let tracker = try TrackerEntityTransformer().tracker(from: trackerEntity)
         delegate.recordStoreDidChangeRecordForTracker(tracker)
@@ -66,9 +65,9 @@ final class RecordStore {
     }
     
     func daysDone(of tracker: Tracker) throws -> Int {
-        let request = TrackerRecordEntity.fetchRequest()
+        let request = RecordEntity.fetchRequest()
         request.predicate = NSPredicate(format: "%K == %@",
-                                        #keyPath(TrackerRecordEntity.trackerID),
+                                        #keyPath(RecordEntity.trackerID),
                                         tracker.id as NSUUID)
         return try context.fetch(request).count
     }
@@ -86,9 +85,9 @@ final class RecordStore {
         }
         let dayEnd = Calendar.current.startOfDay(for: nextDay)
         return NSPredicate(format: "%K >= %@ AND %K < %@",
-                           #keyPath(TrackerRecordEntity.date),
+                           #keyPath(RecordEntity.date),
                            dayStart as NSDate,
-                           #keyPath(TrackerRecordEntity.date),
+                           #keyPath(RecordEntity.date),
                            dayEnd as NSDate)
     }
     
@@ -102,10 +101,10 @@ final class RecordStore {
         return entities.first
     }
     
-    private func fetchRecordEntity(forTrackerWithID id: UUID, forDate date: Date) throws -> TrackerRecordEntity? {
-        let request = TrackerRecordEntity.fetchRequest()
+    private func fetchRecordEntity(forTrackerWithID id: UUID, forDate date: Date) throws -> RecordEntity? {
+        let request = RecordEntity.fetchRequest()
         let idPredicate = NSPredicate(format: "%K == %@",
-                                      #keyPath(TrackerRecordEntity.trackerID),
+                                      #keyPath(RecordEntity.trackerID),
                                       id as NSUUID)
         let dayPredicate = try fetchRequestPredicate(for: date)
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
