@@ -20,7 +20,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
     
     private let trackerStore: TrackerStore
     private let categoryStore: CategoryStore
-    private let recordStore: TrackerRecordStore
+    private let recordStore: RecordStore
     
     private var shouldShowStubView: Bool {
         trackerStore.numberOfSections == 0
@@ -342,8 +342,8 @@ extension TrackersListViewController: TrackerStoreDelegate {
 }
 
 
-extension TrackersListViewController: TrackerRecordStoreDelegate {
-    func trackerRecordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
+extension TrackersListViewController: RecordStoreDelegate {
+    func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
         do {
             guard let indexPath = try trackerStore.indexPath(for: tracker) else {
                 assertionFailure("TrackersListViewController.trackerRecordStoreDidChangeRecordForTracker: indexPath for \(tracker) is nil")

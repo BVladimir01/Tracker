@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         do {
             let trackerStore = try TrackerStore(context: context)
-            let recordStore = TrackerRecordStore(context: context)
+            let recordStore = RecordStore(context: context)
             window = UIWindow(windowScene: windowScene)
             window?.rootViewController = TabBarController(stores:
                                                             TrackerDataStores(trackerStore: trackerStore,

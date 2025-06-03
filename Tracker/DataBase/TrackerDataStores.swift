@@ -8,9 +8,9 @@
 final class TrackerDataStores {
     let trackerStore: TrackerStore
     let trackerCategoryStore: CategoryStore
-    let trackerRecordStore: TrackerRecordStore
+    let trackerRecordStore: RecordStore
     
-    init(trackerStore: TrackerStore, trackerCategoryStore: CategoryStore, trackerRecordStore: TrackerRecordStore) {
+    init(trackerStore: TrackerStore, trackerCategoryStore: CategoryStore, trackerRecordStore: RecordStore) {
         self.trackerStore = trackerStore
         self.trackerCategoryStore = trackerCategoryStore
         self.trackerRecordStore = trackerRecordStore

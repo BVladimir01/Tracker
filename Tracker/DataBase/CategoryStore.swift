@@ -117,12 +117,8 @@ extension CategoryStore: NSFetchedResultsControllerDelegate {
             assertionFailure("CategoryStore.controllerDidChangeContent: changed indices are nil on update")
             return
         }
-        guard let delegate else {
-            assertionFailure("CategoryStore.controllerDidChangeContent: delegate is nil")
-            return
-        }
         let update = CategoryUpdate(insertedIndices: insertedIndices)
-        delegate.categoryStoreDidUpdate(with: update)
+        delegate?.categoryStoreDidUpdate(with: update)
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
