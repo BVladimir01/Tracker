@@ -91,18 +91,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E70556012DE6F55500A43EF6 /* NewTrackerSetup */ = {
+		E70556012DE6F55500A43EF6 /* NewTrackerSetupFlow */ = {
 			isa = PBXGroup;
 			children = (
-				E7C3A8D42DE7439400096105 /* ColorsHandler.swift */,
-				E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */,
-				E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */,
-				E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */,
-				E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */,
+				E7C3A9492DEF9AC500096105 /* NewTrackerSetup */,
 				E7D037C52DD0FE86007819A8 /* Schedule */,
 				E7D037C42DD0FE76007819A8 /* Category */,
 			);
-			path = NewTrackerSetup;
+			path = NewTrackerSetupFlow;
 			sourceTree = "<group>";
 		};
 		E7C3A8E92DE81EEA00096105 /* DataBase */ = {
@@ -116,6 +112,44 @@
 				E7C3A8ED2DE8203900096105 /* TrackerDataModel.xcdatamodeld */,
 			);
 			path = DataBase;
+			sourceTree = "<group>";
+		};
+		E7C3A9492DEF9AC500096105 /* NewTrackerSetup */ = {
+			isa = PBXGroup;
+			children = (
+				E7D037B22DCF2F3C007819A8 /* NewTrackerSetupViewController.swift */,
+				E7C3A94B2DEF9B8200096105 /* EmojisTable */,
+				E7C3A94A2DEF9B7500096105 /* ColorsTable */,
+			);
+			path = NewTrackerSetup;
+			sourceTree = "<group>";
+		};
+		E7C3A94A2DEF9B7500096105 /* ColorsTable */ = {
+			isa = PBXGroup;
+			children = (
+				E7C3A8D42DE7439400096105 /* ColorsHandler.swift */,
+				E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */,
+			);
+			path = ColorsTable;
+			sourceTree = "<group>";
+		};
+		E7C3A94B2DEF9B8200096105 /* EmojisTable */ = {
+			isa = PBXGroup;
+			children = (
+				E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */,
+				E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */,
+			);
+			path = EmojisTable;
+			sourceTree = "<group>";
+		};
+		E7C3A94C2DEF9BD500096105 /* StartupFlow */ = {
+			isa = PBXGroup;
+			children = (
+				E7D0370E2DC3B80E007819A8 /* AppDelegate.swift */,
+				E7D037102DC3B80E007819A8 /* SceneDelegate.swift */,
+				E7D037122DC3B80E007819A8 /* TabBarController.swift */,
+			);
+			path = StartupFlow;
 			sourceTree = "<group>";
 		};
 		E7D037022DC3B80E007819A8 = {
@@ -137,16 +171,14 @@
 		E7D0370D2DC3B80E007819A8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				E7D037AF2DCF1E38007819A8 /* TrackerCreation */,
-				E7D037A62DCA88C2007819A8 /* Stats */,
+				E7C3A94C2DEF9BD500096105 /* StartupFlow */,
 				E7D037A52DCA88AF007819A8 /* TrackersList */,
+				E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */,
+				E7D037A62DCA88C2007819A8 /* Stats */,
 				E7D037942DC8AA93007819A8 /* Extensions */,
 				E7D037912DC8A9A9007819A8 /* Models */,
 				E7C3A8E92DE81EEA00096105 /* DataBase */,
 				E7D037242DC3C014007819A8 /* Resources */,
-				E7D0370E2DC3B80E007819A8 /* AppDelegate.swift */,
-				E7D037102DC3B80E007819A8 /* SceneDelegate.swift */,
-				E7D037122DC3B80E007819A8 /* TabBarController.swift */,
 				E7D037192DC3B80F007819A8 /* LaunchScreen.storyboard */,
 			);
 			path = Tracker;
@@ -164,7 +196,6 @@
 		E7D037912DC8A9A9007819A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E7D037C02DD07A7D007819A8 /* TrackerCellViewModel.swift */,
 				E7D037972DC8AD80007819A8 /* RGBColor.swift */,
 				E7D0379B2DC8AECB007819A8 /* Weekday.swift */,
 				E7D0379F2DC8B0F7007819A8 /* Schedule.swift */,
@@ -188,6 +219,7 @@
 			children = (
 				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
+				E7D037C02DD07A7D007819A8 /* TrackerCellViewModel.swift */,
 				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
 			);
 			path = TrackersList;
@@ -201,13 +233,13 @@
 			path = Stats;
 			sourceTree = "<group>";
 		};
-		E7D037AF2DCF1E38007819A8 /* TrackerCreation */ = {
+		E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */ = {
 			isa = PBXGroup;
 			children = (
 				E7D037B02DCF1E59007819A8 /* NewTrackerViewController.swift */,
-				E70556012DE6F55500A43EF6 /* NewTrackerSetup */,
+				E70556012DE6F55500A43EF6 /* NewTrackerSetupFlow */,
 			);
-			path = TrackerCreation;
+			path = TrackerCreationFlow;
 			sourceTree = "<group>";
 		};
 		E7D037C42DD0FE76007819A8 /* Category */ = {
