@@ -11,13 +11,22 @@ import CoreData
 
 final class TrackerDataStores {
     let trackerStore: TrackerStore
-    let trackerCategoryStore: CategoryStore
-    let trackerRecordStore: RecordStore
+    let categoryStore: CategoryStore
+    let recordStore: RecordStore
+    private let container: NSPersistentContainer
     
-    init(trackerStore: TrackerStore, trackerCategoryStore: CategoryStore, trackerRecordStore: RecordStore) {
-        self.trackerStore = trackerStore
-        self.trackerCategoryStore = trackerCategoryStore
-        self.trackerRecordStore = trackerRecordStore
+    init() throws {
+        let container = NSPersistentContainer(name: "TrackerDataModel")
+        container.loadPersistentStores { description, error in
+            if let error {
+                assertionFailure("AppDelegate: \(error.localizedDescription)")
+            }
+        }
+        let context = container.viewContext
+        self.container = container
+        self.trackerStore = try TrackerStore(context: context)
+        self.categoryStore = try CategoryStore(context: context)
+        self.recordStore = RecordStore(context: context)
     }
 }
 

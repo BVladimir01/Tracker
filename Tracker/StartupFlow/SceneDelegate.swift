@@ -13,23 +13,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            assertionFailure("SceneDelegate.scene: Failed to get appDelegate")
-            return
-        }
-        let context = appDelegate.persistentContainer.viewContext
-        guard let categoryStore = try? CategoryStore(context: context) else {
-            assertionFailure("SceneDelegate.scene: Failed to initialize trackerCategoryStore")
-            return
-        }
         do {
-            let trackerStore = try TrackerStore(context: context)
-            let recordStore = RecordStore(context: context)
+            let stores = try TrackerDataStores()
             window = UIWindow(windowScene: windowScene)
-            window?.rootViewController = TabBarController(stores:
-                                                            TrackerDataStores(trackerStore: trackerStore,
-                                                                              trackerCategoryStore: categoryStore,
-                                                                              trackerRecordStore: recordStore))
+            window?.rootViewController = TabBarController(stores: stores)
             window?.makeKeyAndVisible()
         } catch {
             assertionFailure("SceneDelegate.scene: error \(error)")

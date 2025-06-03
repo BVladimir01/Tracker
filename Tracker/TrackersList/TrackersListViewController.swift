@@ -34,8 +34,8 @@ final class TrackersListViewController: UIViewController {
     
     init(trackerDataStores: TrackerDataStores) {
         self.trackerStore = trackerDataStores.trackerStore
-        self.categoryStore = trackerDataStores.trackerCategoryStore
-        self.recordStore = trackerDataStores.trackerRecordStore
+        self.categoryStore = trackerDataStores.categoryStore
+        self.recordStore = trackerDataStores.recordStore
         super.init(nibName: nil, bundle: nil)
         recordStore.delegate = self
         trackerStore.delegate = self

@@ -245,8 +245,8 @@
 		E7D037C42DD0FE76007819A8 /* Category */ = {
 			isa = PBXGroup;
 			children = (
-				E7C3A9472DEE30E000096105 /* CategorySelectionCellViewModel.swift */,
 				E7D037BA2DCF9B17007819A8 /* CategorySelectionViewController.swift */,
+				E7C3A9472DEE30E000096105 /* CategorySelectionCellViewModel.swift */,
 				E7D037BE2DCFD6A6007819A8 /* CategoryCreationViewController.swift */,
 			);
 			path = Category;
