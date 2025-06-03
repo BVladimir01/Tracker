@@ -33,19 +33,9 @@ final class TrackerRecordStore {
         try context.save()
     }
     
-    func removeRecord(fromTrackerWithID trackerID: UUID, on date: Date) throws {
-        let request = TrackerRecordEntity.fetchRequest()
-        let idPredicate = NSPredicate(format: "%K == %@",
-                                      #keyPath(TrackerRecordEntity.trackerID),
-                                      trackerID as NSUUID)
-        let dayPredicate = try fetchRequestPredicate(for: date)
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
-        let recordEntities = try context.fetch(request)
-        if recordEntities.count > 1 {
-            throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(trackerID) has more than one record for this day \(date)")
-        }
-        guard let recordEntity = recordEntities.first else {
-            throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(trackerID) has no record for this day \(date)")
+    func removeRecord(from tracker: Tracker, on date: Date) throws {
+        guard let recordEntity = try trackerRecordEntity(for: tracker, on: date) else {
+            throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(tracker.id) has no record for this day \(date)")
         }
         context.delete(recordEntity)
     }
@@ -59,15 +49,8 @@ final class TrackerRecordStore {
         return requestResult.count
     }
     
-    func isCompleted(trackerID: UUID, on date: Date) throws -> Bool {
-        let request = TrackerRecordEntity.fetchRequest()
-        let idPredicate = NSPredicate(format: "%K == %@",
-                                      #keyPath(TrackerRecordEntity.trackerID),
-                                      trackerID as NSUUID)
-        let dayPredicate = try fetchRequestPredicate(for: date)
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
-        let requestResult = try context.fetch(request)
-        return !requestResult.isEmpty
+    func isCompleted(tracker: Tracker, on date: Date) throws -> Bool {
+        return try trackerRecordEntity(for: tracker, on: date) != nil
     }
     
     // MARK: - Private Methods
@@ -99,6 +82,7 @@ final class TrackerRecordStore {
                            dayEnd as NSDate)
     }
     
+    
     private func trackerEntity(withID id: UUID) throws -> TrackerEntity {
         let request = TrackerEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
@@ -125,6 +109,20 @@ final class TrackerRecordStore {
         } else {
             throw TrackerRecordStoreError.trackerRecordNotFound(id: id)
         }
+    }
+    
+    private func trackerRecordEntity(for tracker: Tracker, on date: Date) throws -> TrackerRecordEntity? {
+        let request = TrackerRecordEntity.fetchRequest()
+        let idPredicate = NSPredicate(format: "%K == %@",
+                                      #keyPath(TrackerRecordEntity.trackerID),
+                                      tracker.id as NSUUID)
+        let dayPredicate = try fetchRequestPredicate(for: date)
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
+        let recordEntities = try context.fetch(request)
+        if recordEntities.count > 1 {
+            throw TrackerRecordStoreError.unknown(message: "TrackerRecordStore.RemoveRecord: tracker \(tracker.id) has more than one record for the day \(date)")
+        }
+        return recordEntities.first
     }
     
     private func trackerRecordEntities(on date: Date) throws -> [TrackerRecordEntity] {

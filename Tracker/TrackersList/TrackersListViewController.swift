@@ -188,7 +188,7 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         }
         let isCompleted: Bool
         do {
-            isCompleted = try recordStore.isCompleted(trackerID: tracker.id, on: selectedDate)
+            isCompleted = try recordStore.isCompleted(tracker: tracker, on: selectedDate)
         } catch {
             assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
             isCompleted = false
@@ -321,8 +321,8 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         do {
             let tracker = try trackerStore.tracker(at: indexPath)
             let trackerID = tracker.id
-            if try recordStore.isCompleted(trackerID: trackerID, on: selectedDate) {
-                try recordStore.removeRecord(fromTrackerWithID: trackerID, on: selectedDate)
+            if try recordStore.isCompleted(tracker: tracker, on: selectedDate) {
+                try recordStore.removeRecord(from: tracker, on: selectedDate)
             } else {
                 try recordStore.add(TrackerRecord(id: UUID(), trackerID: trackerID, date: selectedDate))
             }
