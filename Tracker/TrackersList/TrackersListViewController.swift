@@ -9,7 +9,7 @@ import UIKit
 
 
 // MARK: - TrackersListViewController
-final class TrackersListViewController: UIViewController, NewTrackerViewControllerDelegate {
+final class TrackersListViewController: UIViewController {
     
     // MARK: - Private Properties
 
@@ -61,21 +61,6 @@ final class TrackersListViewController: UIViewController, NewTrackerViewControll
         updateStubViewState()
     }
     
-    // MARK: - Internal Methods
-    
-    func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
-        do {
-            try trackerStore.add(tracker)
-        } catch {
-            assertionFailure("TrackersListViewController.newTrackerViewController: error \(error)")
-        }
-        updateStubViewState()
-        vc.dismiss(animated: true)
-    }
-    
-    func newTrackerViewControllerDidCancelCreation(_ vc: UIViewController) {
-        vc.dismiss(animated: true)
-    }
     
     // MARK: - Private Methods - Views Setup
     
@@ -302,6 +287,26 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 }
 
 
+// MARK: - NewTrackerViewControllerDelegate
+extension TrackersListViewController: NewTrackerViewControllerDelegate {
+    
+    func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
+        do {
+            try trackerStore.add(tracker)
+        } catch {
+            assertionFailure("TrackersListViewController.newTrackerViewController: error \(error)")
+        }
+        updateStubViewState()
+        vc.dismiss(animated: true)
+    }
+    
+    func newTrackerViewControllerDidCancelCreation(_ vc: UIViewController) {
+        vc.dismiss(animated: true)
+    }
+    
+}
+
+
 // MARK: - TrackerCollectionViewCellDelegate
 extension TrackersListViewController: TrackerCollectionViewCellDelegate {
     
@@ -326,6 +331,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
 }
 
 
+// MARK: - TrackerStoreDelegate
 extension TrackersListViewController: TrackerStoreDelegate {
     func trackerStoreDidUpdate(with update: TrackerStoreUpdate) {
         let insertedItemIndexPaths = update.insertedItemIndexPaths
@@ -342,6 +348,7 @@ extension TrackersListViewController: TrackerStoreDelegate {
 }
 
 
+// MARK: - RecordStoreDelegate
 extension TrackersListViewController: RecordStoreDelegate {
     func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
         do {
@@ -349,7 +356,9 @@ extension TrackersListViewController: RecordStoreDelegate {
                 assertionFailure("TrackersListViewController.trackerRecordStoreDidChangeRecordForTracker: indexPath for \(tracker) is nil")
                 return
             }
-            collectionView.reloadItems(at: [indexPath])
+            UIView.performWithoutAnimation {
+                    collectionView.reloadItems(at: [indexPath])
+            }
         } catch {
             assertionFailure("TrackerListViewController.trackerRecordStoreDidChangeRecordForTracker: error \(error)")
         }
