@@ -126,7 +126,7 @@ final class TrackerStore: NSObject {
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
         if entities.count > 1 {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchTrackerEntity: Several entities for tracker with id \(id)")
+            throw TrackerDataStoresError.unexpected(message: "TrackerStore.fetchTrackerEntity: Several entities for tracker with id \(id)")
         }
         return entities.first
     }
@@ -136,14 +136,14 @@ final class TrackerStore: NSObject {
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
         if entities.count > 1 {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchCategoryEntity: Several entities for category with id \(id)")
+            throw TrackerDataStoresError.unexpected(message: "TrackerStore.fetchCategoryEntity: Several entities for category with id \(id)")
         }
         return entities.first
     }
     
     private func fetchRequestPredicate(for date: Date) throws -> NSCompoundPredicate {
         guard let weekday = Weekday.fromCalendarComponent(Calendar.current.component(.weekday, from: date)) else {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create weekday for date")
+            throw TrackerDataStoresError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create weekday for date")
         }
         let weekdayBit = 1 << weekday.rawValue
         let regularPredicate = NSPredicate(format: "%K == YES AND (%K & %@ != 0)",
@@ -152,7 +152,7 @@ final class TrackerStore: NSObject {
                                            weekdayBit as NSNumber)
         let dayStart = Calendar.current.startOfDay(for: date)
         guard let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: date) else {
-            throw TrackerStoreError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create nextDay date")
+            throw TrackerDataStoresError.unexpected(message: "TrackerStore.fetchRequestPredicate: Failed to create nextDay date")
         }
         let nextDayStart = Calendar.current.startOfDay(for: nextDay)
         let irregularPredicate = NSPredicate(format: "%K == NO AND (%K >= %@ AND %K < %@)",
@@ -170,13 +170,6 @@ final class TrackerStore: NSObject {
         }
     }
 
-}
-
-
-// MARK: - TrackerStoreError
-enum TrackerStoreError: Error {
-    case trackerPropertiesNotInitialized(forObjectID: NSManagedObjectID)
-    case unexpected(message: String)
 }
 
 

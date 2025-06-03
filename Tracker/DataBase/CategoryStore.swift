@@ -79,7 +79,7 @@ final class CategoryStore: NSObject {
     
     private func trackerCategory(from categoryEntity: TrackerCategoryEntity) throws -> TrackerCategory {
         guard let id = categoryEntity.id, let title = categoryEntity.title else {
-            throw CategoryStoreError.propertyIsNil(ofObjectWithID: categoryEntity.objectID)
+            throw TrackerDataStoresError.categoryPropertiesNotInitialized(forObjectID: categoryEntity.objectID)
         }
         return TrackerCategory(id: id, title: title)
     }
@@ -89,19 +89,11 @@ final class CategoryStore: NSObject {
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
         if entities.count > 1 {
-            throw CategoryStoreError.unexpected(message: "CategoryStore.fetchCategoryEntity: Several entities for category with id \(id)")
+            throw TrackerDataStoresError.unexpected(message: "CategoryStore.fetchCategoryEntity: Several entities for category with id \(id)")
         }
         return entities.first
     }
     
-}
-
-
-// MARK: - CategoryStoreError
-enum CategoryStoreError: Error {
-    case propertyIsNil(ofObjectWithID: NSManagedObjectID)
-    case categoryEntityDoesNotExist(forID: UUID)
-    case unexpected(message: String)
 }
 
 

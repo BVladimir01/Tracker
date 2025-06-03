@@ -5,6 +5,10 @@
 //  Created by Vladimir on 02.06.2025.
 //
 
+
+import CoreData
+
+
 final class TrackerDataStores {
     let trackerStore: TrackerStore
     let trackerCategoryStore: CategoryStore
@@ -15,4 +19,11 @@ final class TrackerDataStores {
         self.trackerCategoryStore = trackerCategoryStore
         self.trackerRecordStore = trackerRecordStore
     }
+}
+
+
+enum TrackerDataStoresError: Error {
+    case trackerPropertiesNotInitialized(forObjectID: NSManagedObjectID)
+    case categoryPropertiesNotInitialized(forObjectID: NSManagedObjectID)
+    case unexpected(message: String)
 }

@@ -58,7 +58,7 @@ final class RecordStore {
             return
         }
         guard let recordEntity = try fetchRecordEntity(forTrackerWithID: tracker.id, forDate: date) else {
-            throw RecordStoreError.unexpected(message: "RecordStore.RemoveRecord: tracker \(tracker.id) has no record for this day \(date)")
+            throw TrackerDataStoresError.unexpected(message: "RecordStore.RemoveRecord: tracker \(tracker.id) has no record for this day \(date)")
         }
         context.delete(recordEntity)
         try context.save()
@@ -82,7 +82,7 @@ final class RecordStore {
     private func fetchRequestPredicate(for date: Date) throws -> NSPredicate {
         let dayStart = Calendar.current.startOfDay(for: date)
         guard let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: date) else {
-            throw RecordStoreError.unexpected(message: "RecordStore.fetchRequestPredicate: Failed to create nextDay date")
+            throw TrackerDataStoresError.unexpected(message: "RecordStore.fetchRequestPredicate: Failed to create nextDay date")
         }
         let dayEnd = Calendar.current.startOfDay(for: nextDay)
         return NSPredicate(format: "%K >= %@ AND %K < %@",
@@ -97,7 +97,7 @@ final class RecordStore {
         request.predicate = NSPredicate(format: "id == %@", id as NSUUID)
         let entities = try context.fetch(request)
         if entities.count > 1 {
-            throw RecordStoreError.unexpected(message: "RecordStore.fetchTrackerEntity: tracker with id \(id) has more than one entity")
+            throw TrackerDataStoresError.unexpected(message: "RecordStore.fetchTrackerEntity: tracker with id \(id) has more than one entity")
         }
         return entities.first
     }
@@ -111,15 +111,9 @@ final class RecordStore {
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [idPredicate, dayPredicate])
         let recordEntities = try context.fetch(request)
         if recordEntities.count > 1 {
-            throw RecordStoreError.unexpected(message: "RecordStore.RemoveRecord: tracker with id \(id) has more than one record for the day \(date)")
+            throw TrackerDataStoresError.unexpected(message: "RecordStore.RemoveRecord: tracker with id \(id) has more than one record for the day \(date)")
         }
         return recordEntities.first
     }
     
-}
-
-
-// MARK: - RecordStoreError
-enum RecordStoreError: Error {
-    case unexpected(message: String)
 }

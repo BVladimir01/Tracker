@@ -14,7 +14,7 @@ struct TrackerEntityTransformer {
               let colorEntity = trackerEntity.color,
               let emoji = trackerEntity.emoji,
               let categoryID = trackerEntity.category?.id else {
-            throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
+            throw TrackerDataStoresError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
         }
         let rgbColor = RGBColor(red: colorEntity.red,
                               green: colorEntity.green,
@@ -36,7 +36,7 @@ struct TrackerEntityTransformer {
             var weekdayRawValue = 0
             while weekdaysMask != 0 {
                 guard let newWeekday = Weekday(rawValue: weekdayRawValue) else {
-                    throw TrackerStoreError.unexpected(message: "TrackerStore.schedule: Failed to create weekday from raw value")
+                    throw TrackerDataStoresError.unexpected(message: "TrackerStore.schedule: Failed to create weekday from raw value")
                 }
                 if weekdaysMask & 1 != 0 {
                     weekdays.insert(newWeekday)
@@ -45,12 +45,12 @@ struct TrackerEntityTransformer {
                 weekdaysMask >>= 1
             }
             if weekdays.isEmpty {
-                throw TrackerStoreError.unexpected(message: "Tracker.schedule: Weekdays are empty")
+                throw TrackerDataStoresError.unexpected(message: "Tracker.schedule: Weekdays are empty")
             }
             return .regular(weekdays)
         } else {
             guard let date = trackerEntity.date else {
-                throw TrackerStoreError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
+                throw TrackerDataStoresError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
             }
             return .irregular(date)
         }
