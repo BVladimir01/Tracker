@@ -208,7 +208,7 @@ extension ScheduleSelectionViewController {
             static let cornerRadius: CGFloat = 16
             static let rowHeight: CGFloat = 75
             static let width: CGFloat = 343
-            static let spacingToButton: CGFloat = 39
+            static let spacingToButton: CGFloat = 47
             static let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             static let separatorColor: UIColor = .gray
             

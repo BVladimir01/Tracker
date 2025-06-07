@@ -17,12 +17,10 @@ protocol CategoryCreationViewControllerDelegate: AnyObject {
 // MARK: - CategoryCreationViewController
 final class CategoryCreationViewController: UIViewController {
     
-    // MARK: - Internal Properties
-    
-    var dataStorage: TrackersDataSource!
-    weak var delegate: CategoryCreationViewControllerDelegate?
-    
     // MARK: - Private Properties
+    
+    private var categoryStore: CategoryStore
+    private weak var delegate: CategoryCreationViewControllerDelegate?
     
     private let textField = UITextField()
     private let doneButton = UIButton(type: .system)
@@ -33,6 +31,18 @@ final class CategoryCreationViewController: UIViewController {
         } else {
             false
         }
+    }
+    
+    // MARK: Initializers
+    
+    init(categoryStore: CategoryStore, delegate: CategoryCreationViewControllerDelegate) {
+        self.categoryStore = categoryStore
+        self.delegate = delegate
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init not implemented")
     }
     
     // MARK: - Lifecycle
@@ -148,13 +158,7 @@ final class CategoryCreationViewController: UIViewController {
             assertionFailure("CategoryCreationViewController.doneButtonTapped: TextField.text is nil")
             return
         }
-        let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
-        // TODO: show alert with an error message
-        if dataStorage.trackerCategories.contains(newCategory) {
-            assertionFailure("CategoryCreationViewController.doneButtonTapped: Such category already exists")
-            return
-        }
-        dataStorage.add(category: newCategory)
+        let newCategory = TrackerCategory(id: UUID(), title: categoryTitle)
         delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
     }
 }

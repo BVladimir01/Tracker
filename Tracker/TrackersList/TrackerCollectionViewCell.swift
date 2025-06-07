@@ -70,7 +70,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         recordLabel.text = viewModel.recordText
     }
     
-    func set(trackerID: UUID) {
+    func setTrackerID(_ trackerID: UUID) {
         self.trackerID = trackerID
     }
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Weekday: Int, CaseIterable, Equatable, Comparable {
+enum Weekday: Int, CaseIterable, Equatable, Comparable, Codable {
     case monday = 0, tuesday, wednesday, thursday, friday, saturday, sunday
     
     static func fromCalendarComponent(_ index: Int) -> Weekday? {

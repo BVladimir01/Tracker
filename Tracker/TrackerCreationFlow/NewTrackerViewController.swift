@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: NewTrackerViewControllerDelegate
 protocol NewTrackerViewControllerDelegate: AnyObject {
-    func newTrackerViewControllerDidCreateTracker(_ vc: UIViewController)
+    func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker)
     func newTrackerViewControllerDidCancelCreation(_ vc: UIViewController)
 }
 
@@ -17,13 +17,11 @@ protocol NewTrackerViewControllerDelegate: AnyObject {
 // MARK: - NewTracerViewController
 final class NewTrackerViewController: UIViewController, NewTrackerSetupViewControllerDelegate {
     
-    // MARK: - Internal Properties
-    
-    weak var delegate: NewTrackerViewControllerDelegate?
-    var dataStorage: TrackersDataSource!
-    var selectedDate: Date?
-    
     // MARK: - Private Properties
+    
+    private weak var delegate: NewTrackerViewControllerDelegate?
+    private var selectedDate: Date
+    private var categoryStore: CategoryStore
     
     private let regularTrackerButton = UIButton(type: .system)
     private let irregularTrackerButton = UIButton(type: .system)
@@ -31,6 +29,18 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     private let irregularTrackerTitle = "Нерегулярное событие"
     private let regularTrackerTitle = "Привычка"
     
+    // MARK: Initializers
+    
+    init(delegate: NewTrackerViewControllerDelegate, selectedDate: Date, categoryStore: CategoryStore) {
+        self.delegate = delegate
+        self.selectedDate = selectedDate
+        self.categoryStore = categoryStore
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init not implemented")
+    }
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -43,9 +53,9 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     // MARK: - Internal Methods
     
-    func newTrackerSetupViewControllerDidCreateTracker(_ vc: UIViewController) {
+    func newTrackerSetupViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
         vc.dismiss(animated: true)
-        delegate?.newTrackerViewControllerDidCreateTracker(self)
+        delegate?.newTrackerViewController(self, didCreateTracker: tracker)
     }
     
     func newTrackerSetupViewControllerDidCancelCreation(_ vc: UIViewController) {
@@ -128,11 +138,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
             assertionFailure("NewTrackerViewController.didTapCreate: unknown title")
             return
         }
-        let newTrackerSetupVC = NewTrackerSetupViewController()
-        newTrackerSetupVC.trackerIsRegular = createRegularTracker
-        newTrackerSetupVC.dataStorage = dataStorage
-        newTrackerSetupVC.delegate = self
-        newTrackerSetupVC.selectedDate = selectedDate
+        let newTrackerSetupVC = NewTrackerSetupViewController(trackerIsRegular: createRegularTracker, categoryStore: categoryStore, selectedDate: selectedDate, delegate: self)
         present(newTrackerSetupVC, animated: true)
     }
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Schedule {
+enum Schedule: Codable {
     case regular(Set<Weekday>)
     case irregular(Date)
 }

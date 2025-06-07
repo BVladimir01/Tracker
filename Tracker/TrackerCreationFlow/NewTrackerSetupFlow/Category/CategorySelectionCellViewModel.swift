@@ -1,0 +1,19 @@
+//
+//  CategorySelectionCellViewModel.swift
+//  Tracker
+//
+//  Created by Vladimir on 02.06.2025.
+//
+
+import UIKit
+
+struct CategorySelectionCellViewModel {
+    let isFirst: Bool
+    let isLast: Bool
+    let isSelected: Bool
+    let text: String
+    let textFont: UIFont
+    let textColor: UIColor
+    let cornerRadius: CGFloat
+    let backgroundColor: UIColor
+}
