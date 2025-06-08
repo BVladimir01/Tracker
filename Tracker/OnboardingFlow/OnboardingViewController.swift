@@ -32,6 +32,7 @@ final class OnboardingViewController: UIPageViewController {
         super.viewDidLoad()
         dataSource = self
         delegate = self
+        setViewControllers([pages[0]], direction: .forward, animated: true)
         setUpButton()
         setUpPageControl()
         NSLayoutConstraint.activate(constraints)

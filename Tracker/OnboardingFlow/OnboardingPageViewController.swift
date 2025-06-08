@@ -29,6 +29,7 @@ final class OnboardingPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpBackground()
         setUpTitleLabel()
         NSLayoutConstraint.activate(constraints)
     }
@@ -45,6 +46,19 @@ final class OnboardingPageViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                             constant: LayoutConstants.Title.spacingToTopView),
             titleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+        ])
+    }
+    
+    private func setUpBackground() {
+        let background = UIImageView(image: backgroundImage)
+        background.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(background)
+        
+        constraints.append(contentsOf: [
+            background.topAnchor.constraint(equalTo: view.topAnchor),
+            background.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            background.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            background.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
