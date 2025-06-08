@@ -75,7 +75,21 @@ final class OnboardingViewController: UIPageViewController {
     
     @objc
     private func buttonTapped() {
-        // TODO: implement
+        do {
+            let stores = try TrackerDataStores()
+            let tabBarController = TabBarController(stores: stores)
+            guard let window = view.window else {
+                assertionFailure("OnboardingViewController.buttonTapped: failed to get window")
+                return
+            }
+//            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
+//                window.rootViewController = tabBarController
+//            }
+            window.rootViewController = tabBarController
+        } catch {
+            print(error)
+            assertionFailure("OnboardingViewController.buttonTapped: failed to initialize DataStores")
+        }
     }
     
 }
