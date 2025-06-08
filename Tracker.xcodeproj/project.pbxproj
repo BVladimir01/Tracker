@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E7370FCC2DF61F230087785E /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */; };
+		E7370FCF2DF61F850087785E /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */; };
 		E7C3A8CF2DE7428500096105 /* EmojisHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */; };
 		E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */; };
 		E7C3A8D32DE7439000096105 /* ColorsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisHandler.swift; sourceTree = "<group>"; };
 		E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -99,6 +103,15 @@
 				E7D037C42DD0FE76007819A8 /* Category */,
 			);
 			path = NewTrackerSetupFlow;
+			sourceTree = "<group>";
+		};
+		E7370FCA2DF61EED0087785E /* OnboardingFlow */ = {
+			isa = PBXGroup;
+			children = (
+				E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */,
+				E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */,
+			);
+			path = OnboardingFlow;
 			sourceTree = "<group>";
 		};
 		E7C3A8E92DE81EEA00096105 /* DataBase */ = {
@@ -171,14 +184,15 @@
 		E7D0370D2DC3B80E007819A8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				E7C3A8E92DE81EEA00096105 /* DataBase */,
+				E7D037942DC8AA93007819A8 /* Extensions */,
+				E7D037912DC8A9A9007819A8 /* Models */,
+				E7370FCA2DF61EED0087785E /* OnboardingFlow */,
+				E7D037242DC3C014007819A8 /* Resources */,
 				E7C3A94C2DEF9BD500096105 /* StartupFlow */,
 				E7D037A52DCA88AF007819A8 /* TrackersList */,
 				E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */,
 				E7D037A62DCA88C2007819A8 /* Stats */,
-				E7D037942DC8AA93007819A8 /* Extensions */,
-				E7D037912DC8A9A9007819A8 /* Models */,
-				E7C3A8E92DE81EEA00096105 /* DataBase */,
-				E7D037242DC3C014007819A8 /* Resources */,
 				E7D037192DC3B80F007819A8 /* LaunchScreen.storyboard */,
 			);
 			path = Tracker;
@@ -340,6 +354,7 @@
 				E7D037132DC3B80E007819A8 /* TabBarController.swift in Sources */,
 				E7D037982DC8AD80007819A8 /* RGBColor.swift in Sources */,
 				E7C3A93A2DECEAAE00096105 /* CategoryStore.swift in Sources */,
+				E7370FCF2DF61F850087785E /* OnboardingPageViewController.swift in Sources */,
 				E7C3A8D52DE7439400096105 /* ColorsHandler.swift in Sources */,
 				E7D037A22DC8B2C9007819A8 /* TrackerRecord.swift in Sources */,
 				E7D0379E2DC8B082007819A8 /* TrackerCategory.swift in Sources */,
@@ -357,6 +372,7 @@
 				E7D037A42DCA6DA8007819A8 /* TrackerCollectionViewCell.swift in Sources */,
 				E7C3A8D32DE7439000096105 /* ColorsCollectionViewCell.swift in Sources */,
 				E7D037112DC3B80E007819A8 /* SceneDelegate.swift in Sources */,
+				E7370FCC2DF61F230087785E /* OnboardingViewController.swift in Sources */,
 				E7C3A9422DED9AEE00096105 /* TrackerDataStores.swift in Sources */,
 				E7D037C12DD07A7D007819A8 /* TrackerCellViewModel.swift in Sources */,
 				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
