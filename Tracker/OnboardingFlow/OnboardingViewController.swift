@@ -30,6 +30,8 @@ final class OnboardingViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dataSource = self
+        delegate = self
         setUpButton()
         setUpPageControl()
         NSLayoutConstraint.activate(constraints)
@@ -70,6 +72,43 @@ final class OnboardingViewController: UIPageViewController {
     @objc
     private func buttonTapped() {
         // TODO: implement
+    }
+    
+}
+
+
+extension OnboardingViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        if viewController == pages[1] {
+            return pages[0]
+        } else {
+            return nil
+        }
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        if viewController == pages[0] {
+            return pages[1]
+        } else {
+            return nil
+        }
+    }
+    
+    func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        2
+    }
+    
+    func presentationIndex(for pageViewController: UIPageViewController) -> Int {
+        0
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard let currentViewController = pageViewController.viewControllers?.first, let currentIndex = pages.firstIndex(of: currentViewController) else {
+            assertionFailure("OnboardingViewController.pageViewController: failed to get index of viewController")
+            return
+        }
+        pageControl.currentPage = currentIndex
     }
     
 }
