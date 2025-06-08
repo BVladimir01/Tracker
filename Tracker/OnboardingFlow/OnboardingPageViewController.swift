@@ -37,6 +37,7 @@ final class OnboardingPageViewController: UIViewController {
     private func setUpTitleLabel() {
         titleLabel.text = text
         titleLabel.textColor = LayoutConstants.Title.textColor
+        titleLabel.font = LayoutConstants.Title.font
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 2
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +46,8 @@ final class OnboardingPageViewController: UIViewController {
         constraints.append(contentsOf: [
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                             constant: LayoutConstants.Title.spacingToTopView),
-            titleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+            titleLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            titleLabel.widthAnchor.constraint(equalToConstant: LayoutConstants.Title.width)
         ])
     }
     
@@ -75,7 +77,7 @@ extension OnboardingPageViewController {
             static let spacingToTopView: CGFloat = 388
             static let font = UIFont.systemFont(ofSize: 32, weight: .bold)
             static let textColor: UIColor = .ypBlack
-            
+            static let width: CGFloat = 343
         }
     }
 }

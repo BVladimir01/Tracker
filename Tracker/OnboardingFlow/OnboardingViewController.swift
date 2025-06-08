@@ -55,7 +55,8 @@ final class OnboardingViewController: UIPageViewController {
     
     private func setUpButton() {
         button.setTitle("Вот это технологии", for: .normal)
-        button.tintColor = LayoutConstants.Button.color
+        button.backgroundColor = LayoutConstants.Button.color
+        button.tintColor = LayoutConstants.Button.textColor
         button.titleLabel?.textColor = LayoutConstants.Button.textColor
         button.titleLabel?.font = LayoutConstants.Button.font
         button.layer.cornerRadius = LayoutConstants.Button.cornerRadius
@@ -66,7 +67,9 @@ final class OnboardingViewController: UIPageViewController {
         constraints.append(contentsOf: [
             button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                            constant: -LayoutConstants.Button.spacingToBottomView),
-            button.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+            button.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            button.heightAnchor.constraint(equalToConstant: LayoutConstants.Button.height),
+            button.widthAnchor.constraint(equalToConstant: LayoutConstants.Button.width)
         ])
     }
     
@@ -95,15 +98,7 @@ extension OnboardingViewController: UIPageViewControllerDataSource, UIPageViewCo
             return nil
         }
     }
-    
-    func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        2
-    }
-    
-    func presentationIndex(for pageViewController: UIPageViewController) -> Int {
-        0
-    }
-    
+
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard let currentViewController = pageViewController.viewControllers?.first, let currentIndex = pages.firstIndex(of: currentViewController) else {
             assertionFailure("OnboardingViewController.pageViewController: failed to get index of viewController")
@@ -129,7 +124,7 @@ extension OnboardingViewController {
             static let font = UIFont.systemFont(ofSize: 16, weight: .medium)
             static let cornerRadius: CGFloat = 16
             static let height: CGFloat = 60
-            static let width: CGFloat = 33
+            static let width: CGFloat = 335
             static let spacingToBottomView: CGFloat = 69
         }
     }
