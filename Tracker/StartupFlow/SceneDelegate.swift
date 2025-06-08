@@ -13,16 +13,10 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        do {
-            let stores = try TrackerDataStores()
             window = UIWindow(windowScene: windowScene)
-            window?.rootViewController = TabBarController(stores: stores)
+            window?.rootViewController = OnboardingViewController()
             window?.makeKeyAndVisible()
-        } catch {
-            assertionFailure("SceneDelegate.scene: error \(error)")
-        }
     }
-
 
 }
 
