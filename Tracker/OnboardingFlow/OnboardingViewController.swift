@@ -30,8 +30,9 @@ final class OnboardingViewController: UIPageViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpPageControl()
         setUpButton()
+        setUpPageControl()
+        NSLayoutConstraint.activate(constraints)
     }
     
     private func setUpPageControl() {

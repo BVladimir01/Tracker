@@ -13,8 +13,7 @@ final class OnboardingPageViewController: UIViewController {
     
     private let text: String
     private let backgroundImage: UIImage
-    
-    private let button = UIButton(type: .system)
+
     private let titleLabel = UILabel()
     private var constraints: [NSLayoutConstraint] = []
     
@@ -31,7 +30,7 @@ final class OnboardingPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTitleLabel()
-        setUpButton()
+        NSLayoutConstraint.activate(constraints)
     }
     
     private func setUpTitleLabel() {
@@ -49,23 +48,6 @@ final class OnboardingPageViewController: UIViewController {
         ])
     }
     
-    private func setUpButton() {
-        button.setTitle("Вот это технологии", for: .normal)
-        button.tintColor = LayoutConstants.Button.color
-        button.titleLabel?.textColor = LayoutConstants.Button.textColor
-        button.titleLabel?.font = LayoutConstants.Button.font
-        button.layer.cornerRadius = LayoutConstants.Button.cornerRadius
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(button)
-        
-        constraints.append(contentsOf: [
-            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-                                           constant: -LayoutConstants.Button.spacingToBottomView),
-            button.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
-        ])
-    }
-    
     @objc
     private func buttonTapped() {
         // TODO: implement
@@ -80,15 +62,6 @@ extension OnboardingPageViewController {
             static let font = UIFont.systemFont(ofSize: 32, weight: .bold)
             static let textColor: UIColor = .ypBlack
             
-        }
-        enum Button {
-            static let color: UIColor = .ypBlack
-            static let textColor: UIColor = .ypWhite
-            static let font = UIFont.systemFont(ofSize: 16, weight: .medium)
-            static let cornerRadius: CGFloat = 16
-            static let height: CGFloat = 60
-            static let width: CGFloat = 33
-            static let spacingToBottomView: CGFloat = 69
         }
     }
 }
