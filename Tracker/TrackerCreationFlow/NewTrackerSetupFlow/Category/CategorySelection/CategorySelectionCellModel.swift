@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct CategorySelectionCellViewModel {
+struct CategorySelectionCellModel {
     let isFirst: Bool
     let isLast: Bool
     let isSelected: Bool
