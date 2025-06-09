@@ -8,19 +8,18 @@
 import UIKit
 
 
+// MARK: - CategoryCell
 final class CategoryCell: UITableViewCell {
+    
+    // MARK: - Internal Properties
     
     static let reuseID = "CategorySelectionCell"
     
+    // MARK: - Private properties
+    
     private let separatorView = UIView()
     
-    override func prepareForReuse() {
-        layer.maskedCorners = []
-        layer.masksToBounds = false
-        selectedBackgroundView?.layer.maskedCorners = []
-        selectedBackgroundView?.layer.masksToBounds = false
-        setSeparator(hidden: false)
-    }
+    // MARK: - Initializers
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,6 +29,18 @@ final class CategoryCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
+    
+    // MARK: - Lifecycle
+    
+    override func prepareForReuse() {
+        layer.maskedCorners = []
+        layer.masksToBounds = false
+        selectedBackgroundView?.layer.maskedCorners = []
+        selectedBackgroundView?.layer.masksToBounds = false
+        setSeparator(hidden: false)
+    }
+    
+    // MARK: - Internal Methods
     
     func configure(with cellModel: CategorySelectionCellModel) {
         textLabel?.text = cellModel.text
@@ -63,6 +74,7 @@ final class CategoryCell: UITableViewCell {
         }
     }
     
+    // MARK: - Private Methods
     private func setUpCell() {
         backgroundColor = LayoutConstants.backgroundColor
         textLabel?.textColor = LayoutConstants.textColor
@@ -88,6 +100,7 @@ final class CategoryCell: UITableViewCell {
 }
 
 
+// MARK: - LayoutConstants
 extension CategoryCell {
     enum LayoutConstants {
         static let cornerRadius: CGFloat = 16

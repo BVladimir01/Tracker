@@ -10,7 +10,11 @@ import UIKit
 
 typealias Binding<T> = (T) -> ()
 
+
+// MARK: - CategorySelectionViewModel
 final class CategorySelectionViewModel {
+    
+    // MARK: - Internal Properties
     
     var categories: [TrackerCategory] {
         didSet {
@@ -47,7 +51,11 @@ final class CategorySelectionViewModel {
         categories.isEmpty
     }
     
+    // MARK: - Private Properties
+    
     private let categoryStore: CategoryStore
+    
+    // MARK: - Initilizers
     
     init(categoryStore: CategoryStore, selectedCategory: TrackerCategory?) {
         self.categoryStore = categoryStore
@@ -65,6 +73,8 @@ final class CategorySelectionViewModel {
         categoryStore.delegate = self
     }
     
+    // MARK: - Internal Methods
+    
     func addCategory(_ category: TrackerCategory) {
         do {
             try categoryStore.add(category)
@@ -80,7 +90,7 @@ final class CategorySelectionViewModel {
 }
 
 
-
+// MARK: - CategoryStoreDelegate
 extension CategorySelectionViewModel: CategoryStoreDelegate {
     func categoryStoreDidUpdate(with update: CategoryUpdate) {
         categories = categoryStore.allTrackerCategories
