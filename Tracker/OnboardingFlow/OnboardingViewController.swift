@@ -86,6 +86,7 @@ final class OnboardingViewController: UIPageViewController {
                 window.rootViewController = tabBarController
             }
             window.rootViewController = tabBarController
+            OnboardingStatusStore.shared.userDidPassOnboarding()
         } catch {
             print(error)
             assertionFailure("OnboardingViewController.buttonTapped: failed to initialize DataStores")
