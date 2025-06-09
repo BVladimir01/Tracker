@@ -18,10 +18,10 @@ protocol CategorySelectionViewControllerDelegate: AnyObject {
 final class CategorySelectionViewController: UIViewController, CategoryCreationViewControllerDelegate {
     
     // MARK: - Private Properties
-    
+
     private weak var delegate: CategorySelectionViewControllerDelegate?
+    private let viewModel: CategorySelectionViewModel
     private let categoryStore: CategoryStore
-    private var selectedCategory: TrackerCategory?
     
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
@@ -29,19 +29,15 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     
     private let cellReuseID = "checkmarkCell"
     
-    private var shouldDisplayStub: Bool {
-        categoryStore.numberOfRows == 0
-    }
     private var tableShouldScroll: Bool {
-        CGFloat(table.numberOfRows(inSection: 0))*LayoutConstants.Table.rowHeight > LayoutConstants.Table.maxHeight
+        table.contentSize.height > LayoutConstants.Table.maxHeight
     }
     
-    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: CategoryStore, initialCategory: TrackerCategory?) {
+    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: CategoryStore, viewModel: CategorySelectionViewModel) {
         self.delegate = delegate
+        self.viewModel = viewModel
         self.categoryStore = categoryStore
-        selectedCategory = initialCategory
         super.init(nibName: nil, bundle: nil)
-        categoryStore.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -57,12 +53,12 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         setUpStubView()
         setUpAddButton()
         setUpTable()
-        updateStubViewState()
         updateTableViewState()
+        setUpViewModel()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        guard let selectedCategory else {
+        guard let selectedCategory = viewModel.selectedCategory else {
             return
         }
         delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
@@ -71,31 +67,9 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     // MARK: - Internal Methods
     
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
-        defer {
-            updateStubViewState()
-            updateTableViewState()
-            vc.dismiss(animated: true)
-        }
-        do {
-            try categoryStore.add(category)
-            guard let newSelectedRow = try categoryStore.indexPath(for: category)?.row else {
-                assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: failed to get indexPath of new category \(category)")
-                return
-            }
-            let previousRow = newSelectedRow - 1
-            let nextRow = newSelectedRow + 1
-            tableView(table, didSelectRowAt: IndexPath(row: newSelectedRow, section: 0))
-            if previousRow >= 0 {
-                table.reloadRows(at: [IndexPath(row: previousRow, section: 0)], with: .none)
-            }
-            if nextRow <= table.numberOfRows(inSection: 0) - 1 {
-                table.reloadRows(at: [IndexPath(row: nextRow, section: 0)], with: .none)
-            }
-            table.scrollToRow(at: IndexPath(row: newSelectedRow, section: 0),
-                              at: .middle, animated: true)
-        } catch {
-            assertionFailure("CategorySelectionViewController.categoryCreationViewControllerDelegate: error \(error)")
-        }
+        viewModel.addCategory(category)
+        viewModel.setSelectedCategory(to: category)
+        vc.dismiss(animated: true)
     }
     
     // MARK: - Private Methods - Setup
@@ -193,38 +167,63 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         ])
     }
     
+    private func setUpViewModel() {
+        viewModel.onCategoriesChange = { [weak self] categories in
+            guard let self else { return }
+            self.table.reloadData()
+            self.setStubView(hidden: !self.viewModel.shouldDisplayStub)
+            self.updateTableViewState()
+        }
+        viewModel.onSelectedRowChange = { [weak self] rows in
+            let (oldRow, newRow) = rows
+            if let oldRow {
+                self?.table.reloadRows(at: [IndexPath(row: oldRow, section: 0)],
+                                       with: .none)
+            }
+            if let newRow {
+                self?.table.reloadRows(at: [IndexPath(row: newRow, section: 0)],
+                                       with: .none)
+                self?.table.scrollToRow(at: IndexPath(row: newRow, section: 0),
+                                        at: .middle,
+                                        animated: true)
+            }
+        }
+    }
+    
     // MARK: - Private Methods - Helpers
     
-    private func updateStubViewState() {
-        stubView.isHidden = !shouldDisplayStub
+    private func setStubView(hidden: Bool) {
+        stubView.isHidden = hidden
     }
     
     private func updateTableViewState() {
         table.isScrollEnabled = tableShouldScroll
     }
     
-    private func configureCell(_ cell: UITableViewCell, with viewModel: CategorySelectionCellViewModel) {
-        cell.backgroundColor = viewModel.backgroundColor
-        cell.textLabel?.text = viewModel.text
-        cell.textLabel?.font = viewModel.textFont
-        cell.textLabel?.textColor = viewModel.textColor
-        cell.accessoryType = viewModel.isSelected ? .checkmark : .none
-        cell.layer.cornerRadius = viewModel.cornerRadius
+    private func configureCell(_ cell: UITableViewCell, with cellModel: CategorySelectionCellModel) {
+        cell.backgroundColor = cellModel.backgroundColor
+        cell.textLabel?.text = cellModel.text
+        cell.textLabel?.font = cellModel.textFont
+        cell.textLabel?.textColor = cellModel.textColor
+        cell.accessoryType = cellModel.isSelected ? .checkmark : .none
+        cell.layer.cornerRadius = cellModel.cornerRadius
         cell.layer.masksToBounds = true
-        switch (viewModel.isFirst, viewModel.isLast) {
+        cell.selectedBackgroundView?.layer.cornerRadius = cellModel.cornerRadius
+        cell.selectedBackgroundView?.layer.masksToBounds = true
+        switch (cellModel.isFirst, cellModel.isLast) {
         case (true, true):
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         case (true, false):
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            cell.selectedBackgroundView?.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case (false, true):
             cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            cell.selectedBackgroundView?.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         case (false, false):
             cell.layer.masksToBounds = false
             cell.layer.cornerRadius = 0
         }
-        cell.selectedBackgroundView?.layer.masksToBounds = true
-        cell.selectedBackgroundView?.layer.cornerRadius = LayoutConstants.Table.cornerRadius
     }
     
     // MARK: - Private Methods - Intentions
@@ -242,44 +241,28 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
 extension CategorySelectionViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categoryStore.numberOfRows ?? 0
+        viewModel.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let category: TrackerCategory
-        let selectedRow: Int?
-        do {
-            if let selectedCategory {
-                selectedRow = try categoryStore.indexPath(for: selectedCategory)?.row
-                if selectedRow == nil {
-                    assertionFailure("CategorySelectionViewController.tableView: failed to get indexPath of category \(selectedCategory)")
-                }
-            } else {
-                selectedRow = nil
-            }
-            category = try categoryStore.trackerCategory(at: indexPath)
-        } catch {
-            assertionFailure("CategorySelectionViewController.tableView: error \(error)")
-            return UITableViewCell()
-        }
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
-        let cellIsLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
-        let cellIsSelected: Bool
-        if let selectedRow, selectedRow == indexPath.row {
-            cellIsSelected = true
+        let category = viewModel.categories[indexPath.row]
+        let isSelected: Bool
+        if let selectedRow = viewModel.selectedRow,  indexPath.row == selectedRow{
+            isSelected = true
         } else {
-            cellIsSelected = false
+            isSelected = false
         }
-        let viewModel = CategorySelectionCellViewModel(isFirst: indexPath.row == 0,
-                                                       isLast: cellIsLast,
-                                                       isSelected: cellIsSelected,
-                                                       text: category.title,
-                                                       textFont: LayoutConstants.Table.cellTextFont,
-                                                       textColor: LayoutConstants.Table.cellTextColor,
-                                                       cornerRadius: LayoutConstants.Table.cornerRadius,
-                                                       backgroundColor: LayoutConstants.Table.cellBackgroundColor
-                                                       )
-        configureCell(cell, with: viewModel)
+        let isLast = indexPath.row == (tableView.numberOfRows(inSection: indexPath.section) - 1)
+        let cellModel = CategorySelectionCellModel(isFirst: indexPath.row == 0,
+                                                   isLast: isLast,
+                                                   isSelected: isSelected,
+                                                   text: category.title,
+                                                   textFont: LayoutConstants.Table.cellTextFont,
+                                                   textColor: LayoutConstants.Table.cellTextColor,
+                                                   cornerRadius: LayoutConstants.Table.cornerRadius,
+                                                   backgroundColor: LayoutConstants.Table.cellBackgroundColor)
+        configureCell(cell, with: cellModel)
         return cell
     }
     
@@ -290,35 +273,9 @@ extension CategorySelectionViewController: UITableViewDataSource {
 extension CategorySelectionViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var updatedRows: [IndexPath] = []
-        updatedRows.append(indexPath)
-        do {
-            if let oldSelectedCategory = selectedCategory {
-                let oldSelectedRow = try categoryStore.indexPath(for: oldSelectedCategory)?.row
-                if let oldSelectedRow {
-                    updatedRows.append(IndexPath(row: oldSelectedRow, section: 0))
-                } else {
-                    assertionFailure("CategorySelectionViewController.tableView: failed to get indexPath of category \(oldSelectedCategory)")
-                }
-            }
-            selectedCategory = try categoryStore.trackerCategory(at: indexPath)
-        } catch {
-            assertionFailure("CategorySelectionViewController.tableView: error \(error)")
-        }
-        tableView.reloadRows(at: updatedRows, with: .none)
-        tableView.deselectRow(at: indexPath, animated: false)
+        viewModel.selectedRow = indexPath.row
     }
     
-}
-
-
-extension CategorySelectionViewController: CategoryStoreDelegate {
-    func categoryStoreDidUpdate(with update: CategoryUpdate) {
-        let insertedIndices = Array(update.insertedIndices)
-        table.performBatchUpdates {
-            table.insertRows(at: insertedIndices.map { IndexPath(row: $0, section: 0)}, with: .automatic)
-        }
-    }
 }
 
 

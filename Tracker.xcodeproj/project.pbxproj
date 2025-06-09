@@ -11,7 +11,6 @@
 		E7370FCF2DF61F850087785E /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */; };
 		E73710072DF6C3840087785E /* OnboardingStatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */; };
 		E73710092DF6F4FB0087785E /* CategorySelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710082DF6F4EE0087785E /* CategorySelectionViewModel.swift */; };
-		E737100E2DF6FDC70087785E /* CategorySelectionCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E737100D2DF6FDBC0087785E /* CategorySelectionCellViewModel.swift */; };
 		E7C3A8CF2DE7428500096105 /* EmojisHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */; };
 		E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */; };
 		E7C3A8D32DE7439000096105 /* ColorsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */; };
@@ -52,7 +51,6 @@
 		E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStatusStore.swift; sourceTree = "<group>"; };
 		E73710082DF6F4EE0087785E /* CategorySelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewModel.swift; sourceTree = "<group>"; };
-		E737100D2DF6FDBC0087785E /* CategorySelectionCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionCellViewModel.swift; sourceTree = "<group>"; };
 		E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisHandler.swift; sourceTree = "<group>"; };
 		E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -124,10 +122,9 @@
 		E737100A2DF6F4FF0087785E /* CategorySelection */ = {
 			isa = PBXGroup;
 			children = (
-				E73710082DF6F4EE0087785E /* CategorySelectionViewModel.swift */,
-				E7D037BA2DCF9B17007819A8 /* CategorySelectionViewController.swift */,
-				E737100D2DF6FDBC0087785E /* CategorySelectionCellViewModel.swift */,
 				E7C3A9472DEE30E000096105 /* CategorySelectionCellModel.swift */,
+				E7D037BA2DCF9B17007819A8 /* CategorySelectionViewController.swift */,
+				E73710082DF6F4EE0087785E /* CategorySelectionViewModel.swift */,
 			);
 			path = CategorySelection;
 			sourceTree = "<group>";
@@ -384,7 +381,6 @@
 				E7C3A8D52DE7439400096105 /* ColorsHandler.swift in Sources */,
 				E7D037A22DC8B2C9007819A8 /* TrackerRecord.swift in Sources */,
 				E7D0379E2DC8B082007819A8 /* TrackerCategory.swift in Sources */,
-				E737100E2DF6FDC70087785E /* CategorySelectionCellViewModel.swift in Sources */,
 				E73710072DF6C3840087785E /* OnboardingStatusStore.swift in Sources */,
 				E7C3A9332DECA35000096105 /* TrackerStore.swift in Sources */,
 				E7D037262DC3D3B5007819A8 /* TrackersListViewController.swift in Sources */,
