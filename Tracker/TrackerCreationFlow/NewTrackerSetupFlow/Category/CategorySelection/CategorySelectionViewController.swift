@@ -27,8 +27,6 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     private let addButton = UIButton(type: .system)
     private let table = UITableView()
     
-    private let cellReuseID = "checkmarkCell"
-    
     private var tableShouldScroll: Bool {
         table.contentSize.height > LayoutConstants.Table.maxHeight
     }
@@ -151,10 +149,9 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         table.isScrollEnabled = false
         table.backgroundColor = .clear
         table.rowHeight = LayoutConstants.Table.rowHeight
-        table.separatorStyle = .singleLine
-        table.separatorInset = LayoutConstants.Table.separatorInset
-        table.separatorColor = LayoutConstants.Table.separatorColor
-        table.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseID)
+        table.register(CategoryCell.self,
+                       forCellReuseIdentifier: CategoryCell.reuseID)
+        table.separatorStyle = .none
         
         view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -200,32 +197,6 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         table.isScrollEnabled = tableShouldScroll
     }
     
-    private func configureCell(_ cell: UITableViewCell, with cellModel: CategorySelectionCellModel) {
-        cell.backgroundColor = cellModel.backgroundColor
-        cell.textLabel?.text = cellModel.text
-        cell.textLabel?.font = cellModel.textFont
-        cell.textLabel?.textColor = cellModel.textColor
-        cell.accessoryType = cellModel.isSelected ? .checkmark : .none
-        cell.layer.cornerRadius = cellModel.cornerRadius
-        cell.layer.masksToBounds = true
-        cell.selectedBackgroundView?.layer.cornerRadius = cellModel.cornerRadius
-        cell.selectedBackgroundView?.layer.masksToBounds = true
-        switch (cellModel.isFirst, cellModel.isLast) {
-        case (true, true):
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        case (true, false):
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-            cell.selectedBackgroundView?.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case (false, true):
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-            cell.selectedBackgroundView?.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        case (false, false):
-            cell.layer.masksToBounds = false
-            cell.layer.cornerRadius = 0
-        }
-    }
-    
     // MARK: - Private Methods - Intentions
     
     @objc
@@ -245,7 +216,10 @@ extension CategorySelectionViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseID, for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryCell.reuseID, for: indexPath) as? CategoryCell else {
+            assertionFailure("CategorySelectionViewController.tableView: failed to typecast cell")
+            return UITableViewCell()
+        }
         let category = viewModel.categories[indexPath.row]
         let isSelected: Bool
         if let selectedRow = viewModel.selectedRow,  indexPath.row == selectedRow{
@@ -257,12 +231,9 @@ extension CategorySelectionViewController: UITableViewDataSource {
         let cellModel = CategorySelectionCellModel(isFirst: indexPath.row == 0,
                                                    isLast: isLast,
                                                    isSelected: isSelected,
-                                                   text: category.title,
-                                                   textFont: LayoutConstants.Table.cellTextFont,
-                                                   textColor: LayoutConstants.Table.cellTextColor,
-                                                   cornerRadius: LayoutConstants.Table.cornerRadius,
-                                                   backgroundColor: LayoutConstants.Table.cellBackgroundColor)
-        configureCell(cell, with: cellModel)
+                                                   text: category.title)
+        cell.configure(with: cellModel)
+        
         return cell
     }
     
@@ -315,12 +286,6 @@ extension CategorySelectionViewController {
             static let width: CGFloat = 343
             static let maxHeight: CGFloat = 525
             static let spacingToSuperviewTop: CGFloat = 87
-            static let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-            static let separatorColor: UIColor = .gray
-            
-            static let cellTextFont: UIFont = .systemFont(ofSize: 17, weight: .regular)
-            static let cellTextColor: UIColor = .ypBlack
-            static let cellBackgroundColor: UIColor = .ypBackground
         }
     }
 }

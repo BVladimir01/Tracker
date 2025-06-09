@@ -12,8 +12,4 @@ struct CategorySelectionCellModel {
     let isLast: Bool
     let isSelected: Bool
     let text: String
-    let textFont: UIFont
-    let textColor: UIColor
-    let cornerRadius: CGFloat
-    let backgroundColor: UIColor
 }
