@@ -82,9 +82,9 @@ final class OnboardingViewController: UIPageViewController {
                 assertionFailure("OnboardingViewController.buttonTapped: failed to get window")
                 return
             }
-//            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
-//                window.rootViewController = tabBarController
-//            }
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
+                window.rootViewController = tabBarController
+            }
             window.rootViewController = tabBarController
         } catch {
             print(error)
