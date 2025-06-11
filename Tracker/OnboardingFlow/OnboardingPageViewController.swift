@@ -9,13 +9,18 @@
 import UIKit
 
 
+// MARK: - OnboardingPageViewController
 final class OnboardingPageViewController: UIViewController {
+    
+    // MARK: - Private Properties
     
     private let text: String
     private let backgroundImage: UIImage
 
     private let titleLabel = UILabel()
     private var constraints: [NSLayoutConstraint] = []
+    
+    // MARK: - Initializers
     
     init(title: String, backgroundImage: UIImage) {
         self.text = title
@@ -27,12 +32,16 @@ final class OnboardingPageViewController: UIViewController {
         fatalError("not implemented")
     }
     
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpBackground()
         setUpTitleLabel()
         NSLayoutConstraint.activate(constraints)
     }
+    
+    // MARK: - Private Methods - Setup
     
     private func setUpTitleLabel() {
         titleLabel.text = text
@@ -67,6 +76,7 @@ final class OnboardingPageViewController: UIViewController {
 }
 
 
+// MARK: - Layout Constants
 extension OnboardingPageViewController {
     enum LayoutConstants {
         enum Title {

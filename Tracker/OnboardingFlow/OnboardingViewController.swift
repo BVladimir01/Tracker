@@ -8,12 +8,17 @@
 import UIKit
 
 
+// MARK: - OnboardingViewController
 final class OnboardingViewController: UIPageViewController {
+    
+    // MARK: - Private Properties
     
     private let pages: [UIViewController]
     private let pageControl = UIPageControl()
     private let button = UIButton(type: .system)
     private var constraints: [NSLayoutConstraint] = []
+    
+    // MARK: - Initializers
     
     init() {
         pages = [(Strings.onboardingTitle1, UIImage.firstOnboardingPage),
@@ -27,6 +32,7 @@ final class OnboardingViewController: UIPageViewController {
         fatalError("not implemented")
     }
     
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +43,8 @@ final class OnboardingViewController: UIPageViewController {
         setUpPageControl()
         NSLayoutConstraint.activate(constraints)
     }
+    
+    // MARK: - Private Methods - Setup
     
     private func setUpPageControl() {
         pageControl.currentPage = 0
@@ -73,6 +81,8 @@ final class OnboardingViewController: UIPageViewController {
         ])
     }
     
+    // MARK: - Private Methods - Intentions
+    
     @objc
     private func buttonTapped() {
         do {
@@ -96,6 +106,7 @@ final class OnboardingViewController: UIPageViewController {
 }
 
 
+// MARK: - UIPageViewControllerDataSource, UIPageViewControllerDelegate
 extension OnboardingViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
@@ -125,6 +136,7 @@ extension OnboardingViewController: UIPageViewControllerDataSource, UIPageViewCo
 }
 
 
+// MARK: - Layout Constants
 extension OnboardingViewController {
     enum LayoutConstants {
         enum PageControl {
