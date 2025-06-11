@@ -379,9 +379,11 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private func chooseCategoryTapped() {
         nameTextField.resignFirstResponder()
+        let vm = CategorySelectionViewModel(categoryStore: categoryStore,
+                                                                    selectedCategory: trackerCategory)
         let vc = CategorySelectionViewController(delegate: self,
                                                  categoryStore: categoryStore,
-                                                 initialCategory: trackerCategory)
+                                                 viewModel: vm)
         present(vc, animated: true)
     }
     

@@ -31,6 +31,11 @@ final class CategoryStore: NSObject {
     var numberOfRows: Int? {
         fetchedResultsController.sections?.first?.numberOfObjects
     }
+    
+    var allTrackerCategories: [TrackerCategory] {
+        (fetchedResultsController.fetchedObjects ?? []).compactMap( {try? trackerCategory(from: $0)} )
+    }
+    
     // MARK: - Private Properties
     
     private let context: NSManagedObjectContext
