@@ -39,7 +39,7 @@ final class OnboardingPageViewController: UIViewController {
         titleLabel.textColor = LayoutConstants.Title.textColor
         titleLabel.font = LayoutConstants.Title.font
         titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 2
+        titleLabel.numberOfLines = LayoutConstants.Title.numberOfLines
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
@@ -63,11 +63,7 @@ final class OnboardingPageViewController: UIViewController {
             background.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    
-    @objc
-    private func buttonTapped() {
-        // TODO: implement
-    }
+
 }
 
 
@@ -78,6 +74,7 @@ extension OnboardingPageViewController {
             static let font = UIFont.systemFont(ofSize: 32, weight: .bold)
             static let textColor: UIColor = .ypBlack
             static let width: CGFloat = 343
+            static let numberOfLines = 2
         }
     }
 }

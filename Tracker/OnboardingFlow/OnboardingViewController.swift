@@ -16,8 +16,8 @@ final class OnboardingViewController: UIPageViewController {
     private var constraints: [NSLayoutConstraint] = []
     
     init() {
-        pages = [("Отслеживайте только то, что хотите", UIImage.firstOnboardingPage),
-                 ("Даже если это не литры воды и йога", UIImage.secondOnboardingPage)].map { (text, image) in
+        pages = [(Strings.onboardingTitle1, UIImage.firstOnboardingPage),
+                 (Strings.onboardingTitle2, UIImage.secondOnboardingPage)].map { (text, image) in
             OnboardingPageViewController(title: text, backgroundImage: image)
             }
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
@@ -54,7 +54,7 @@ final class OnboardingViewController: UIPageViewController {
     }
     
     private func setUpButton() {
-        button.setTitle("Вот это технологии", for: .normal)
+        button.setTitle(Strings.transitionButtonTitle, for: .normal)
         button.backgroundColor = LayoutConstants.Button.color
         button.tintColor = LayoutConstants.Button.textColor
         button.titleLabel?.textColor = LayoutConstants.Button.textColor
@@ -142,5 +142,10 @@ extension OnboardingViewController {
             static let width: CGFloat = 335
             static let spacingToBottomView: CGFloat = 69
         }
+    }
+    enum Strings {
+        static let onboardingTitle1 = "Отслеживайте только то, что хотите"
+        static let onboardingTitle2 = "Даже если это не литры воды и йога"
+        static let transitionButtonTitle = "Вот это технологии!"
     }
 }
