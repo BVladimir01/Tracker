@@ -163,7 +163,7 @@ extension ScheduleSelectionViewController: UITableViewDataSource {
         }
         cell.backgroundColor = LayoutConstants.Table.cellBackgroundColor
         if let weekday = Weekday(rawValue: indexPath.row) {
-            cell.textLabel?.text = weekday.asString(short: false)
+            cell.textLabel?.text = weekday.asString(short: false).capitalized(with: .current)
         }
         cell.textLabel?.font = LayoutConstants.Table.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.Table.cellTextColor
