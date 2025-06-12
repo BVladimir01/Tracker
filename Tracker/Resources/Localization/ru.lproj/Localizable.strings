@@ -16,20 +16,23 @@
 "newTrackerSetup.Category_config_title" = "Категория";
 "newTrackerSetup.Schedule_config_description.every_day" = "Каждый день";
 "newTrackerSetup.textField.placeholder_title" = "Введите название трекера";
-// MARK: Schedule Selection VC
+// MARK: - Schedule Selection VC
 "scheduleSelection.view_title" = "Расписание";
 "scheduleSelection.doneButton_title" = "Готово";
-// MARK: Category Selection VC
+// MARK: - Category Selection VC
 "categorySelection.view_title" = "Категория";
 "categorySelection.stub_title" = "Привычки и события можно объединять по смыслу";
 "categorySelection.newCategoryButton_title" = "Добавить категорию";
-// MARK: Category Creation VC
+// MARK: - Category Creation VC
 "categoryCreation.view_title" = "Новая категория";
 "categoryCreation.doneButton_title" = "Готово";
 "newTrackerSetup.textField.placeholder_title" = "Введите название категории";
-// MARK: Trackers List Tab
+// MARK: - Trackers List Tab
 "trackersListTab.nav_title" = "Трекеры";
 "trackersListTab.stub_title" = "Что будем отслеживать?";
 "trackersListTab.cell.irregular_tracker_is_done" = "Выполнен";
 "trackersListTab.cell.irregular_tracker_not_done" = "Не выполнен";
-
+// MARK: - Onboarding
+"onboarding.page1_title" = "Отслеживайте только то, что хотите";
+"onboarding.page2_title" = "Даже если это не литры воды и йога";
+"onboarding.button_title" = "Вот это технологии!";

@@ -155,9 +155,14 @@ extension OnboardingViewController {
             static let spacingToBottomView: CGFloat = 69
         }
     }
+}
+
+
+// MARK: - Strings {
+extension OnboardingViewController {
     enum Strings {
-        static let onboardingTitle1 = "Отслеживайте только то, что хотите"
-        static let onboardingTitle2 = "Даже если это не литры воды и йога"
-        static let transitionButtonTitle = "Вот это технологии!"
+        static let onboardingTitle1 = NSLocalizedString("onboarding.page1_title", comment: "")
+        static let onboardingTitle2 = NSLocalizedString("onboarding.page2_title", comment: "")
+        static let transitionButtonTitle = NSLocalizedString("onboarding.button_title", comment: "")
     }
 }

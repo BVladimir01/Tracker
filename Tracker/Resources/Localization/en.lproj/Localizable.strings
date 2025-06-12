@@ -32,4 +32,7 @@
 "trackersListTab.stub_title" = "What would you like to track?";
 "trackersListTab.cell.irregular_tracker_is_done" = "Done";
 "trackersListTab.cell.irregular_tracker_not_done" = "Not done";
-
+// MARK: - Onboarding
+"onboarding.page1_title" = "Track just what you want";
+"onboarding.page2_title" = "Even if that is not water intake and yoga";
+"onboarding.button_title" = "Jump in!";
