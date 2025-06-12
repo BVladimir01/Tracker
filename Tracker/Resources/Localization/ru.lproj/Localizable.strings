@@ -8,6 +8,7 @@
 // MARK: - New Tracker Setup VC
 "newTrackerSetup.regular_tracker_view_title" = "Новая привычка";
 "newTrackerSetup.irregular_tracker_view_title" = "Новое нерегулярное событие";
+"newTrackerSetup.cancelButton_title" = "Отмена";
 "newTrackerSetup.createButton_title" = "Создать";
 "newTrackerSetup.emojiCollection_title" = "Emoji";
 "newTrackerSetup.colorCollection_title" = "Цвет";

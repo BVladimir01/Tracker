@@ -55,7 +55,7 @@ final class CategorySelectionViewModel {
     
     private let categoryStore: CategoryStore
     
-    // MARK: - Initilizers
+    // MARK: - Initializers
     
     init(categoryStore: CategoryStore, selectedCategory: TrackerCategory?) {
         self.categoryStore = categoryStore

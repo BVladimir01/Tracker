@@ -52,7 +52,7 @@ final class TrackersListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Трекеры"
+        title = Strings.title
         view.backgroundColor = LayoutConstants.backgroundColor
         setUpStubView()
         setUpDoneButton()
@@ -77,7 +77,7 @@ final class TrackersListViewController: UIViewController {
         ])
         
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        label.text = Strings.stubViewTitle
         label.font = LayoutConstants.Stub.labelFont
         label.textColor = LayoutConstants.Stub.textColor
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -148,8 +148,6 @@ final class TrackersListViewController: UIViewController {
     
     private func trackerCellViewModel(from tracker: Tracker) -> TrackerCellViewModel {
         let recordText: String
-        let daysEnding = ["дней", "день", "дня", "дня", "дня",
-                          "дней", "дней", "дней", "дней", "дней"]
         let daysDone: Int
         do {
             daysDone = try recordStore.daysDone(of: tracker)
@@ -159,17 +157,12 @@ final class TrackersListViewController: UIViewController {
         }
         switch tracker.schedule {
         case .regular:
-            if (10..<20).contains(daysDone) {
-                recordText = "\(daysDone) дней"
-                break
-            }
-            let lastDigit = daysDone % 10
-            recordText = "\(daysDone) \(daysEnding[lastDigit])"
+            recordText = String(format: Strings.daysDone, daysDone)
         case .irregular:
             if daysDone == 0 {
-                recordText = "Не выполнен"
+                recordText = Strings.irregularTrackerNotDone
             } else {
-                recordText = "Выполнен"
+                recordText = Strings.irregularTrackerIsDone
             }
         }
         let isCompleted: Bool
@@ -388,5 +381,17 @@ extension TrackersListViewController {
             static let insets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
             static let headerLateralPadding: CGFloat = 28
         }
+    }
+}
+
+
+// MARK: - Strings
+extension TrackersListViewController {
+    enum Strings {
+        static let title = NSLocalizedString("trackersListTab.nav_title", comment: "")
+        static let stubViewTitle = NSLocalizedString("trackersListTab.stub_title", comment: "")
+        static let irregularTrackerIsDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_is_done", comment: "")
+        static let irregularTrackerNotDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_not_done", comment: "")
+        static let daysDone = NSLocalizedString("days", comment: "")
     }
 }

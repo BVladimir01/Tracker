@@ -1,13 +1,14 @@
 // MARK: - Stats Tab
 "statsTab.nav_title" = "Stats";
 "statsTab.stub_title" = "Nothing to analyze yet";
-// MARK: - Tracker Creation VC
+// MARK: - New Tracker VC
 "trackerCreation.regular_tracker_title" = "Habit";
-"trackerCreation.irregular_tracker_title" = "Occasional task";
+"trackerCreation.irregular_tracker_title" = "Occasional event";
 "trackerCreation.view_title" = "Tracker creation";
 // MARK: - New Tracker Setup VC
 "newTrackerSetup.regular_tracker_view_title" = "New habit";
 "newTrackerSetup.irregular_tracker_view_title" = "New occasional event";
+"newTrackerSetup.cancelButton_title" = "Cancel";
 "newTrackerSetup.createButton_title" = "Create";
 "newTrackerSetup.emojiCollection_title" = "Emoji";
 "newTrackerSetup.colorCollection_title" = "Color";
@@ -20,7 +21,7 @@
 "scheduleSelection.doneButton_title" = "Done";
 // MARK: Category Selection VC
 "categorySelection.view_title" = "Category";
-"categorySelection.stub_title" = "Habits and tasks can be grouped";
+"categorySelection.stub_title" = "Habits and events can be grouped";
 "categorySelection.newCategoryButton_title" = "Add category";
 // MARK: Category Creation VC
 "categoryCreation.view_title" = "New category";
@@ -28,7 +29,7 @@
 "newTrackerSetup.textField.placeholder_title" = "Enter category title";
 // MARK: Trackers List Tab
 "trackersListTab.nav_title" = "Trackers";
-"trackersListTab.stub_title" = "What would you like to track";
+"trackersListTab.stub_title" = "What would you like to track?";
 "trackersListTab.cell.irregular_tracker_is_done" = "Done";
 "trackersListTab.cell.irregular_tracker_not_done" = "Not done";
 

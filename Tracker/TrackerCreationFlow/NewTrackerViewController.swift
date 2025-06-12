@@ -26,9 +26,6 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     private let regularTrackerButton = UIButton(type: .system)
     private let irregularTrackerButton = UIButton(type: .system)
     
-    private let irregularTrackerTitle = "Нерегулярное событие"
-    private let regularTrackerTitle = "Привычка"
-    
     // MARK: Initializers
     
     init(delegate: NewTrackerViewControllerDelegate, selectedDate: Date, categoryStore: CategoryStore) {
@@ -67,7 +64,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     
     private func setUpTitle() {
         let title = UILabel()
-        title.text = "Создание трекера"
+        title.text = Strings.title
         title.font = LayoutConstants.Title.Font
         title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
@@ -82,7 +79,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     }
     
     private func setUpRegularTrackerButton() {
-        regularTrackerButton.setTitle(regularTrackerTitle, for: .normal)
+        regularTrackerButton.setTitle(Strings.regularTrackerTitle, for: .normal)
         regularTrackerButton.setTitleColor(LayoutConstants.Buttons.textColor, for: .normal)
         regularTrackerButton.titleLabel?.font = LayoutConstants.Buttons.titleFont
         regularTrackerButton.addTarget(self, action: #selector(didSelectTrackerType(_:)), for: .touchUpInside)
@@ -103,7 +100,7 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
     }
     
     private func setUpIrregularTrackerButton() {
-        irregularTrackerButton.setTitle(irregularTrackerTitle, for: .normal)
+        irregularTrackerButton.setTitle(Strings.irregularTrackerTitle, for: .normal)
         irregularTrackerButton.setTitleColor(LayoutConstants.Buttons.textColor, for: .normal)
         irregularTrackerButton.titleLabel?.font = LayoutConstants.Buttons.titleFont
         irregularTrackerButton.addTarget(self, action: #selector(didSelectTrackerType(_:)), for: .touchUpInside)
@@ -130,9 +127,9 @@ final class NewTrackerViewController: UIViewController, NewTrackerSetupViewContr
             return
         }
         var createRegularTracker: Bool
-        if buttonTitle == regularTrackerTitle {
+        if buttonTitle == Strings.regularTrackerTitle {
             createRegularTracker = true
-        } else if buttonTitle == irregularTrackerTitle {
+        } else if buttonTitle == Strings.irregularTrackerTitle {
             createRegularTracker = false
         } else {
             assertionFailure("NewTrackerViewController.didTapCreate: unknown title")
@@ -165,5 +162,15 @@ extension NewTrackerViewController {
             static let topButtonToSuperviewTop: CGFloat = 344
             static let buttonsSpacing: CGFloat = 16
         }
+    }
+}
+
+
+// MARK: - Strings
+extension NewTrackerViewController {
+    enum Strings {
+        static let regularTrackerTitle = NSLocalizedString("trackerCreation.regular_tracker_title", comment: "")
+        static let irregularTrackerTitle = NSLocalizedString("trackerCreation.irregular_tracker_title", comment: "")
+        static let title = NSLocalizedString("trackerCreation.view_title", comment: "")
     }
 }

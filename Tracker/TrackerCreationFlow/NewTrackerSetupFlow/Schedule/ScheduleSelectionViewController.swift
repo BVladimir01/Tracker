@@ -55,7 +55,7 @@ final class ScheduleSelectionViewController: UIViewController {
     
     private func setUpTitle() {
         let title = UILabel()
-        title.text = "Расписание"
+        title.text = Strings.title
         title.font = LayoutConstants.Title.font
         title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
@@ -70,7 +70,7 @@ final class ScheduleSelectionViewController: UIViewController {
     }
     
     private func setUpDoneButton() {
-        doneButton.setTitle("Готово", for: .normal)
+        doneButton.setTitle(Strings.doneButtonTitle, for: .normal)
         doneButton.titleLabel?.font = LayoutConstants.Button.font
         doneButton.setTitleColor(LayoutConstants.Button.textColor, for: .normal)
         doneButton.backgroundColor = LayoutConstants.Button.backgroundColor
@@ -217,5 +217,14 @@ extension ScheduleSelectionViewController {
             static let cellBackgroundColor: UIColor = .ypBackground
             static let cellSwitcherOnColor: UIColor = .ypBlue
         }
+    }
+}
+
+
+// MARK: - Strings
+extension ScheduleSelectionViewController {
+    enum Strings {
+        static let title = NSLocalizedString("scheduleSelection.view_title", comment: "")
+        static let doneButtonTitle = NSLocalizedString("scheduleSelection.doneButton_title", comment: "")
     }
 }

@@ -133,7 +133,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private func setUpTitleAndScrollView() {
         let title = UILabel()
-        title.text = "Новый трекер"
+        title.text = trackerIsRegular ? Strings.regularTitle : Strings.irregularTitle
         title.font = LayoutConstants.Title.font
         title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
@@ -170,7 +170,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     private func setUpNameTextField() {
-        nameTextField.placeholder = LayoutConstants.TextField.placeHolder
+        nameTextField.placeholder = Strings.textFieldPlaceholderTitle
         nameTextField.borderStyle = .none
         nameTextField.layer.cornerRadius = LayoutConstants.TextField.cornerRadius
         nameTextField.layer.masksToBounds = true
@@ -205,7 +205,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     private func setUpCancelButton() {
-        cancelButton.setTitle("Отменить", for: .normal)
+        cancelButton.setTitle(Strings.cancelButtonTitle, for: .normal)
         cancelButton.setTitleColor(LayoutConstants.Buttons.cancelButtonColor, for: .normal)
         cancelButton.titleLabel?.font = LayoutConstants.Buttons.font
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
@@ -226,7 +226,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     private func setUpCreateButton() {
-        createButton.setTitle("Создать", for: .normal)
+        createButton.setTitle(Strings.createButtonTitle, for: .normal)
         createButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
         createButton.setTitleColor(LayoutConstants.Buttons.createButtonTextColor, for: .normal)
         createButton.titleLabel?.font = LayoutConstants.Buttons.font
@@ -273,7 +273,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private func setUpEmojisCollectionView() {
         let emojiTitle = UILabel()
-        emojiTitle.text = "Emoji"
+        emojiTitle.text = Strings.emojiCollectionTitle
         emojiTitle.textColor = LayoutConstants.SelectionCollectionView.titleColor
         emojiTitle.font = LayoutConstants.SelectionCollectionView.titleFont
         contentView.addSubview(emojiTitle)
@@ -304,7 +304,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private func setUpColorsCollectionView() {
         let colorTitle = UILabel()
-        colorTitle.text = "Цвет"
+        colorTitle.text = Strings.colorCollectionTitle
         colorTitle.textColor = LayoutConstants.SelectionCollectionView.titleColor
         colorTitle.font = LayoutConstants.SelectionCollectionView.titleFont
         contentView.addSubview(colorTitle)
@@ -409,7 +409,7 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
     private func configureCategoryCell(_ cell: UITableViewCell) {
         cell.backgroundColor = LayoutConstants.SettingsTable.cellBackgroundColor
         
-        cell.textLabel?.text = "Категория"
+        cell.textLabel?.text = Strings.categoryConfigTitle
         cell.textLabel?.font = LayoutConstants.SettingsTable.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.SettingsTable.cellTextColor
         
@@ -423,14 +423,14 @@ extension NewTrackerSetupViewController: UITableViewDataSource {
     private func configureScheduleCell(_ cell: UITableViewCell) {
         cell.backgroundColor = LayoutConstants.SettingsTable.cellBackgroundColor
         
-        cell.textLabel?.text = "Расписание"
+        cell.textLabel?.text = Strings.scheduleConfigTitle
         cell.textLabel?.font = LayoutConstants.SettingsTable.cellTextFont
         cell.textLabel?.textColor = LayoutConstants.SettingsTable.cellTextColor
         
         let weekdaysAsStrings = weekdays.sorted().map { $0.asString(short: true) }
         cell.detailTextLabel?.text = weekdaysAsStrings.joined(separator: ", ")
         if weekdays.count == Weekday.allCases.count {
-            cell.detailTextLabel?.text = "Каждый день"
+            cell.detailTextLabel?.text = Strings.scheduleEveryDay
         }
         cell.detailTextLabel?.font = LayoutConstants.SettingsTable.cellTextFont
         cell.detailTextLabel?.textColor = LayoutConstants.SettingsTable.cellDetailTextColor
@@ -493,7 +493,6 @@ extension NewTrackerSetupViewController {
             static let topPadding: CGFloat = 27
         }
         enum TextField {
-            static let placeHolder = "Введите название трекера"
             static let backgroundColor: UIColor = .ypBackground
             static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
             static let textColor: UIColor = .ypBlack
@@ -550,5 +549,22 @@ extension NewTrackerSetupViewController {
             static let bottomSpacing: CGFloat = 16
             
         }
+    }
+}
+
+
+// MARK: - Strings
+extension NewTrackerSetupViewController {
+    enum Strings {
+        static let regularTitle = NSLocalizedString("newTrackerSetup.regular_tracker_view_title", comment: "")
+        static let irregularTitle = NSLocalizedString("newTrackerSetup.irregular_tracker_view_title", comment: "")
+        static let cancelButtonTitle = NSLocalizedString("newTrackerSetup.cancelButton_title", comment: "")
+        static let createButtonTitle = NSLocalizedString("newTrackerSetup.createButton_title", comment: "")
+        static let emojiCollectionTitle = NSLocalizedString("newTrackerSetup.emojiCollection_title", comment: "")
+        static let colorCollectionTitle = NSLocalizedString("newTrackerSetup.colorCollection_title", comment: "")
+        static let scheduleConfigTitle = NSLocalizedString("newTrackerSetup.Schedule_config_title", comment: "")
+        static let categoryConfigTitle = NSLocalizedString("newTrackerSetup.Category_config_title", comment: "")
+        static let scheduleEveryDay = NSLocalizedString("newTrackerSetup.Schedule_config_description.every_day", comment: "")
+        static let textFieldPlaceholderTitle = NSLocalizedString("newTrackerSetup.textField.placeholder_title", comment: "")
     }
 }

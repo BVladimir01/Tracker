@@ -64,7 +64,7 @@ final class CategoryCreationViewController: UIViewController {
     
     private func setUpTitle() {
         let title = UILabel()
-        title.text = "Новая Категория"
+        title.text = Strings.title
         title.font = LayoutConstants.Title.font
         title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
@@ -114,7 +114,7 @@ final class CategoryCreationViewController: UIViewController {
     }
     
     private func setUpDoneButton() {
-        doneButton.setTitle("Готово", for: .normal)
+        doneButton.setTitle(Strings.doneButtonTitle, for: .normal)
         doneButton.titleLabel?.font = LayoutConstants.Button.font
         doneButton.setTitleColor(LayoutConstants.Button.textColor, for: .normal)
         doneButton.backgroundColor = LayoutConstants.Button.disabledBackgroundColor
@@ -183,7 +183,7 @@ extension CategoryCreationViewController {
             static let spacingToSuperviewTop: CGFloat = 27
         }
         enum TextField {
-            static let placeHolder = "Введите название категории"
+            static let placeHolder = Strings.textFieldPlaceholderTitle
             static let backgroundColor: UIColor = .ypBackground
             static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
             static let textColor: UIColor = .ypBlack
@@ -204,5 +204,15 @@ extension CategoryCreationViewController {
             static let height: CGFloat = 60
             static let width: CGFloat = 335
         }
+    }
+}
+
+
+// MARK: - Strings
+extension CategoryCreationViewController {
+    enum Strings {
+        static let title = NSLocalizedString("categoryCreation.view_title", comment: "")
+        static let doneButtonTitle = NSLocalizedString("categoryCreation.doneButton_title", comment: "")
+        static let textFieldPlaceholderTitle = NSLocalizedString("newTrackerSetup.textField.placeholder_title", comment: "")
     }
 }

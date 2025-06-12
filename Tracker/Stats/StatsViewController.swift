@@ -18,7 +18,7 @@ final class StatsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Статистика"
+        title = Strings.title
         setUpStub()
     }
     
@@ -36,7 +36,7 @@ final class StatsViewController: UIViewController {
         ])
         
         let label = UILabel()
-        label.text = "Анализировать пока нечего"
+        label.text = Strings.stubViewTitle
         label.font = LayoutConstants.Stub.labelFont
         label.textColor = LayoutConstants.Stub.textColor
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -72,5 +72,13 @@ extension StatsViewController {
             static let textColor: UIColor = .ypBlack
             static let labelToImageSpacing: CGFloat = 8
         }
+    }
+}
+
+
+extension StatsViewController {
+    enum Strings {
+        static let title = NSLocalizedString("statsTab.nav_title", comment: "")
+        static let stubViewTitle = NSLocalizedString("statsTab.stub_title", comment: "")
     }
 }

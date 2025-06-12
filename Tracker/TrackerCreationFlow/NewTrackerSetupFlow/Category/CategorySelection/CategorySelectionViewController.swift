@@ -74,7 +74,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     
     private func setUpTitle() {
         let title = UILabel()
-        title.text = "Категория"
+        title.text = Strings.title
         title.font = LayoutConstants.Title.font
         title.textColor = LayoutConstants.Title.textColor
         title.textAlignment = .center
@@ -100,7 +100,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         ])
         
         let label = UILabel()
-        label.text = "Привычки и события можно" + "\n" + "объединить по смыслу"
+        label.text = Strings.stubViewTitle
         label.textAlignment = .center
         label.font = LayoutConstants.Stub.labelFont
         label.textColor = LayoutConstants.Stub.textColor
@@ -125,7 +125,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     }
     
     private func setUpAddButton() {
-        addButton.setTitle("Добавить категорию", for: .normal)
+        addButton.setTitle(Strings.newCategoryButtonTitle, for: .normal)
         addButton.titleLabel?.font = LayoutConstants.Button.font
         addButton.setTitleColor(LayoutConstants.Button.textColor, for: .normal)
         addButton.backgroundColor = LayoutConstants.Button.backgroundColor
@@ -287,5 +287,15 @@ extension CategorySelectionViewController {
             static let maxHeight: CGFloat = 525
             static let spacingToSuperviewTop: CGFloat = 87
         }
+    }
+}
+
+
+// MARK: - Strings
+extension CategorySelectionViewController {
+    enum Strings {
+        static let title = NSLocalizedString("categorySelection.view_title", comment: "")
+        static let stubViewTitle = NSLocalizedString("categorySelection.stub_title", comment: "")
+        static let newCategoryButtonTitle = NSLocalizedString("categorySelection.newCategoryButton_title", comment: "")
     }
 }
