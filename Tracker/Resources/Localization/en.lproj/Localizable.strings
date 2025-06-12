@@ -26,7 +26,7 @@
 // MARK: Category Creation VC
 "categoryCreation.view_title" = "New category";
 "categoryCreation.doneButton_title" = "Done";
-"newTrackerSetup.textField.placeholder_title" = "Enter category title";
+"categoryCreation.textField.placeholder_title" = "Enter category title";
 // MARK: Trackers List Tab
 "trackersListTab.nav_title" = "Trackers";
 "trackersListTab.stub_title" = "What would you like to track?";

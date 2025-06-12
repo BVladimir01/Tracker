@@ -213,6 +213,6 @@ extension CategoryCreationViewController {
     enum Strings {
         static let title = NSLocalizedString("categoryCreation.view_title", comment: "")
         static let doneButtonTitle = NSLocalizedString("categoryCreation.doneButton_title", comment: "")
-        static let textFieldPlaceholderTitle = NSLocalizedString("newTrackerSetup.textField.placeholder_title", comment: "")
+        static let textFieldPlaceholderTitle = NSLocalizedString("categoryCreation.textField.placeholder_title", comment: "")
     }
 }

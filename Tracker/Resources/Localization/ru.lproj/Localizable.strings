@@ -26,7 +26,7 @@
 // MARK: - Category Creation VC
 "categoryCreation.view_title" = "Новая категория";
 "categoryCreation.doneButton_title" = "Готово";
-"newTrackerSetup.textField.placeholder_title" = "Введите название категории";
+"categoryCreation.textField.placeholder_title" = "Введите название категории";
 // MARK: - Trackers List Tab
 "trackersListTab.nav_title" = "Трекеры";
 "trackersListTab.stub_title" = "Что будем отслеживать?";
