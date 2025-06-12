@@ -12,6 +12,8 @@
 		E73710072DF6C3840087785E /* OnboardingStatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */; };
 		E73710092DF6F4FB0087785E /* CategorySelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710082DF6F4EE0087785E /* CategorySelectionViewModel.swift */; };
 		E73710132DF76F050087785E /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710122DF76EFE0087785E /* CategoryCell.swift */; };
+		E73710342DFAA4D40087785E /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E73710322DFAA4D40087785E /* Localizable.stringsdict */; };
+		E73710372DFAA93A0087785E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E73710352DFAA93A0087785E /* Localizable.strings */; };
 		E7C3A8CF2DE7428500096105 /* EmojisHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */; };
 		E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */; };
 		E7C3A8D32DE7439000096105 /* ColorsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */; };
@@ -53,6 +55,10 @@
 		E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStatusStore.swift; sourceTree = "<group>"; };
 		E73710082DF6F4EE0087785E /* CategorySelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewModel.swift; sourceTree = "<group>"; };
 		E73710122DF76EFE0087785E /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
+		E73710332DFAA4D40087785E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		E73710362DFAA93A0087785E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E73710382DFAB08C0087785E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		E73710392DFAB08C0087785E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E7C3A8CE2DE7428500096105 /* EmojisHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisHandler.swift; sourceTree = "<group>"; };
 		E7C3A8D02DE7429800096105 /* EmojisCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojisCollectionViewCell.swift; sourceTree = "<group>"; };
 		E7C3A8D22DE7439000096105 /* ColorsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -138,6 +144,15 @@
 				E7D037BE2DCFD6A6007819A8 /* CategoryCreationViewController.swift */,
 			);
 			path = CategoryCreation;
+			sourceTree = "<group>";
+		};
+		E73710302DFAA4BB0087785E /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				E73710322DFAA4D40087785E /* Localizable.stringsdict */,
+				E73710352DFAA93A0087785E /* Localizable.strings */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		E7C3A8E92DE81EEA00096105 /* DataBase */ = {
@@ -227,6 +242,7 @@
 		E7D037242DC3C014007819A8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E73710302DFAA4BB0087785E /* Localization */,
 				E7D0371C2DC3B80F007819A8 /* Info.plist */,
 				E7D037172DC3B80F007819A8 /* Assets.xcassets */,
 			);
@@ -341,6 +357,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = E7D037022DC3B80E007819A8;
 			productRefGroup = E7D0370C2DC3B80E007819A8 /* Products */;
@@ -358,7 +375,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7D037182DC3B80F007819A8 /* Assets.xcassets in Resources */,
+				E73710372DFAA93A0087785E /* Localizable.strings in Resources */,
 				E7D0371B2DC3B80F007819A8 /* Base in Resources */,
+				E73710342DFAA4D40087785E /* Localizable.stringsdict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +430,24 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		E73710322DFAA4D40087785E /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E73710332DFAA4D40087785E /* en */,
+				E73710382DFAB08C0087785E /* ru */,
+			);
+			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		E73710352DFAA93A0087785E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E73710362DFAA93A0087785E /* en */,
+				E73710392DFAB08C0087785E /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		E7D037192DC3B80F007819A8 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -427,6 +464,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -490,6 +528,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
