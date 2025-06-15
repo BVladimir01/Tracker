@@ -81,6 +81,23 @@ final class TrackersListViewModel {
     func sectionTitle(at sectionIndex: Int) -> String {
         sectionTitles[sectionIndex]
     }
+    
+    func trackerTapped(at indexPath: IndexPath) {
+        guard let tracker = tracker(at: indexPath) else {
+            assertionFailure("TrackersListViewModel.trackerTapped: failed to get tracker that was tapped")
+            return
+        }
+        do {
+            if try recordStore.isCompleted(tracker: tracker, on: selectedDate) {
+                try recordStore.removeRecord(from: tracker, on: selectedDate)
+            } else {
+                try recordStore.add(TrackerRecord(trackerID: tracker.id, date: selectedDate))
+            }
+        } catch {
+            assertionFailure("TrackersListViewModel.trackerTapped: error \(error)")
+            return
+        }
+    }
 
     // MARK: - Private Methods
     
