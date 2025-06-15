@@ -49,7 +49,7 @@
 		E7D037B72DCF7095007819A8 /* ScheduleSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037B62DCF7095007819A8 /* ScheduleSelectionViewController.swift */; };
 		E7D037BB2DCF9B17007819A8 /* CategorySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037BA2DCF9B17007819A8 /* CategorySelectionViewController.swift */; };
 		E7D037BF2DCFD6A6007819A8 /* CategoryCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037BE2DCFD6A6007819A8 /* CategoryCreationViewController.swift */; };
-		E7D037C12DD07A7D007819A8 /* TrackerCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037C02DD07A7D007819A8 /* TrackerCellViewModel.swift */; };
+		E7D037C12DD07A7D007819A8 /* TrackerCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D037C02DD07A7D007819A8 /* TrackerCellModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,7 +99,7 @@
 		E7D037B62DCF7095007819A8 /* ScheduleSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleSelectionViewController.swift; sourceTree = "<group>"; };
 		E7D037BA2DCF9B17007819A8 /* CategorySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionViewController.swift; sourceTree = "<group>"; };
 		E7D037BE2DCFD6A6007819A8 /* CategoryCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCreationViewController.swift; sourceTree = "<group>"; };
-		E7D037C02DD07A7D007819A8 /* TrackerCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCellViewModel.swift; sourceTree = "<group>"; };
+		E7D037C02DD07A7D007819A8 /* TrackerCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCellModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -300,7 +300,7 @@
 				E73276902DFF20C800180061 /* TrackersListViewModel.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
-				E7D037C02DD07A7D007819A8 /* TrackerCellViewModel.swift */,
+				E7D037C02DD07A7D007819A8 /* TrackerCellModel.swift */,
 				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
 			);
 			path = TrackersList;
@@ -449,7 +449,7 @@
 				E7D037112DC3B80E007819A8 /* SceneDelegate.swift in Sources */,
 				E7370FCC2DF61F230087785E /* OnboardingViewController.swift in Sources */,
 				E7C3A9422DED9AEE00096105 /* TrackerDataStores.swift in Sources */,
-				E7D037C12DD07A7D007819A8 /* TrackerCellViewModel.swift in Sources */,
+				E7D037C12DD07A7D007819A8 /* TrackerCellModel.swift in Sources */,
 				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
 				E7C3A9482DEE30EB00096105 /* CategorySelectionCellModel.swift in Sources */,
 			);
