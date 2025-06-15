@@ -57,7 +57,8 @@ final class TrackersListViewModel {
     init(trackerStore: TrackerStore, recordStore: RecordStore) {
         self.trackerStore = trackerStore
         self.recordStore = recordStore
-        updateDisplayedTrackers()
+        trackerStore.delegate = self
+        recordStore.delegate = self
     }
     
     // MARK: - Internal Methods
