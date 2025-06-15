@@ -142,3 +142,13 @@ extension TrackersListViewModel: TrackerStoreDelegate {
         updateDisplayedTrackers()
     }
 }
+
+
+// MARK: - RecordStoreDelegate
+extension TrackersListViewModel: RecordStoreDelegate {
+    func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
+        updateDisplayedTrackers()
+    }
+    
+    
+}
