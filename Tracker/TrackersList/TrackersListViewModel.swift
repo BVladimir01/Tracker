@@ -40,6 +40,10 @@ final class TrackersListViewModel {
         displayedTrackers.count
     }
     
+    var shouldDisplayStub: Bool {
+        numberOfSections == 0
+    }
+    
     // MARK: - Private Properties
     
     private let trackerStore: TrackerStore
@@ -104,6 +108,14 @@ final class TrackersListViewModel {
             return
         }
     }
+    
+    func daysDone(of tracker: Tracker) -> Int {
+        return (try? recordStore.daysDone(of: tracker)) ?? 0
+    }
+    
+    func isCompleted(tracker: Tracker) -> Bool {
+        return (try? recordStore.isCompleted(tracker: tracker, on: selectedDate)) ?? false
+    }
 
     // MARK: - Private Methods
     
@@ -136,17 +148,9 @@ final class TrackersListViewModel {
         case .today:
             return true
         case .completed:
-            if let completed = try? recordStore.isCompleted(tracker: tracker, on: selectedDate) {
-                return completed
-            } else {
-                return false
-            }
+            return isCompleted(tracker: tracker)
         case .uncompleted:
-            if let completed = try? recordStore.isCompleted(tracker: tracker, on: selectedDate) {
-                return !completed
-            } else {
-                return true
-            }
+            return !isCompleted(tracker: tracker)
         }
     }
     
