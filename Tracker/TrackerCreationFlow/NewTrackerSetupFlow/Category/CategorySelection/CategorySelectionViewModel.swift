@@ -8,8 +8,6 @@
 
 import UIKit
 
-typealias Binding<T> = (T) -> ()
-
 
 // MARK: - CategorySelectionViewModel
 final class CategorySelectionViewModel {
