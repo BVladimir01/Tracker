@@ -71,8 +71,11 @@ final class TrackersListViewModel {
         trackerStore.numberOfItemsInSection(section) ?? 0
     }
     
-    func tracker(at indexPath: IndexPath) -> Tracker {
-        displayedTrackers[indexPath.section][indexPath.item]
+    func tracker(at indexPath: IndexPath) -> Tracker? {
+        guard (0..<numberOfSections).contains(indexPath.section), (0..<numberOfItemsInSection(indexPath.section)).contains(indexPath.item) else {
+            return nil
+        }
+        return displayedTrackers[indexPath.section][indexPath.item]
     }
     
     func sectionTitle(at sectionIndex: Int) -> String {
