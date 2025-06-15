@@ -78,8 +78,11 @@ final class TrackersListViewModel {
         return displayedTrackers[indexPath.section][indexPath.item]
     }
     
-    func sectionTitle(at sectionIndex: Int) -> String {
-        sectionTitles[sectionIndex]
+    func sectionTitle(at sectionIndex: Int) -> String? {
+        guard (0..<sectionTitles.count).contains(sectionIndex) else {
+            return nil
+        }
+        return sectionTitles[sectionIndex]
     }
     
     func trackerTapped(at indexPath: IndexPath) {
