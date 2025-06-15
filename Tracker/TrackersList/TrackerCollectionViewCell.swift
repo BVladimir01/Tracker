@@ -62,7 +62,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - InternalMethods
     
-    func configure(with viewModel: TrackerCellViewModel) {
+    func configure(with viewModel: TrackerCellModel) {
         titleLabel.text = viewModel.title
         emojiLabel.text = String(viewModel.emoji)
         themeColor = viewModel.color

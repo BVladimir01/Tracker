@@ -18,13 +18,9 @@ final class TrackersListViewController: UIViewController {
     private let stubView = UIView()
     private let datePicker = UIDatePicker()
     
-    private let trackerStore: TrackerStore
     private let categoryStore: CategoryStore
-    private let recordStore: RecordStore
     
-    private var shouldShowStubView: Bool {
-        trackerStore.numberOfSections == 0
-    }
+    private let viewModel: TrackersListViewModel
     
     private var selectedDate: Date {
         datePicker.date
@@ -33,17 +29,10 @@ final class TrackersListViewController: UIViewController {
     // MARK: - Lifecycle
     
     init(trackerDataStores: TrackerDataStores) {
-        self.trackerStore = trackerDataStores.trackerStore
         self.categoryStore = trackerDataStores.categoryStore
-        self.recordStore = trackerDataStores.recordStore
+        self.viewModel = TrackersListViewModel(trackerStore: trackerDataStores.trackerStore,
+                                               recordStore: trackerDataStores.recordStore)
         super.init(nibName: nil, bundle: nil)
-        recordStore.delegate = self
-        trackerStore.delegate = self
-        do {
-            try trackerStore.set(date: datePicker.date)
-        } catch {
-            assertionFailure("TrackersListViewController.init: error \(error)")
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -58,7 +47,7 @@ final class TrackersListViewController: UIViewController {
         setUpDoneButton()
         setUpDatePicker()
         setUpCollectionView()
-        updateStubViewState()
+        initializeViewModel()
     }
     
     
@@ -131,11 +120,14 @@ final class TrackersListViewController: UIViewController {
         ])
     }
     
-    // MARK: - Private Methods - Helpers
-    
-    private func updateStubViewState() {
-        setStubView(visible: shouldShowStubView)
+    private func initializeViewModel() {
+        viewModel.selectedDate = datePicker.date
+        viewModel.initialize(with: { [weak self] _ in
+            self?.collectionView.reloadData()
+        })
     }
+    
+    // MARK: - Private Methods - Helpers
     
     private func setStubView(visible: Bool) {
         stubView.isHidden = !visible
@@ -146,15 +138,9 @@ final class TrackersListViewController: UIViewController {
         }
     }
     
-    private func trackerCellViewModel(from tracker: Tracker) -> TrackerCellViewModel {
+    private func trackerCellModel(from tracker: Tracker) -> TrackerCellModel {
         let recordText: String
-        let daysDone: Int
-        do {
-            daysDone = try recordStore.daysDone(of: tracker)
-        } catch {
-            assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
-            daysDone = 0
-        }
+        let daysDone = viewModel.daysDone(of: tracker)
         switch tracker.schedule {
         case .regular:
             recordText = String(format: Strings.daysDone, daysDone)
@@ -165,14 +151,8 @@ final class TrackersListViewController: UIViewController {
                 recordText = Strings.irregularTrackerIsDone
             }
         }
-        let isCompleted: Bool
-        do {
-            isCompleted = try recordStore.isCompleted(tracker: tracker, on: selectedDate)
-        } catch {
-            assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
-            isCompleted = false
-        }
-        return TrackerCellViewModel(title: tracker.title,
+        let isCompleted = viewModel.isCompleted(tracker: tracker)
+        return TrackerCellModel(title: tracker.title,
                                     color: UIColor.from(RGBColor: tracker.color),
                                     emoji: tracker.emoji,
                                     recordText: recordText, 
@@ -187,13 +167,7 @@ final class TrackersListViewController: UIViewController {
     }
     
     @objc private func dateChanged() {
-        do {
-            try trackerStore.set(date: selectedDate)
-        } catch {
-            assertionFailure("TrackersListViewController.dateChanged: error \(error)")
-        }
-        collectionView.reloadData()
-        updateStubViewState()
+        viewModel.selectedDate = datePicker.date
     }
     
 }
@@ -203,11 +177,11 @@ final class TrackersListViewController: UIViewController {
 extension TrackersListViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerStore.numberOfSections
+        viewModel.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return trackerStore.numberOfItemsInSection(section) ?? 0
+        return viewModel.numberOfItemsInSection(section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, 
@@ -216,18 +190,16 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue or typecast cell")
             return UICollectionViewCell()
         }
-        let buttonEnabled = !(selectedDate > Date())
-        do {
-            let tracker = try trackerStore.tracker(at: indexPath)
-            cell.configure(with: trackerCellViewModel(from: tracker))
-            cell.setTrackerID(tracker.id)
-            cell.setRecordButton(enabled: buttonEnabled)
-            cell.delegate = self
-            return cell
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
+        guard let tracker = viewModel.tracker(at: indexPath) else {
+            assertionFailure("TrackerViewController.collectionView: Failed to get tracker for indexPath")
             return UICollectionViewCell()
         }
+        let buttonEnabled = !(selectedDate > Date())
+        cell.configure(with: trackerCellModel(from: tracker))
+        cell.setTrackerID(tracker.id)
+        cell.setRecordButton(enabled: buttonEnabled)
+        cell.delegate = self
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -235,7 +207,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return UICollectionReusableView()
         }
-        let title = trackerStore.sectionTitle(atSectionIndex: indexPath.section)
+        let title = viewModel.sectionTitle(at: indexPath.section)
         if title == nil {
             assertionFailure("TrackerViewController.collectionView: Failed to get title for supplementary view at \(indexPath)")
         }
@@ -266,7 +238,7 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let title = trackerStore.sectionTitle(atSectionIndex: section)
+        let title = viewModel.sectionTitle(at: section)
         if title == nil {
             assertionFailure("TrackerViewController.collectionView: Failed to get title for supplementary view for section \(section)")
         }
@@ -284,12 +256,7 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersListViewController: NewTrackerViewControllerDelegate {
     
     func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
-        do {
-            try trackerStore.add(tracker)
-        } catch {
-            assertionFailure("TrackersListViewController.newTrackerViewController: error \(error)")
-        }
-        updateStubViewState()
+        viewModel.add(tracker)
         vc.dismiss(animated: true)
     }
     
@@ -302,61 +269,15 @@ extension TrackersListViewController: NewTrackerViewControllerDelegate {
 
 // MARK: - TrackerCollectionViewCellDelegate
 extension TrackersListViewController: TrackerCollectionViewCellDelegate {
-    
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
             return
         }
-        do {
-            let tracker = try trackerStore.tracker(at: indexPath)
-            let trackerID = tracker.id
-            if try recordStore.isCompleted(tracker: tracker, on: selectedDate) {
-                try recordStore.removeRecord(from: tracker, on: selectedDate)
-            } else {
-                try recordStore.add(TrackerRecord(trackerID: trackerID, date: selectedDate))
-            }
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
-            return
-        }
+        viewModel.trackerTapped(at: indexPath)
     }
 }
 
-
-// MARK: - TrackerStoreDelegate
-extension TrackersListViewController: TrackerStoreDelegate {
-    func trackerStoreDidUpdate(with update: TrackerStoreUpdate) {
-        let insertedItemIndexPaths = update.insertedItemIndexPaths
-        let insertedSections = update.insertedSections
-        let removedSections = update.removedSections
-        let removedItemIndexPaths = update.removedItemIndexPaths
-        collectionView.performBatchUpdates {
-            collectionView.insertSections(insertedSections)
-            collectionView.insertItems(at: Array(insertedItemIndexPaths))
-            collectionView.deleteSections(removedSections)
-            collectionView.deleteItems(at: Array(removedItemIndexPaths))
-        }
-    }
-}
-
-
-// MARK: - RecordStoreDelegate
-extension TrackersListViewController: RecordStoreDelegate {
-    func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
-        do {
-            guard let indexPath = try trackerStore.indexPath(for: tracker) else {
-                assertionFailure("TrackersListViewController.trackerRecordStoreDidChangeRecordForTracker: indexPath for \(tracker) is nil")
-                return
-            }
-            UIView.performWithoutAnimation {
-                    collectionView.reloadItems(at: [indexPath])
-            }
-        } catch {
-            assertionFailure("TrackerListViewController.trackerRecordStoreDidChangeRecordForTracker: error \(error)")
-        }
-    }
-}
 
 // MARK: - LayoutConstants
 extension TrackersListViewController {
