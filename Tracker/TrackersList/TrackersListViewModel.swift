@@ -30,12 +30,6 @@ final class TrackersListViewModel {
         }
     }
     
-    var onTrackersChange: Binding<[[Tracker]]> = { _ in } {
-        didSet {
-            onTrackersChange(displayedTrackers)
-        }
-    }
-    
     var numberOfSections: Int {
         displayedTrackers.count
     }
@@ -50,6 +44,11 @@ final class TrackersListViewModel {
     private let recordStore: RecordStore
     
     private var displayedTrackers: [[Tracker]] = [] {
+        didSet {
+            onTrackersChange(displayedTrackers)
+        }
+    }
+    private var onTrackersChange: Binding<[[Tracker]]> = { _ in } {
         didSet {
             onTrackersChange(displayedTrackers)
         }
@@ -117,6 +116,11 @@ final class TrackersListViewModel {
         return (try? recordStore.isCompleted(tracker: tracker, on: selectedDate)) ?? false
     }
 
+    func initialize(with closure: @escaping Binding<[[Tracker]]>) {
+        onTrackersChange = closure
+        updateDisplayedTrackers()
+    }
+    
     // MARK: - Private Methods
     
     private func updateDisplayedTrackers() {
