@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct TrackerCellViewModel {
+struct TrackerCellModel {
     let title: String
     let color: UIColor
     let emoji: Character
