@@ -5,6 +5,6 @@
 //  Created by Vladimir on 15.06.2025.
 //
 
-enum TrackersListFilter {
+enum TrackersListFilter: String, CaseIterable {
     case all, today, completed, uncompleted
 }

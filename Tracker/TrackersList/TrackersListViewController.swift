@@ -18,14 +18,11 @@ final class TrackersListViewController: UIViewController {
     private let stubView = UIView()
     private let datePicker = UIDatePicker()
     private let searchController = UISearchController(searchResultsController: nil)
+    private let filterSelectorButton = UIButton(type: .system)
     
     private let categoryStore: CategoryStore
     
     private let viewModel: TrackersListViewModel
-    
-    private var selectedDate: Date {
-        datePicker.date
-    }
     
     // MARK: - Lifecycle
     
@@ -48,8 +45,9 @@ final class TrackersListViewController: UIViewController {
         setUpDoneButton()
         setUpDatePicker()
         setUpCollectionView()
-        initializeViewModel()
         setUpSearch()
+        setUpFilterSelectorButton()
+        initializeViewModel()
     }
     
     
@@ -129,10 +127,39 @@ final class TrackersListViewController: UIViewController {
         navigationItem.searchController = searchController
     }
     
+    private func setUpFilterSelectorButton() {
+        filterSelectorButton.setTitle("Filters", for: .normal)
+        filterSelectorButton.setTitleColor(.white, for: .normal)
+        filterSelectorButton.titleLabel?.font = LayoutConstants.FilterSelectorButton.font
+        filterSelectorButton.backgroundColor = LayoutConstants.FilterSelectorButton.backgroundColor
+        filterSelectorButton.layer.cornerRadius = LayoutConstants.FilterSelectorButton.cornerRadius
+        filterSelectorButton.layer.masksToBounds = true
+        
+        filterSelectorButton.addTarget(self,
+                                       action: #selector(filterSelectorTapped),
+                                       for: .touchUpInside)
+        
+        view.bringSubviewToFront(filterSelectorButton)
+        
+        view.addSubview(filterSelectorButton)
+        filterSelectorButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterSelectorButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            filterSelectorButton.widthAnchor.constraint(equalToConstant: LayoutConstants.FilterSelectorButton.width),
+            filterSelectorButton.heightAnchor.constraint(equalToConstant: LayoutConstants.FilterSelectorButton.height),
+            filterSelectorButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                         constant: -LayoutConstants.FilterSelectorButton.spacingToBottomView)
+        ])
+    }
+    
     private func initializeViewModel() {
-        viewModel.selectedDate = datePicker.date
+        viewModel.set(date: datePicker.date)
         viewModel.initialize(with: { [weak self] _ in
-            self?.collectionView.reloadData()
+            guard let self else { return }
+            self.collectionView.reloadData()
+            self.datePicker.date = self.viewModel.selectedDate
+            self.setStubView(visible: self.viewModel.shouldDisplayStub)
+            self.setFilterSelectorButton(visible: self.viewModel.shouldEnableFilterSelection)
         })
     }
     
@@ -144,6 +171,15 @@ final class TrackersListViewController: UIViewController {
             view.bringSubviewToFront(stubView)
         } else {
             view.sendSubviewToBack(stubView)
+        }
+    }
+    
+    private func setFilterSelectorButton(visible: Bool) {
+        filterSelectorButton.isHidden = !visible
+        if visible {
+            view.bringSubviewToFront(filterSelectorButton)
+        } else {
+            view.sendSubviewToBack(filterSelectorButton)
         }
     }
     
@@ -171,12 +207,18 @@ final class TrackersListViewController: UIViewController {
     // MARK: - Private Methods - User Intentions
 
     @objc private func addTrackerTapped() {
-        let creatorVC = NewTrackerViewController(delegate: self, selectedDate: selectedDate, categoryStore: categoryStore)
+        let creatorVC = NewTrackerViewController(delegate: self, selectedDate: datePicker.date, categoryStore: categoryStore)
         present(creatorVC, animated: true)
     }
     
     @objc private func dateChanged() {
-        viewModel.selectedDate = datePicker.date
+        viewModel.set(date: datePicker.date)
+    }
+    
+    @objc private func filterSelectorTapped() {
+        present(FilterSelectorViewController(delegate: self,
+                                             activeFilter: viewModel.selectedFilter),
+                animated: true)
     }
     
 }
@@ -203,7 +245,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to get tracker for indexPath")
             return UICollectionViewCell()
         }
-        let buttonEnabled = !(selectedDate > Date())
+        let buttonEnabled = !(datePicker.date > Date())
         cell.configure(with: trackerCellModel(from: tracker))
         cell.setTrackerID(tracker.id)
         cell.setRecordButton(enabled: buttonEnabled)
@@ -261,6 +303,20 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 }
 
 
+extension TrackersListViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let yOffset = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        if yOffset + collectionView.frame.height > contentHeight - 5 {
+            setFilterSelectorButton(visible: false)
+        } else {
+            setFilterSelectorButton(visible: true)
+        }
+        print(yOffset)
+        print(contentHeight)
+    }
+}
+
 // MARK: - NewTrackerViewControllerDelegate
 extension TrackersListViewController: NewTrackerViewControllerDelegate {
     
@@ -293,10 +349,16 @@ extension TrackersListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         viewModel.searchString = searchController.searchBar.text
     }
-    
-    
 }
 
+
+// MARK: - FilterSelectorViewControllerDelegate
+extension TrackersListViewController: FilterSelectorViewControllerDelegate {
+    func filterSelector(_ vc: UIViewController, didSelect filter: TrackersListFilter) {
+        viewModel.set(filter: filter)
+        vc.dismiss(animated: true)
+    }
+}
 
 // MARK: - LayoutConstants
 extension TrackersListViewController {
@@ -320,6 +382,15 @@ extension TrackersListViewController {
             static let lineSpacing: CGFloat = 0
             static let insets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
             static let headerLateralPadding: CGFloat = 28
+        }
+        enum FilterSelectorButton {
+            static let spacingToBottomView: CGFloat = 16
+            static let width: CGFloat = 114
+            static let height: CGFloat = 50
+            static let cornerRadius: CGFloat = 16
+            static let backgroundColor: UIColor = .ypBlue
+            static let textColor: UIColor = .white
+            static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
         }
     }
 }

@@ -18,17 +18,8 @@ final class TrackersListViewModel {
             updateDisplayedTrackers()
         }
     }
-    var selectedFilter: TrackersListFilter = .all {
-        didSet {
-            updateDisplayedTrackers()
-        }
-    }
-    var selectedDate: Date = Date() {
-        didSet {
-            try? trackerStore.set(date: selectedDate)
-            updateDisplayedTrackers()
-        }
-    }
+    private(set) var selectedFilter: TrackersListFilter = .all
+    private(set) var selectedDate: Date = Date()
     
     var numberOfSections: Int {
         displayedTrackers.count
@@ -36,6 +27,10 @@ final class TrackersListViewModel {
     
     var shouldDisplayStub: Bool {
         numberOfSections == 0
+    }
+    
+    var shouldEnableFilterSelection: Bool {
+        return !(trackerStore.numberOfSections == 0)
     }
     
     // MARK: - Private Properties
@@ -121,6 +116,24 @@ final class TrackersListViewModel {
         updateDisplayedTrackers()
     }
     
+    func set(date: Date) {
+        try? trackerStore.set(date: date)
+        if selectedFilter == .today {
+            selectedFilter = .all
+        }
+        selectedDate = date
+        updateDisplayedTrackers()
+    }
+    
+    func set(filter: TrackersListFilter) {
+        if filter == .today {
+            selectedDate = Date()
+            try? trackerStore.set(date: selectedDate)
+        }
+        selectedFilter = filter
+        updateDisplayedTrackers()
+    }
+    
     // MARK: - Private Methods
     
     private func updateDisplayedTrackers() {
@@ -143,7 +156,7 @@ final class TrackersListViewModel {
     }
     
     private func trackerFits(tracker: Tracker, withCategoryTitle category: String) -> Bool {
-        trackerFitsFilter(tracker: tracker) && trackerFitsSearch(tracker: tracker) || categoryFitsSearch(categoryTitle: category)
+        trackerFitsFilter(tracker: tracker) && (trackerFitsSearch(tracker: tracker) || categoryFitsSearch(categoryTitle: category))
     }
     
     private func trackerFitsFilter(tracker: Tracker) -> Bool {
@@ -185,6 +198,4 @@ extension TrackersListViewModel: RecordStoreDelegate {
     func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
         updateDisplayedTrackers()
     }
-    
-    
 }
