@@ -125,7 +125,7 @@ final class TrackersListViewController: UIViewController {
     private func setUpSearch() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.placeholder = Strings.searchControllerPlaceholder
         navigationItem.searchController = searchController
     }
     
@@ -333,5 +333,6 @@ extension TrackersListViewController {
         static let irregularTrackerIsDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_is_done", comment: "")
         static let irregularTrackerNotDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_not_done", comment: "")
         static let daysDone = NSLocalizedString("days", comment: "")
+        static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
     }
 }
