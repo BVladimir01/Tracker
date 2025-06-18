@@ -134,6 +134,7 @@ final class TrackersListViewModel {
                 }
                 sectionTrackers.append(tracker)
             }
+            guard !sectionTrackers.isEmpty else { continue }
             newlyDisplayedTrackers.append(sectionTrackers)
             newSectionTitles.append(trackerStore.sectionTitle(atSectionIndex: sectionIndex) ?? "")
         }
@@ -142,7 +143,7 @@ final class TrackersListViewModel {
     }
     
     private func trackerFits(tracker: Tracker, withCategoryTitle category: String) -> Bool {
-        trackerFitsFilter(tracker: tracker) && trackerFitsSearch(tracker: tracker) && categoryFitsSearch(categoryTitle: category)
+        trackerFitsFilter(tracker: tracker) && trackerFitsSearch(tracker: tracker) || categoryFitsSearch(categoryTitle: category)
     }
     
     private func trackerFitsFilter(tracker: Tracker) -> Bool {

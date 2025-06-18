@@ -17,6 +17,7 @@ final class TrackersListViewController: UIViewController {
                                                   collectionViewLayout: UICollectionViewFlowLayout())
     private let stubView = UIView()
     private let datePicker = UIDatePicker()
+    private let searchController = UISearchController(searchResultsController: nil)
     
     private let categoryStore: CategoryStore
     
@@ -48,6 +49,7 @@ final class TrackersListViewController: UIViewController {
         setUpDatePicker()
         setUpCollectionView()
         initializeViewModel()
+        setUpSearch()
     }
     
     
@@ -118,6 +120,13 @@ final class TrackersListViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+    
+    private func setUpSearch() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search"
+        navigationItem.searchController = searchController
     }
     
     private func initializeViewModel() {
@@ -276,6 +285,16 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         }
         viewModel.trackerTapped(at: indexPath)
     }
+}
+
+
+// MARK: - UISearchResultsUpdating
+extension TrackersListViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        viewModel.searchString = searchController.searchBar.text
+    }
+    
+    
 }
 
 
