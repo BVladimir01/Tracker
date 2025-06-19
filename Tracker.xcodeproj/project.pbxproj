@@ -266,7 +266,6 @@
 				E7D037242DC3C014007819A8 /* Resources */,
 				E7C3A94C2DEF9BD500096105 /* StartupFlow */,
 				E7D037A52DCA88AF007819A8 /* TrackersList */,
-				E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */,
 				E7D037A62DCA88C2007819A8 /* Stats */,
 			);
 			path = Tracker;
@@ -307,6 +306,7 @@
 		E7D037A52DCA88AF007819A8 /* TrackersList */ = {
 			isa = PBXGroup;
 			children = (
+				E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */,
 				E73276902DFF20C800180061 /* TrackersListViewModel.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
 				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
