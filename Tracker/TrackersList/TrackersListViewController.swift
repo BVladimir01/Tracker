@@ -273,7 +273,16 @@ extension TrackersListViewController: UICollectionViewDataSource {
 extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        LayoutConstants.CollectionView.itemSize
+        let cw = collectionView.frame.width
+        let spacing = LayoutConstants.CollectionView.interItemSpacing
+        let itemWidth = LayoutConstants.CollectionView.itemSize.width
+        let insets = collectionView.contentInset.left + collectionView.contentInset.right
+        let numberOfItemsInOneRow = Int((cw + spacing - insets) / (itemWidth + spacing))
+        let addExtraPadding = (indexPath.section == (collectionView.numberOfSections - 1)
+                               && indexPath.item >= (collectionView.numberOfItems(inSection: indexPath.section) - numberOfItemsInOneRow))
+        var itemSize = LayoutConstants.CollectionView.itemSize
+        itemSize.height += addExtraPadding ? LayoutConstants.CollectionView.extraBottomPadding : 0
+        return itemSize
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -302,20 +311,6 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
-
-extension TrackersListViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let yOffset = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        if yOffset + collectionView.frame.height > contentHeight - 5 {
-            setFilterSelectorButton(visible: false)
-        } else {
-            setFilterSelectorButton(visible: true)
-        }
-        print(yOffset)
-        print(contentHeight)
-    }
-}
 
 // MARK: - NewTrackerViewControllerDelegate
 extension TrackersListViewController: NewTrackerViewControllerDelegate {
@@ -382,6 +377,7 @@ extension TrackersListViewController {
             static let lineSpacing: CGFloat = 0
             static let insets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
             static let headerLateralPadding: CGFloat = 28
+            static let extraBottomPadding: CGFloat = 50
         }
         enum FilterSelectorButton {
             static let spacingToBottomView: CGFloat = 16
