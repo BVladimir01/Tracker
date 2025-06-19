@@ -134,6 +134,16 @@
 			path = Filtering;
 			sourceTree = "<group>";
 		};
+		E73276992E0452C300180061 /* TrackersCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
+				E7D037C02DD07A7D007819A8 /* TrackerCellModel.swift */,
+				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
+			);
+			path = TrackersCollectionView;
+			sourceTree = "<group>";
+		};
 		E7370FCA2DF61EED0087785E /* OnboardingFlow */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,9 +319,7 @@
 				E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */,
 				E73276902DFF20C800180061 /* TrackersListViewModel.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
-				E7D037A32DCA6DA8007819A8 /* TrackerCollectionViewCell.swift */,
-				E7D037C02DD07A7D007819A8 /* TrackerCellModel.swift */,
-				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
+				E73276992E0452C300180061 /* TrackersCollectionView */,
 				E73276982E0305EF00180061 /* Filtering */,
 			);
 			path = TrackersList;
