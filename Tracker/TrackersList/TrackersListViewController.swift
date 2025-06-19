@@ -128,7 +128,7 @@ final class TrackersListViewController: UIViewController {
     }
     
     private func setUpFilterSelectorButton() {
-        filterSelectorButton.setTitle("Filters", for: .normal)
+        filterSelectorButton.setTitle(Strings.filters, for: .normal)
         filterSelectorButton.setTitleColor(.white, for: .normal)
         filterSelectorButton.titleLabel?.font = LayoutConstants.FilterSelectorButton.font
         filterSelectorButton.backgroundColor = LayoutConstants.FilterSelectorButton.backgroundColor
@@ -401,5 +401,6 @@ extension TrackersListViewController {
         static let irregularTrackerNotDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_not_done", comment: "")
         static let daysDone = NSLocalizedString("days", comment: "")
         static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
+        static let filters = NSLocalizedString("trackerFilter.filters", comment: "")
     }
 }

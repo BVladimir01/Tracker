@@ -37,3 +37,9 @@
 "onboarding.page1_title" = "Отслеживайте только то, что хотите";
 "onboarding.page2_title" = "Даже если это не литры воды и йога";
 "onboarding.button_title" = "Вот это технологии!";
+// MARK: - Trackers Filters
+"trackerFilter.all" = "Все трекеры";
+"trackerFilter.today" = "Трекеры на сегодня";
+"trackerFilter.completed" = "Завершенные";
+"trackerFilter.uncompleted" = "Незавершенные";
+"trackerFilter.filters" = "Фильтры";

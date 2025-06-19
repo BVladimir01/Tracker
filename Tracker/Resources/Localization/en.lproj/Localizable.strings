@@ -37,3 +37,9 @@
 "onboarding.page1_title" = "Track just what you want";
 "onboarding.page2_title" = "Even if that is not water intake and yoga";
 "onboarding.button_title" = "Jump in!";
+// MARK: - Trackers Filters
+"trackerFilter.all" = "All";
+"trackerFilter.today" = "Today";
+"trackerFilter.completed" = "Completed";
+"trackerFilter.uncompleted" = "Uncompleted";
+"trackerFilter.filters" = "Filters";

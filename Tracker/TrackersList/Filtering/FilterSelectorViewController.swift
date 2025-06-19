@@ -35,6 +35,7 @@ final class FilterSelectorViewController: UIViewController {
         super.viewDidLoad()
         addSubviews()
         setUpView()
+        setUpTitle()
         setUpTable()
     }
     
@@ -43,7 +44,7 @@ final class FilterSelectorViewController: UIViewController {
     }
     
     private func setUpTitle() {
-        titleLabel.text = "Filters"
+        titleLabel.text = Strings.title
         titleLabel.font = LayoutConstants.Title.font
         titleLabel.textColor = LayoutConstants.Title.textColor
         titleLabel.textAlignment = .center
@@ -99,7 +100,7 @@ extension FilterSelectorViewController: UITableViewDataSource {
         } else {
             cell.accessoryType = .none
         }
-        cell.textLabel?.text = filter.rawValue
+        cell.textLabel?.text = filter.asString
         cell.textLabel?.textColor = LayoutConstants.Cell.textColor
         cell.textLabel?.font = LayoutConstants.Cell.textFont
         cell.backgroundColor = LayoutConstants.Cell.backgroundColor
@@ -138,5 +139,13 @@ extension FilterSelectorViewController {
             static let backgroundColor: UIColor = .ypBackground
             static let separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         }
+    }
+}
+
+
+// MARK: - Strings
+extension FilterSelectorViewController {
+    enum Strings {
+        static let title = NSLocalizedString("trackerFilter.filters", comment: "")
     }
 }
