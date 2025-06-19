@@ -11,6 +11,7 @@ import UIKit
 // MARK: - TrackerCollectionViewCellDelegate
 protocol TrackerCollectionViewCellDelegate: AnyObject {
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell)
+    func menuConfiguration(for cell: TrackerCollectionViewCell) -> UIContextMenuConfiguration?
 }
 
 
@@ -100,6 +101,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             trackerMainView.topAnchor.constraint(equalTo: contentView.topAnchor),
             trackerMainView.heightAnchor.constraint(equalToConstant: LayoutConstants.trackerMainViewHeight)
         ])
+        
+        trackerMainView.addInteraction(UIContextMenuInteraction(delegate: self))
     }
     
     private func setUpEmoji() {
@@ -198,6 +201,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         delegate?.trackerCellDidTapRecord(cell: self)
     }
     
+}
+
+
+extension TrackerCollectionViewCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        delegate?.menuConfiguration(for: self)
+    }
 }
 
 

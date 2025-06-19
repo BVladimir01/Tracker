@@ -329,6 +329,7 @@ extension TrackersListViewController: NewTrackerViewControllerDelegate {
 
 // MARK: - TrackerCollectionViewCellDelegate
 extension TrackersListViewController: TrackerCollectionViewCellDelegate {
+    
     func trackerCellDidTapRecord(cell: TrackerCollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
@@ -336,6 +337,26 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         }
         viewModel.trackerTapped(at: indexPath)
     }
+    
+    func menuConfiguration(for cell: TrackerCollectionViewCell) -> UIContextMenuConfiguration? {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return nil }
+        let pinUnPinAction = UIAction(title: "Pin") { [weak self] _ in
+            guard let self else { return }
+            print("pin \(indexPath)")
+        }
+        let editAction = UIAction(title: "Edit") { [weak self] _ in
+            guard let self else { return }
+            print("Edit \(indexPath)")
+        }
+        let deleteAction = UIAction(title: "Remove") { [weak self] _ in
+            guard let self else { return }
+            print("Delete \(indexPath)")
+        }
+        return UIContextMenuConfiguration(actionProvider: { _ in
+            UIMenu(children: [pinUnPinAction, editAction, deleteAction])
+        })
+    }
+    
 }
 
 
