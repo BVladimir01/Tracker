@@ -96,6 +96,13 @@ final class TrackerStore: NSObject {
         return fetchedResultsController.indexPath(forObject: entity)
     }
     
+    func pinUnpinTracker(_ tracker: Tracker) throws {
+        let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id)
+        entity?.isPinned.toggle()
+        try context.save()
+        print("tracker \(tracker.emoji) is \(entity?.isPinned)")
+    }
+    
     // MARK: - Private Properties
     
     private func createTrackerEntity(from tracker: Tracker) throws -> TrackerEntity {
@@ -110,6 +117,7 @@ final class TrackerStore: NSObject {
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
         trackerEntity.title = tracker.title
+        trackerEntity.isPinned = tracker.isPinned
         switch tracker.schedule {
         case .irregular(let date):
             trackerEntity.isRegular = false

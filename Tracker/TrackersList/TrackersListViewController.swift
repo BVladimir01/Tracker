@@ -340,15 +340,16 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
     
     func menuConfiguration(for cell: TrackerCollectionViewCell) -> UIContextMenuConfiguration? {
         guard let indexPath = collectionView.indexPath(for: cell) else { return nil }
-        let pinUnPinAction = UIAction(title: "Pin") { [weak self] _ in
+        guard let isPinned = viewModel.tracker(at: indexPath)?.isPinned else { return nil }
+        let pinUnPinAction = UIAction(title: isPinned ? "Unpin" : "Pin") { [weak self] _ in
             guard let self else { return }
-            print("pin \(indexPath)")
+            self.viewModel.pinUnpinTracker(at: indexPath)
         }
         let editAction = UIAction(title: "Edit") { [weak self] _ in
             guard let self else { return }
             print("Edit \(indexPath)")
         }
-        let deleteAction = UIAction(title: "Remove") { [weak self] _ in
+        let deleteAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
             guard let self else { return }
             print("Delete \(indexPath)")
         }

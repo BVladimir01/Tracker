@@ -26,7 +26,8 @@ struct TrackerEntityTransformer {
                        color: rgbColor,
                        emoji: Character(emoji),
                        schedule: schedule,
-                       categoryID: categoryID)
+                       categoryID: categoryID,
+                       isPinned: trackerEntity.isPinned)
     }
     
     private func schedule(of trackerEntity: TrackerEntity) throws -> Schedule {

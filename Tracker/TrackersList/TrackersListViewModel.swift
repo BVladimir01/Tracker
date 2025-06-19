@@ -110,6 +110,11 @@ final class TrackersListViewModel {
     func isCompleted(tracker: Tracker) -> Bool {
         return (try? recordStore.isCompleted(tracker: tracker, on: selectedDate)) ?? false
     }
+    
+    func pinUnpinTracker(at indexPath: IndexPath) {
+        guard let tracker = tracker(at: indexPath) else { return }
+        try? trackerStore.pinUnpinTracker(tracker)
+    }
 
     func initialize(with closure: @escaping Binding<[[Tracker]]>) {
         onTrackersChange = closure
