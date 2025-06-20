@@ -339,8 +339,8 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
     }
     
     func menuConfiguration(for cell: TrackerCollectionViewCell) -> UIContextMenuConfiguration? {
-        guard let indexPath = collectionView.indexPath(for: cell) else { return nil }
-        guard let isPinned = viewModel.tracker(at: indexPath)?.isPinned else { return nil }
+        guard let indexPath = collectionView.indexPath(for: cell), let tracker = viewModel.tracker(at: indexPath) else { return nil }
+        let isPinned = tracker.isPinned
         let pinUnPinAction = UIAction(title: isPinned ? "Unpin" : "Pin") { [weak self] _ in
             guard let self else { return }
             self.viewModel.pinUnpinTracker(at: indexPath)
@@ -349,12 +349,12 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             guard let self else { return }
             print("Edit \(indexPath)")
         }
-        let deleteAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
+        let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
             guard let self else { return }
-            print("Delete \(indexPath)")
+            self.viewModel.remove(tracker)
         }
         return UIContextMenuConfiguration(actionProvider: { _ in
-            UIMenu(children: [pinUnPinAction, editAction, deleteAction])
+            UIMenu(children: [pinUnPinAction, editAction, removeAction])
         })
     }
     

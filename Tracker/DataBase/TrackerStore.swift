@@ -84,6 +84,13 @@ final class TrackerStore: NSObject {
         try context.save()
     }
     
+    func remove(_ tracker: Tracker) throws {
+        // TODO: remove tracker records as well
+        guard let removedEntity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else { return }
+        context.delete(removedEntity)
+        try context.save()
+    }
+    
     func set(date: Date) throws {
         fetchedResultsController.fetchRequest.predicate = try fetchRequestPredicate(for: date)
         try fetchedResultsController.performFetch()
