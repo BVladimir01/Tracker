@@ -156,6 +156,16 @@ final class TrackersListViewModel {
             newlyDisplayedTrackers.append(sectionTrackers)
             newSectionTitles.append(trackerStore.sectionTitle(atSectionIndex: sectionIndex) ?? "")
         }
+        // manage pinned trackers
+        var pinnedTrackers: [Tracker] = []
+        for sectionIndex in 0..<newlyDisplayedTrackers.count {
+            pinnedTrackers.append(contentsOf: newlyDisplayedTrackers[sectionIndex].filter { $0.isPinned })
+            newlyDisplayedTrackers[sectionIndex].removeAll(where: { $0.isPinned })
+        }
+        if !pinnedTrackers.isEmpty {
+            newlyDisplayedTrackers.insert(pinnedTrackers, at: 0)
+            newSectionTitles.insert("Pinned", at: 0)
+        }
         displayedTrackers = newlyDisplayedTrackers
         sectionTitles = newSectionTitles
     }
