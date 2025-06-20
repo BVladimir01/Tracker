@@ -11,7 +11,7 @@ import UIKit
 // MARK: TrackerEditorViewControllerDelegate
 protocol TrackerEditorViewControllerDelegate: AnyObject {
     func trackerEditorViewControllerDiDCancel(_ vc: UIViewController)
-    func trackerEditorViewController(_ vc: UIViewController, didChange: Tracker, to newTracker: Tracker)
+    func trackerEditorViewController(_ vc: UIViewController, didChange oldTracker: Tracker, to newTracker: Tracker)
 }
 
 
@@ -84,6 +84,8 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         super.viewDidLoad()
         view.backgroundColor = LayoutConstants.backgroundColor
         setUpTitleAndScrollView()
+        setUpDaysDoneLabel()
+        setUpTrackerTitleView()
         setUpCancelButton()
         setUpSaveButton()
         setUpSettingsTable()
@@ -149,6 +151,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
+        scrollView.alwaysBounceVertical = true
     }
     
     private func setUpDaysDoneLabel() {
@@ -156,17 +159,17 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         daysDoneLabel.textColor = LayoutConstants.DaysDoneLabel.textColor
         daysDoneLabel.font = LayoutConstants.DaysDoneLabel.font
         daysDoneLabel.backgroundColor = .clear
+        daysDoneLabel.textAlignment = .center
         
-        view.addSubview(daysDoneLabel)
+        contentView.addSubview(daysDoneLabel)
         daysDoneLabel.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
-            daysDoneLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            daysDoneLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
-                                               constant: LayoutConstants.DaysDoneLabel.spacingToTopView),
-            daysDoneLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: LayoutConstants.DaysDoneLabel.height),
-            daysDoneLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+            daysDoneLabel.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
+            daysDoneLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
+            daysDoneLabel.heightAnchor.constraint(equalToConstant: LayoutConstants.DaysDoneLabel.height),
+            daysDoneLabel.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
                                                    constant: LayoutConstants.DaysDoneLabel.lateralPadding),
-            daysDoneLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+            daysDoneLabel.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
                                                     constant: -LayoutConstants.DaysDoneLabel.lateralPadding)
         ])
     }
@@ -174,13 +177,15 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     private func setUpTrackerTitleView() {
         trackerTitleView.layer.cornerRadius = LayoutConstants.TrackerTitleView.cornerRadius
         trackerTitleView.backgroundColor = LayoutConstants.TrackerTitleView.backgroundColor
+        trackerTitleView.layer.masksToBounds = true
         
-        view.addSubview(trackerTitleView)
+        contentView.addSubview(trackerTitleView)
         trackerTitleView.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
-            trackerTitleView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            trackerTitleView.centerXAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.centerXAnchor),
             trackerTitleView.topAnchor.constraint(equalTo: daysDoneLabel.bottomAnchor,
                                                             constant: LayoutConstants.TrackerTitleView.spacingToTopView),
+            trackerTitleView.widthAnchor.constraint(equalToConstant: LayoutConstants.TrackerTitleView.width),
             trackerTitleView.heightAnchor.constraint(equalToConstant: LayoutConstants.TrackerTitleView.height)
         ])
         
@@ -192,10 +197,10 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         trackerTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
             trackerTitleLabel.centerXAnchor.constraint(equalTo: trackerTitleView.centerXAnchor),
-            trackerTitleLabel.topAnchor.constraint(equalTo: trackerTitleView.bottomAnchor,
+            trackerTitleLabel.topAnchor.constraint(equalTo: trackerTitleView.topAnchor,
                                                    constant: LayoutConstants.TrackerTitleView.labelVerticalPadding),
             trackerTitleLabel.widthAnchor.constraint(equalToConstant: LayoutConstants.TrackerTitleView.labelWidth),
-            trackerTitleView.bottomAnchor.constraint(lessThanOrEqualTo: trackerTitleView.bottomAnchor, constant: -LayoutConstants.TrackerTitleView.labelVerticalPadding)
+            trackerTitleView.bottomAnchor.constraint(equalTo: trackerTitleView.bottomAnchor, constant: -LayoutConstants.TrackerTitleView.labelVerticalPadding)
         ])
     }
     
@@ -478,7 +483,7 @@ extension TrackerEditorViewController {
             static let width: CGFloat = 344
             static let height: CGFloat = 75
             static let backgroundColor: UIColor = .ypBackground
-            static let textColor: UIColor = .ypBackground
+            static let textColor: UIColor = .ypBlack
             static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
             static let labelWidth: CGFloat = 286
             static let labelVerticalPadding: CGFloat = 6
