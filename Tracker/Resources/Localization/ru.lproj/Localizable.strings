@@ -33,6 +33,7 @@
 "trackersListTab.cell.irregular_tracker_is_done" = "Выполнен";
 "trackersListTab.cell.irregular_tracker_not_done" = "Не выполнен";
 "trackersListTab.search_placeholder" = "Поиск";
+"trackersListTab.pinned" = "Закрепленные";
 // MARK: - Onboarding
 "onboarding.page1_title" = "Отслеживайте только то, что хотите";
 "onboarding.page2_title" = "Даже если это не литры воды и йога";

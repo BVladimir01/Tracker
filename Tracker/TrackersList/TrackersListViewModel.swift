@@ -164,7 +164,7 @@ final class TrackersListViewModel {
         }
         if !pinnedTrackers.isEmpty {
             newlyDisplayedTrackers.insert(pinnedTrackers, at: 0)
-            newSectionTitles.insert("Pinned", at: 0)
+            newSectionTitles.insert(Strings.pinned, at: 0)
         }
         displayedTrackers = newlyDisplayedTrackers
         sectionTitles = newSectionTitles
@@ -212,5 +212,13 @@ extension TrackersListViewModel: TrackerStoreDelegate {
 extension TrackersListViewModel: RecordStoreDelegate {
     func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
         updateDisplayedTrackers()
+    }
+}
+
+
+// MARK: - Strings
+extension TrackersListViewModel {
+    enum Strings {
+        static let pinned = NSLocalizedString("trackersListTab.pinned", comment: "")
     }
 }

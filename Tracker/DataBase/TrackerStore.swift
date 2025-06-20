@@ -100,7 +100,6 @@ final class TrackerStore: NSObject {
         let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id)
         entity?.isPinned.toggle()
         try context.save()
-        print("tracker \(tracker.emoji) is \(entity?.isPinned)")
     }
     
     // MARK: - Private Properties
