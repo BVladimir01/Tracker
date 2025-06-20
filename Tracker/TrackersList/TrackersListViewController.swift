@@ -341,13 +341,15 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
     func menuConfiguration(for cell: TrackerCollectionViewCell) -> UIContextMenuConfiguration? {
         guard let indexPath = collectionView.indexPath(for: cell), let tracker = viewModel.tracker(at: indexPath) else { return nil }
         let isPinned = tracker.isPinned
+        let daysDone = viewModel.daysDone(of: tracker)
         let pinUnPinAction = UIAction(title: isPinned ? "Unpin" : "Pin") { [weak self] _ in
             guard let self else { return }
             self.viewModel.pinUnpinTracker(at: indexPath)
         }
         let editAction = UIAction(title: "Edit") { [weak self] _ in
             guard let self else { return }
-            print("Edit \(indexPath)")
+            let editorVC = TrackerEditorViewController(oldTracker: tracker, daysDone: daysDone, categoryStore: categoryStore, delegate: self)
+            present(editorVC, animated: true)
         }
         let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
             guard let self else { return }
@@ -376,6 +378,23 @@ extension TrackersListViewController: FilterSelectorViewControllerDelegate {
         vc.dismiss(animated: true)
     }
 }
+
+
+// MARK: - TrackerEditorViewControllerDelegate
+extension TrackersListViewController: TrackerEditorViewControllerDelegate {
+    
+    func trackerEditorViewControllerDiDCancel(_ vc: UIViewController) {
+        vc.dismiss(animated: true)
+    }
+    
+    func trackerEditorViewController(_ vc: UIViewController, didChange oldTracker: Tracker, to newTracker: Tracker) {
+        vc.dismiss(animated: true)
+        viewModel.remove(oldTracker)
+        viewModel.add(newTracker)
+    }
+    
+}
+
 
 // MARK: - LayoutConstants
 extension TrackersListViewController {
