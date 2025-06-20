@@ -11,6 +11,7 @@
 		E73276932DFF21A200180061 /* TrackersListFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276922DFF219E00180061 /* TrackersListFilter.swift */; };
 		E73276952DFF2C2F00180061 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276942DFF2C2C00180061 /* Binding.swift */; };
 		E73276972E0305EC00180061 /* FilterSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276962E0305DA00180061 /* FilterSelectorViewController.swift */; };
+		E73276A42E05801B00180061 /* TrackerEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276A32E05801300180061 /* TrackerEditorViewController.swift */; };
 		E7370FCC2DF61F230087785E /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */; };
 		E7370FCF2DF61F850087785E /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */; };
 		E73710072DF6C3840087785E /* OnboardingStatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */; };
@@ -58,6 +59,7 @@
 		E73276922DFF219E00180061 /* TrackersListFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersListFilter.swift; sourceTree = "<group>"; };
 		E73276942DFF2C2C00180061 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		E73276962E0305DA00180061 /* FilterSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSelectorViewController.swift; sourceTree = "<group>"; };
+		E73276A32E05801300180061 /* TrackerEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEditorViewController.swift; sourceTree = "<group>"; };
 		E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStatusStore.swift; sourceTree = "<group>"; };
@@ -142,6 +144,14 @@
 				E7D037A72DCB4B87007819A8 /* CategoryTitleView.swift */,
 			);
 			path = TrackersCollectionView;
+			sourceTree = "<group>";
+		};
+		E73276A22E05800900180061 /* TrackerEditFlow */ = {
+			isa = PBXGroup;
+			children = (
+				E73276A32E05801300180061 /* TrackerEditorViewController.swift */,
+			);
+			path = TrackerEditFlow;
 			sourceTree = "<group>";
 		};
 		E7370FCA2DF61EED0087785E /* OnboardingFlow */ = {
@@ -316,6 +326,7 @@
 		E7D037A52DCA88AF007819A8 /* TrackersList */ = {
 			isa = PBXGroup;
 			children = (
+				E73276A22E05800900180061 /* TrackerEditFlow */,
 				E7D037AF2DCF1E38007819A8 /* TrackerCreationFlow */,
 				E73276902DFF20C800180061 /* TrackersListViewModel.swift */,
 				E7D037252DC3D3B5007819A8 /* TrackersListViewController.swift */,
@@ -472,6 +483,7 @@
 				E7D037C12DD07A7D007819A8 /* TrackerCellModel.swift in Sources */,
 				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
 				E7C3A9482DEE30EB00096105 /* CategorySelectionCellModel.swift in Sources */,
+				E73276A42E05801B00180061 /* TrackerEditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
