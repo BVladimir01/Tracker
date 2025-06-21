@@ -65,7 +65,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     // MARK: - Internal Methods
     
     func categoryCreationViewControllerDelegate(_ vc: UIViewController, didCreateCategory category: TrackerCategory) {
-        viewModel.addCategory(category)
+        viewModel.add(category)
         viewModel.setSelectedCategory(to: category)
         vc.dismiss(animated: true)
     }
@@ -248,7 +248,7 @@ extension CategorySelectionViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        guard let oldCategory = try? categoryStore.trackerCategory(at: indexPath) else {
+        guard let oldCategory = viewModel.category(at: indexPath) else {
             assertionFailure("CategorySelectionViewController.tableView: failed to get category at \(indexPath)")
             return nil
         }
@@ -260,7 +260,7 @@ extension CategorySelectionViewController: UITableViewDelegate {
                 present(editorVC, animated: true)
             }
             let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
-                print("remove")
+                
             }
             return UIMenu(children: [editAction, removeAction])
         })

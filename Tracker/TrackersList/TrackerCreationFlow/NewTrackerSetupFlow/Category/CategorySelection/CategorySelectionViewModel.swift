@@ -73,12 +73,32 @@ final class CategorySelectionViewModel {
     
     // MARK: - Internal Methods
     
-    func addCategory(_ category: TrackerCategory) {
+    func add(_ category: TrackerCategory) {
         do {
             try categoryStore.add(category)
         } catch {
-            print("CategorySelectionViewModel.addCategory: error \(error)")
+            assertionFailure("CategorySelectionViewModel.add: error \(error)")
         }
+    }
+    
+    func remove(_ category: TrackerCategory) {
+        do {
+            try categoryStore.remove(category)
+        } catch {
+            assertionFailure("CategorySelectionViewModel.remove: error \(error)")
+        }
+    }
+    
+    func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) {
+        do {
+            try categoryStore.change(oldCategory: oldCategory, to: newCategory)
+        } catch {
+            assertionFailure("CategorySelectionViewModel.change: error \(error)")
+        }
+    }
+    
+    func category(at indexPath: IndexPath) -> TrackerCategory? {
+        try? categoryStore.trackerCategory(at: indexPath)
     }
     
     func setSelectedCategory(to category: TrackerCategory) {
