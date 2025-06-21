@@ -50,7 +50,11 @@
 "TrackerEditorViewController.cancelButton_title" = "Отменить";
 "TrackerEditorViewController.saveButton_title" = "Сохранить";
 // MARK: - Tracker Context Menu
-"trackerContextMenu.pin" = "Закрепить";
-"trackerContextMenu.unpin" = "Открепить";
-"trackerContextMenu.edit" = "Редактировать";
-"trackerContextMenu.remove" = "Удалить";
+"contextMenu.pin" = "Закрепить";
+"contextMenu.unpin" = "Открепить";
+"contextMenu.edit" = "Редактировать";
+"contextMenu.remove" = "Удалить";
+// MARK: - Category Editor VC
+"CategoryEditorViewController.view_title" = "Редактирование категории";
+"CategoryEditorViewController.doneButton_title" = "Готово";
+"CategoryEditorViewController.textField.placeholder_title" = "Введите новое название";

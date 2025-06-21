@@ -444,9 +444,9 @@ extension TrackersListViewController {
         static let daysDone = NSLocalizedString("days", comment: "")
         static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
         static let filters = NSLocalizedString("trackerFilter.filters", comment: "")
-        static let pin = NSLocalizedString("trackerContextMenu.pin", comment: "")
-        static let unpin = NSLocalizedString("trackerContextMenu.unpin", comment: "")
-        static let edit = NSLocalizedString("trackerContextMenu.edit", comment: "")
-        static let remove = NSLocalizedString("trackerContextMenu.remove", comment: "")
+        static let pin = NSLocalizedString("contextMenu.pin", comment: "")
+        static let unpin = NSLocalizedString("contextMenu.unpin", comment: "")
+        static let edit = NSLocalizedString("contextMenu.edit", comment: "")
+        static let remove = NSLocalizedString("contextMenu.remove", comment: "")
     }
 }

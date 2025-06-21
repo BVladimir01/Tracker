@@ -253,13 +253,13 @@ extension CategorySelectionViewController: UITableViewDelegate {
             return nil
         }
         return UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
-            let editAction = UIAction(title: "Edit") { [weak self] _ in
+            let editAction = UIAction(title: Strings.edit) { [weak self] _ in
                 guard let self else { return }
                 let editorVC = CategoryEditorViewController(oldCategory: oldCategory,
                                                             delegate: self)
                 present(editorVC, animated: true)
             }
-            let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
+            let removeAction = UIAction(title: Strings.remove, attributes: [.destructive]) { [weak self] _ in
                 self?.viewModel.remove(oldCategory)
             }
             return UIMenu(children: [editAction, removeAction])
@@ -325,5 +325,7 @@ extension CategorySelectionViewController {
         static let title = NSLocalizedString("categorySelection.view_title", comment: "")
         static let stubViewTitle = NSLocalizedString("categorySelection.stub_title", comment: "")
         static let newCategoryButtonTitle = NSLocalizedString("categorySelection.newCategoryButton_title", comment: "")
+        static let edit = NSLocalizedString("contextMenu.edit", comment: "")
+        static let remove = NSLocalizedString("contextMenu.remove", comment: "")
     }
 }
