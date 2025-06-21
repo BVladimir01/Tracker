@@ -13,6 +13,7 @@ final class StatsService {
     // MARK: - Internal Properties
     
     static let shared = StatsService()
+    static let statsDidChange = NSNotification.Name("statsDidChange")
     
     var totalTrackersDone: Int {
         get {
@@ -20,6 +21,7 @@ final class StatsService {
         }
         set {
             storage.set(newValue, forKey: totalTrackersDoneKey)
+            notificationCenter.post(name: StatsService.statsDidChange, object: self)
         }
     }
     
@@ -27,6 +29,7 @@ final class StatsService {
     
     private let totalTrackersDoneKey = "totalTrackersDoneKey"
     private let storage = UserDefaults.standard
+    private let notificationCenter = NotificationCenter.default
     
     
     // MARK: - Initializers
