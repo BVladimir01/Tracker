@@ -13,4 +13,5 @@ struct TrackerCellModel {
     let emoji: Character
     let recordText: String
     let isCompleted: Bool
+    let isPinned: Bool
 }

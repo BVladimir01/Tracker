@@ -198,10 +198,11 @@ final class TrackersListViewController: UIViewController {
         }
         let isCompleted = viewModel.isCompleted(tracker: tracker)
         return TrackerCellModel(title: tracker.title,
-                                    color: UIColor.from(RGBColor: tracker.color),
-                                    emoji: tracker.emoji,
-                                    recordText: recordText, 
-                                    isCompleted: isCompleted)
+                                color: UIColor.from(RGBColor: tracker.color),
+                                emoji: tracker.emoji,
+                                recordText: recordText, 
+                                isCompleted: isCompleted,
+                                isPinned: tracker.isPinned)
     }
     
     // MARK: - Private Methods - User Intentions
@@ -247,7 +248,6 @@ extension TrackersListViewController: UICollectionViewDataSource {
         }
         let buttonEnabled = !(datePicker.date > Date())
         cell.configure(with: trackerCellModel(from: tracker))
-        cell.setTrackerID(tracker.id)
         cell.setRecordButton(enabled: buttonEnabled)
         cell.delegate = self
         return cell

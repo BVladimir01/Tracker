@@ -68,4 +68,5 @@ extension CategoryTitleView {
         static let textAlignment: NSTextAlignment = .left
         static let lateralPadding: CGFloat = 28
     }
+    
 }

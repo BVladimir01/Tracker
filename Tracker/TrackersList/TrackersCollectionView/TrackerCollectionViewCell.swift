@@ -31,6 +31,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private let trackerMainView = UIView()
     private let trackerRecordView = UIView()
     private let emojiLabel = UILabel()
+    private let pinImageView = UIImageView(image: LayoutConstants.PinIcon.image)
     private let titleLabel = UILabel()
     private let recordLabel = UILabel()
     private let recordButton = UIButton()
@@ -69,10 +70,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         themeColor = viewModel.color
         isCompleted = viewModel.isCompleted
         recordLabel.text = viewModel.recordText
-    }
-    
-    func setTrackerID(_ trackerID: UUID) {
-        self.trackerID = trackerID
+        pinImageView.isHidden = !viewModel.isPinned
     }
     
     func setRecordButton(enabled: Bool) {
@@ -91,6 +89,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         trackerMainView.layer.cornerRadius = LayoutConstants.trackerMainViewCornerRadius
         trackerMainView.layer.masksToBounds = true
         setUpEmoji()
+        setUpPin()
         setUpTitle()
         
         trackerMainView.translatesAutoresizingMaskIntoConstraints = false
@@ -119,9 +118,25 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             emojiLabel.widthAnchor.constraint(equalToConstant: LayoutConstants.Emoji.viewSize),
             emojiLabel.heightAnchor.constraint(equalToConstant: LayoutConstants.Emoji.viewSize),
             emojiLabel.leadingAnchor.constraint(equalTo: trackerMainView.leadingAnchor,
-                                                constant: LayoutConstants.Emoji.leftPadding),
+                                                constant: LayoutConstants.Emoji.lateralPadding),
             emojiLabel.topAnchor.constraint(equalTo: trackerMainView.topAnchor,
-                                            constant: LayoutConstants.Emoji.leftPadding)
+                                            constant: LayoutConstants.Emoji.lateralPadding)
+        ])
+    }
+    
+    private func setUpPin() {
+        pinImageView.tintColor = LayoutConstants.PinIcon.color
+        pinImageView.isHidden = true
+        
+        trackerMainView.addSubview(pinImageView)
+        pinImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            pinImageView.topAnchor.constraint(equalTo: trackerMainView.topAnchor,
+                                              constant: LayoutConstants.PinIcon.verticalPadding),
+            pinImageView.trailingAnchor.constraint(equalTo: trackerMainView.trailingAnchor,
+                                                   constant: -LayoutConstants.PinIcon.lateralPadding),
+//            pinImageView.widthAnchor.constraint(equalToConstant: LayoutConstants.PinIcon.width),
+//            pinImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.PinIcon.height)
         ])
     }
     
@@ -220,8 +235,8 @@ extension TrackerCollectionViewCell {
             static let backgroundColor = UIColor.white.withAlphaComponent(0.3)
             static let viewSize: CGFloat = 24
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
-            static let topPadding: CGFloat = 12
-            static let leftPadding: CGFloat = 12
+            static let verticalPadding: CGFloat = 12
+            static let lateralPadding: CGFloat = 12
         }
         enum Title {
             static let font: UIFont = .systemFont(ofSize: 12, weight: .medium)
@@ -240,6 +255,14 @@ extension TrackerCollectionViewCell {
             static let height: CGFloat = 44
             static let topPadding: CGFloat = -2
             static let rightPadding: CGFloat = 2
+        }
+        enum PinIcon {
+            static let image = UIImage.pin
+            static let color = UIColor.white
+            static let width: CGFloat = 24
+            static let height: CGFloat = 24
+            static let verticalPadding: CGFloat = 18
+            static let lateralPadding: CGFloat = 12
         }
     }
 }
