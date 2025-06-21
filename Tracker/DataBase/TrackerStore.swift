@@ -57,6 +57,7 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerEntity>
     private let transformer = TrackerEntityTransformer()
+    private var observer: NSObjectProtocol?
     
     private var insertedSections: IndexSet?
     private var insertedItemIndexPaths: Set<IndexPath>?
@@ -76,10 +77,10 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
                                                           managedObjectContext: context,
                                                           sectionNameKeyPath: #keyPath(TrackerEntity.category.title),
                                                           cacheName: nil)
-        
         super.init()
         fetchedResultsController.delegate = self
         try fetchedResultsController.performFetch()
+        addObserver()
     }
     
     // MARK: - Internal Properties
@@ -149,7 +150,15 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
         try context.save()
     }
     
-    // MARK: - Private Properties
+    // MARK: - Private Methods
+    
+    private func addObserver() {
+        observer = NotificationCenter.default.addObserver(forName: CategoryStore.didChangeCategories,
+                                                          object: nil,
+                                                          queue: .main) { [weak self] _ in
+            try? self?.fetchedResultsController.performFetch()
+        }
+    }
     
     private func createTrackerEntity(from tracker: Tracker) throws -> TrackerEntity {
         let trackerEntity = TrackerEntity(context: context)
