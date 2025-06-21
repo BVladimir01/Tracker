@@ -91,6 +91,29 @@ final class TrackerStore: NSObject {
         try context.save()
     }
     
+    func change(oldTracker: Tracker, to newTracker: Tracker) throws {
+        let changedEntity = try fetchTrackerEntity(forTrackerWithID: oldTracker.id)
+        changedEntity?.category = try fetchCategoryEntity(forCategoryWithID: newTracker.category.id)
+        if oldTracker.color != newTracker.color {
+            let newColor = ColorEntity(context: context)
+            newColor.alpha = newTracker.color.alpha
+            newColor.red = newTracker.color.red
+            newColor.green = newTracker.color.green
+            newColor.blue = newTracker.color.blue
+            changedEntity?.color = newColor
+        }
+        switch newTracker.schedule {
+        case .regular(let weekdays):
+            changedEntity?.weekdaysMask = weekdaysMask(from: weekdays)
+            changedEntity?.isRegular = true
+        case .irregular(let date):
+            changedEntity?.date = date
+            changedEntity?.isRegular = false
+        }
+        changedEntity?.emoji = String(newTracker.emoji)
+        try context.save()
+    }
+    
     func set(date: Date) throws {
         fetchedResultsController.fetchRequest.predicate = try fetchRequestPredicate(for: date)
         try fetchedResultsController.performFetch()

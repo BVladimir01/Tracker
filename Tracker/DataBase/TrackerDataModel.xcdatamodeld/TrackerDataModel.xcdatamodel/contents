@@ -25,8 +25,8 @@
         <attribute name="isRegular" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
         <attribute name="weekdaysMask" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="category" maxCount="1" deletionRule="Nullify" destinationEntity="CategoryEntity" inverseName="trackers" inverseEntity="CategoryEntity"/>
-        <relationship name="color" maxCount="1" deletionRule="Nullify" destinationEntity="ColorEntity" inverseName="tracker" inverseEntity="ColorEntity"/>
-        <relationship name="records" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RecordEntity" inverseName="tracker" inverseEntity="RecordEntity"/>
+        <relationship name="category" maxCount="1" deletionRule="No Action" destinationEntity="CategoryEntity" inverseName="trackers" inverseEntity="CategoryEntity"/>
+        <relationship name="color" maxCount="1" deletionRule="No Action" destinationEntity="ColorEntity" inverseName="tracker" inverseEntity="ColorEntity"/>
+        <relationship name="records" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="RecordEntity" inverseName="tracker" inverseEntity="RecordEntity"/>
     </entity>
 </model>

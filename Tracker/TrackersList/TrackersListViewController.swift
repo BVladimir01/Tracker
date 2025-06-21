@@ -389,8 +389,7 @@ extension TrackersListViewController: TrackerEditorViewControllerDelegate {
     
     func trackerEditorViewController(_ vc: UIViewController, didChange oldTracker: Tracker, to newTracker: Tracker) {
         vc.dismiss(animated: true)
-        viewModel.remove(oldTracker)
-        viewModel.add(newTracker)
+        viewModel.change(oldTracker: oldTracker, to: newTracker)
     }
     
 }

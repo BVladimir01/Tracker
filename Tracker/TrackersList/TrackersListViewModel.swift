@@ -69,6 +69,10 @@ final class TrackersListViewModel {
         try? trackerStore.remove(tracker)
     }
     
+    func change(oldTracker: Tracker, to newTracker: Tracker) {
+        try? trackerStore.change(oldTracker: oldTracker, to: newTracker)
+    }
+    
     func numberOfItemsInSection(_ sectionIndex: Int) -> Int? {
         guard (0..<numberOfSections).contains(sectionIndex) else {
             return nil
