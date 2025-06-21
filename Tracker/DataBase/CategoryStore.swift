@@ -21,8 +21,22 @@ protocol CategoryStoreDelegate: AnyObject {
 }
 
 
+// MARK: CategoryStoreProtocol
+protocol CategoryStoreProtocol: AnyObject {
+    
+    var delegate: CategoryStoreDelegate? { get set }
+    var allTrackerCategories: [TrackerCategory] { get }
+    var numberOfRows: Int? { get }
+    
+    func add(_ category: TrackerCategory) throws
+    func indexPath(for category: TrackerCategory) throws -> IndexPath?
+    func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory
+    
+}
+
+
 // MARK: - CategoryStore
-final class CategoryStore: NSObject {
+final class CategoryStore: NSObject, CategoryStoreProtocol {
     
     // MARK: - Internal Properties
     

@@ -21,7 +21,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     // MARK: - Private Properties
     
     private let trackerIsRegular: Bool
-    private let categoryStore: CategoryStore
+    private let categoryStore: CategoryStoreProtocol
     private weak var delegate: TrackerEditorViewControllerDelegate?
     private let oldTracker: Tracker
     private let daysDone: Int
@@ -60,7 +60,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     
     // MARK: - Initializers
     
-    init(oldTracker: Tracker, daysDone: Int, categoryStore: CategoryStore, delegate: TrackerEditorViewControllerDelegate) {
+    init(oldTracker: Tracker, daysDone: Int, categoryStore: CategoryStoreProtocol, delegate: TrackerEditorViewControllerDelegate) {
         self.oldTracker = oldTracker
         self.daysDone = daysDone
         self.categoryStore = categoryStore

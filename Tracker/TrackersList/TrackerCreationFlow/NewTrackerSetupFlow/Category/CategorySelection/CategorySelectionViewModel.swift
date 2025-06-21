@@ -51,11 +51,11 @@ final class CategorySelectionViewModel {
     
     // MARK: - Private Properties
     
-    private let categoryStore: CategoryStore
+    private let categoryStore: CategoryStoreProtocol
     
     // MARK: - Initializers
     
-    init(categoryStore: CategoryStore, selectedCategory: TrackerCategory?) {
+    init(categoryStore: CategoryStoreProtocol, selectedCategory: TrackerCategory?) {
         self.categoryStore = categoryStore
         do {
             categories = try (0..<(categoryStore.numberOfRows ?? 0)).map { index in

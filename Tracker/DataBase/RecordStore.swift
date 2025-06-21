@@ -14,8 +14,21 @@ protocol RecordStoreDelegate: AnyObject {
 }
 
 
+// MARK: - RecordStoreProtocol
+protocol RecordStoreProtocol: AnyObject {
+    
+    var delegate: RecordStoreDelegate? { get set }
+    
+    func add(_ record: TrackerRecord) throws
+    func removeRecord(from tracker: Tracker, on date: Date) throws
+    func daysDone(of tracker: Tracker) throws -> Int
+    func isCompleted(tracker: Tracker, on date: Date) throws -> Bool
+    
+}
+
+
 // MARK: - RecordStore
-final class RecordStore {
+final class RecordStore: RecordStoreProtocol{
     
     // MARK: - Internal Properties
     

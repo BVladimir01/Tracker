@@ -39,7 +39,9 @@ final class TabBarController: UITabBarController {
     }
     
     private func setUpAndReturnTrackerNavStack() -> UIViewController {
-        let trackersVC = TrackersListViewController(trackerDataStores: stores)
+        let trackersVC = TrackersListViewController(trackerStore: stores.trackerStore,
+                                                    categoryStore: stores.categoryStore,
+                                                    recordStore: stores.recordStore)
         let trackerNavController = UINavigationController(rootViewController: trackersVC)
         trackerNavController.navigationBar.prefersLargeTitles = true
         trackerNavController.tabBarItem = UITabBarItem(title: Strings.trackersTitle,

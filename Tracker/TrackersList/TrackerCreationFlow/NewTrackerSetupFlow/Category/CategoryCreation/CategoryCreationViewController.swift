@@ -19,7 +19,7 @@ final class CategoryCreationViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private var categoryStore: CategoryStore
+    private var categoryStore: CategoryStoreProtocol
     private weak var delegate: CategoryCreationViewControllerDelegate?
     
     private let textField = UITextField()
@@ -35,7 +35,7 @@ final class CategoryCreationViewController: UIViewController {
     
     // MARK: Initializers
     
-    init(categoryStore: CategoryStore, delegate: CategoryCreationViewControllerDelegate) {
+    init(categoryStore: CategoryStoreProtocol, delegate: CategoryCreationViewControllerDelegate) {
         self.categoryStore = categoryStore
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)

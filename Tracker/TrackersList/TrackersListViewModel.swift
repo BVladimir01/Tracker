@@ -35,8 +35,8 @@ final class TrackersListViewModel {
     
     // MARK: - Private Properties
     
-    private let trackerStore: TrackerStore
-    private let recordStore: RecordStore
+    private let trackerStore: TrackerStoreProtocol
+    private let recordStore: RecordStoreProtocol
     
     private var displayedTrackers: [[Tracker]] = [] {
         didSet {
@@ -52,7 +52,7 @@ final class TrackersListViewModel {
     
     // MARK: - Initializers
     
-    init(trackerStore: TrackerStore, recordStore: RecordStore) {
+    init(trackerStore: TrackerStoreProtocol, recordStore: RecordStoreProtocol) {
         self.trackerStore = trackerStore
         self.recordStore = recordStore
         trackerStore.delegate = self

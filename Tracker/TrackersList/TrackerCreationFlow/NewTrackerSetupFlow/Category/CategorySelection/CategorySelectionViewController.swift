@@ -21,7 +21,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
 
     private weak var delegate: CategorySelectionViewControllerDelegate?
     private let viewModel: CategorySelectionViewModel
-    private let categoryStore: CategoryStore
+    private let categoryStore: CategoryStoreProtocol
     
     private let stubView = UIView()
     private let addButton = UIButton(type: .system)
@@ -31,7 +31,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
         table.contentSize.height > LayoutConstants.Table.maxHeight
     }
     
-    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: CategoryStore, viewModel: CategorySelectionViewModel) {
+    init(delegate: CategorySelectionViewControllerDelegate, categoryStore: CategoryStoreProtocol, viewModel: CategorySelectionViewModel) {
         self.delegate = delegate
         self.viewModel = viewModel
         self.categoryStore = categoryStore

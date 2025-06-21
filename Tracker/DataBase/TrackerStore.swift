@@ -23,8 +23,26 @@ protocol TrackerStoreDelegate: AnyObject {
 }
 
 
+// MARK: - TrackerStoreProtocol
+protocol TrackerStoreProtocol: AnyObject {
+    
+    var numberOfSections: Int { get }
+    var delegate: TrackerStoreDelegate? { get set }
+    
+    func numberOfItemsInSection(_ section: Int) -> Int?
+    func sectionTitle(atSectionIndex index: Int) -> String?
+    func tracker(at indexPath: IndexPath) throws -> Tracker
+    func add(_ tracker: Tracker) throws
+    func remove(_ tracker: Tracker) throws
+    func change(oldTracker: Tracker, to newTracker: Tracker) throws
+    func set(date: Date) throws
+    func pinUnpinTracker(_ tracker: Tracker) throws
+    
+}
+
+
 // MARK: - TrackerStore
-final class TrackerStore: NSObject {
+final class TrackerStore: NSObject, TrackerStoreProtocol {
     
     // MARK: Internal Properties
     
@@ -119,12 +137,12 @@ final class TrackerStore: NSObject {
         try fetchedResultsController.performFetch()
     }
     
-    func indexPath(for tracker: Tracker) throws -> IndexPath? {
-        guard let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else {
-            return nil
-        }
-        return fetchedResultsController.indexPath(forObject: entity)
-    }
+//    func indexPath(for tracker: Tracker) throws -> IndexPath? {
+//        guard let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else {
+//            return nil
+//        }
+//        return fetchedResultsController.indexPath(forObject: entity)
+//    }
     
     func pinUnpinTracker(_ tracker: Tracker) throws {
         let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id)

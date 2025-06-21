@@ -20,16 +20,18 @@ final class TrackersListViewController: UIViewController {
     private let searchController = UISearchController(searchResultsController: nil)
     private let filterSelectorButton = UIButton(type: .system)
     
-    private let categoryStore: CategoryStore
+    private let categoryStore: CategoryStoreProtocol
     
     private let viewModel: TrackersListViewModel
     
     // MARK: - Lifecycle
     
-    init(trackerDataStores: TrackerDataStores) {
-        self.categoryStore = trackerDataStores.categoryStore
-        self.viewModel = TrackersListViewModel(trackerStore: trackerDataStores.trackerStore,
-                                               recordStore: trackerDataStores.recordStore)
+    init(trackerStore: TrackerStoreProtocol,
+         categoryStore: CategoryStoreProtocol,
+         recordStore: RecordStoreProtocol) {
+        self.categoryStore = categoryStore
+        self.viewModel = TrackersListViewModel(trackerStore: trackerStore,
+                                               recordStore: recordStore)
         super.init(nibName: nil, bundle: nil)
     }
     
