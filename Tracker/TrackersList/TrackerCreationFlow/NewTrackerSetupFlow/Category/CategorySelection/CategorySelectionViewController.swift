@@ -260,7 +260,7 @@ extension CategorySelectionViewController: UITableViewDelegate {
                 present(editorVC, animated: true)
             }
             let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
-                
+                self?.viewModel.remove(oldCategory)
             }
             return UIMenu(children: [editAction, removeAction])
         })
@@ -271,7 +271,10 @@ extension CategorySelectionViewController: UITableViewDelegate {
 
 // MARK: CategoryEditorViewControllerDelegate
 extension CategorySelectionViewController: CategoryEditorViewControllerDelegate {
-    
+    func categoryEditorViewController(_ vc: UIViewController, didChange oldCategory: TrackerCategory, to newCategory: TrackerCategory) {
+        viewModel.change(oldCategory: oldCategory, to: newCategory)
+        vc.dismiss(animated: true)
+    }
 }
 
 

@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: CategoryEditorViewControllerDelegate
 protocol CategoryEditorViewControllerDelegate: AnyObject {
-    
+    func categoryEditorViewController(_ vc: UIViewController, didChange oldCategory: TrackerCategory, to newCategory: TrackerCategory)
 }
 
 
@@ -168,8 +168,8 @@ final class CategoryEditorViewController: UIViewController {
             assertionFailure("CategoryEditorViewController.doneButtonTapped: TextField.text is nil")
             return
         }
-        let newCategory = TrackerCategory(id: UUID(), title: categoryTitle)
-//        delegate?.categoryCreationViewControllerDelegate(self, didCreateCategory: newCategory)
+        let newCategory = TrackerCategory(id: oldCategory.id, title: categoryTitle)
+        delegate?.categoryEditorViewController(self, didChange: oldCategory, to: newCategory)
     }
 }
 
