@@ -49,3 +49,8 @@
 "TrackerEditorViewController.irregular_tracker_view_title" = "Edit occasional event";
 "TrackerEditorViewController.cancelButton_title" = "Cancel";
 "TrackerEditorViewController.saveButton_title" = "Save";
+// MARK: - Tracker Context Menu
+"trackerContextMenu.pin" = "Pin";
+"trackerContextMenu.unpin" = "Unpin";
+"trackerContextMenu.edit" = "Edit";
+"trackerContextMenu.remove" = "Remove";

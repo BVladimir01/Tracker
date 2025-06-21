@@ -342,16 +342,16 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell), let tracker = viewModel.tracker(at: indexPath) else { return nil }
         let isPinned = tracker.isPinned
         let daysDone = viewModel.daysDone(of: tracker)
-        let pinUnPinAction = UIAction(title: isPinned ? "Unpin" : "Pin") { [weak self] _ in
+        let pinUnPinAction = UIAction(title: isPinned ? Strings.unpin : Strings.pin) { [weak self] _ in
             guard let self else { return }
             self.viewModel.pinUnpinTracker(at: indexPath)
         }
-        let editAction = UIAction(title: "Edit") { [weak self] _ in
+        let editAction = UIAction(title: Strings.edit) { [weak self] _ in
             guard let self else { return }
             let editorVC = TrackerEditorViewController(oldTracker: tracker, daysDone: daysDone, categoryStore: categoryStore, delegate: self)
             present(editorVC, animated: true)
         }
-        let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
+        let removeAction = UIAction(title: Strings.remove, attributes: [.destructive]) { [weak self] _ in
             guard let self else { return }
             self.viewModel.remove(tracker)
         }
@@ -443,5 +443,9 @@ extension TrackersListViewController {
         static let daysDone = NSLocalizedString("days", comment: "")
         static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
         static let filters = NSLocalizedString("trackerFilter.filters", comment: "")
+        static let pin = NSLocalizedString("trackerContextMenu.pin", comment: "")
+        static let unpin = NSLocalizedString("trackerContextMenu.unpin", comment: "")
+        static let edit = NSLocalizedString("trackerContextMenu.edit", comment: "")
+        static let remove = NSLocalizedString("trackerContextMenu.remove", comment: "")
     }
 }

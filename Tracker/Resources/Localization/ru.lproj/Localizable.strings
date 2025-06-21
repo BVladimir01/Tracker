@@ -49,3 +49,8 @@
 "TrackerEditorViewController.irregular_tracker_view_title" = "Редактирование нерегулярного события";
 "TrackerEditorViewController.cancelButton_title" = "Отменить";
 "TrackerEditorViewController.saveButton_title" = "Сохранить";
+// MARK: - Tracker Context Menu
+"trackerContextMenu.pin" = "Закрепить";
+"trackerContextMenu.unpin" = "Открепить";
+"trackerContextMenu.edit" = "Редактировать";
+"trackerContextMenu.remove" = "Удалить";
