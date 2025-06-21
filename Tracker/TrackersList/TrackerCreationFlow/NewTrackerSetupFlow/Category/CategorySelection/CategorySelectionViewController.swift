@@ -247,6 +247,31 @@ extension CategorySelectionViewController: UITableViewDelegate {
         viewModel.selectedRow = indexPath.row
     }
     
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let oldCategory = try? categoryStore.trackerCategory(at: indexPath) else {
+            assertionFailure("CategorySelectionViewController.tableView: failed to get category at \(indexPath)")
+            return nil
+        }
+        return UIContextMenuConfiguration(actionProvider:  { [weak self] _ in
+            let editAction = UIAction(title: "Edit") { [weak self] _ in
+                guard let self else { return }
+                let editorVC = CategoryEditorViewController(oldCategory: oldCategory,
+                                                            delegate: self)
+                present(editorVC, animated: true)
+            }
+            let removeAction = UIAction(title: "Remove", attributes: [.destructive]) { [weak self] _ in
+                print("remove")
+            }
+            return UIMenu(children: [editAction, removeAction])
+        })
+    }
+    
+}
+
+
+// MARK: CategoryEditorViewControllerDelegate
+extension CategorySelectionViewController: CategoryEditorViewControllerDelegate {
+    
 }
 
 
