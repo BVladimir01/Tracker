@@ -82,6 +82,18 @@ final class CategoryStore: NSObject, CategoryStoreProtocol {
         try context.save()
     }
     
+    func remove(_ category: TrackerCategory) throws {
+        guard let entity = try fetchCategoryEntity(forCategoryWithID: category.id) else { return }
+        context.delete(entity)
+        try context.save()
+    }
+    
+    func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) throws {
+        let changedEntity = try fetchCategoryEntity(forCategoryWithID: oldCategory.id)
+        changedEntity?.title = newCategory.title
+        try context.save()
+    }
+    
     func indexPath(for category: TrackerCategory) throws -> IndexPath? {
         guard let entity = try fetchCategoryEntity(forCategoryWithID: category.id) else {
             return nil
