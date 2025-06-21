@@ -1,6 +1,7 @@
 // MARK: - Stats Tab
 "statsTab.nav_title" = "Статистика";
 "statsTab.stub_title" = "Анализировать пока нечего";
+"statsTab.trackersDone" = "Трекеров завершено ";
 // MARK: - Tracker Creation VC
 "trackerCreation.regular_tracker_title" = "Привычка";
 "trackerCreation.irregular_tracker_title" = "Нерегулярное событие";

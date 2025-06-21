@@ -1,6 +1,7 @@
 // MARK: - Stats Tab
 "statsTab.nav_title" = "Stats";
 "statsTab.stub_title" = "Nothing to analyze yet";
+"statsTab.trackersDone" = "Trackers completed";
 // MARK: - New Tracker VC
 "trackerCreation.regular_tracker_title" = "Habit";
 "trackerCreation.irregular_tracker_title" = "Occasional event";

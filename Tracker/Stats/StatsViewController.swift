@@ -109,7 +109,7 @@ final class StatsViewController: UIViewController {
                                                           constant: -LayoutConstants.Card.horizontalPadding),
         ])
         
-        trackersDoneSubtitle.text = "trackersDone"
+        trackersDoneSubtitle.text = Strings.trackersDone
         trackersDoneSubtitle.font = LayoutConstants.Card.subtitleFont
         trackersDoneSubtitle.textColor = LayoutConstants.Card.textColor
         trackersDoneSubtitle.translatesAutoresizingMaskIntoConstraints = false
@@ -222,5 +222,6 @@ extension StatsViewController {
     enum Strings {
         static let title = NSLocalizedString("statsTab.nav_title", comment: "")
         static let stubViewTitle = NSLocalizedString("statsTab.stub_title", comment: "")
+        static let trackersDone = NSLocalizedString("statsTab.trackersDone", comment: "")
     }
 }
