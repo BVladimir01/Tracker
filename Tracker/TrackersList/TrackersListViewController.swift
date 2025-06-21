@@ -344,18 +344,22 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         guard let indexPath = collectionView.indexPath(for: cell), let tracker = viewModel.tracker(at: indexPath) else { return nil }
         let isPinned = tracker.isPinned
         let daysDone = viewModel.daysDone(of: tracker)
-        let pinUnPinAction = UIAction(title: isPinned ? Strings.unpin : Strings.pin) { [weak self] _ in
+        let pinUnPinAction = UIAction(title: isPinned ? Strings.contextUnpin : Strings.contextPin) { [weak self] _ in
             guard let self else { return }
             self.viewModel.pinUnpinTracker(at: indexPath)
         }
-        let editAction = UIAction(title: Strings.edit) { [weak self] _ in
+        let editAction = UIAction(title: Strings.contextEdit) { [weak self] _ in
             guard let self else { return }
             let editorVC = TrackerEditorViewController(oldTracker: tracker, daysDone: daysDone, categoryStore: categoryStore, delegate: self)
             present(editorVC, animated: true)
         }
-        let removeAction = UIAction(title: Strings.remove, attributes: [.destructive]) { [weak self] _ in
-            guard let self else { return }
-            self.viewModel.remove(tracker)
+        let removeAction = UIAction(title: Strings.contextRemove, attributes: [.destructive]) { [weak self] _ in
+            let alert = AlertFactory.removeConfirmation(title: Strings.alertTitle,
+                                                        removeTitle: Strings.alertRemove,
+                                                        cancelTitle: Strings.alertCancel) { [weak self] in
+                self?.viewModel.remove(tracker)
+            }
+            self?.present(alert, animated: true)
         }
         return UIContextMenuConfiguration(actionProvider: { _ in
             UIMenu(children: [pinUnPinAction, editAction, removeAction])
@@ -444,9 +448,12 @@ extension TrackersListViewController {
         static let daysDone = NSLocalizedString("days", comment: "")
         static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
         static let filters = NSLocalizedString("trackerFilter.filters", comment: "")
-        static let pin = NSLocalizedString("contextMenu.pin", comment: "")
-        static let unpin = NSLocalizedString("contextMenu.unpin", comment: "")
-        static let edit = NSLocalizedString("contextMenu.edit", comment: "")
-        static let remove = NSLocalizedString("contextMenu.remove", comment: "")
+        static let contextPin = NSLocalizedString("contextMenu.pin", comment: "")
+        static let contextUnpin = NSLocalizedString("contextMenu.unpin", comment: "")
+        static let contextEdit = NSLocalizedString("contextMenu.edit", comment: "")
+        static let contextRemove = NSLocalizedString("contextMenu.remove", comment: "")
+        static let alertTitle = NSLocalizedString("trackersListTab.alert_title", comment: "")
+        static let alertRemove = NSLocalizedString("alert.remove", comment: "")
+        static let alertCancel = NSLocalizedString("alert.cancel", comment: "")
     }
 }

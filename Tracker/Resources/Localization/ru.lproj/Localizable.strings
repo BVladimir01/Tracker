@@ -34,6 +34,7 @@
 "trackerCell.irregular_tracker_not_done" = "Не выполнен";
 "trackersListTab.search_placeholder" = "Поиск";
 "trackersListTab.pinned" = "Закрепленные";
+"trackersListTab.alert_title" = "Уверены, что хотите удалить трекер?";
 // MARK: - Onboarding
 "onboarding.page1_title" = "Отслеживайте только то, что хотите";
 "onboarding.page2_title" = "Даже если это не литры воды и йога";
@@ -58,3 +59,7 @@
 "CategoryEditorViewController.view_title" = "Редактирование категории";
 "CategoryEditorViewController.doneButton_title" = "Готово";
 "CategoryEditorViewController.textField.placeholder_title" = "Введите новое название";
+"CategoryEditorViewController.alert_title" = "Эта категория точно не нужна?";
+// MARK: - Alert
+"alert.remove" = "Удалить";
+"alert.cancel" = "Отменить";

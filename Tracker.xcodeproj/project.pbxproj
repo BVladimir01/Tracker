@@ -14,6 +14,7 @@
 		E73276A42E05801B00180061 /* TrackerEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276A32E05801300180061 /* TrackerEditorViewController.swift */; };
 		E73276B42E06667C00180061 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = E73276B32E06667C00180061 /* SnapshotTesting */; };
 		E73276BF2E06999800180061 /* CategoryEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276BE2E06999100180061 /* CategoryEditorViewController.swift */; };
+		E73276C22E06BC1E00180061 /* AlertFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276C12E06BC1200180061 /* AlertFactory.swift */; };
 		E7370FCC2DF61F230087785E /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */; };
 		E7370FCF2DF61F850087785E /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */; };
 		E73710072DF6C3840087785E /* OnboardingStatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */; };
@@ -74,6 +75,7 @@
 		E73276A32E05801300180061 /* TrackerEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEditorViewController.swift; sourceTree = "<group>"; };
 		E73276A92E06651500180061 /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E73276BE2E06999100180061 /* CategoryEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorViewController.swift; sourceTree = "<group>"; };
+		E73276C12E06BC1200180061 /* AlertFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertFactory.swift; sourceTree = "<group>"; };
 		E7370FCB2DF61F1A0087785E /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		E7370FCE2DF61F7D0087785E /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		E73710062DF6C32C0087785E /* OnboardingStatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStatusStore.swift; sourceTree = "<group>"; };
@@ -186,6 +188,14 @@
 				E73276BE2E06999100180061 /* CategoryEditorViewController.swift */,
 			);
 			path = CategoryEdit;
+			sourceTree = "<group>";
+		};
+		E73276C02E06BC0200180061 /* UIHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				E73276C12E06BC1200180061 /* AlertFactory.swift */,
+			);
+			path = UIHelpers;
 			sourceTree = "<group>";
 		};
 		E7370FCA2DF61EED0087785E /* OnboardingFlow */ = {
@@ -315,6 +325,7 @@
 		E7D0370D2DC3B80E007819A8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				E73276C02E06BC0200180061 /* UIHelpers */,
 				E7C3A8E92DE81EEA00096105 /* DataBase */,
 				E7D037942DC8AA93007819A8 /* Extensions */,
 				E7D037912DC8A9A9007819A8 /* Models */,
@@ -566,6 +577,7 @@
 				E7C3A9422DED9AEE00096105 /* TrackerDataStores.swift in Sources */,
 				E7D037C12DD07A7D007819A8 /* TrackerCellModel.swift in Sources */,
 				E7C3A8D12DE7429800096105 /* EmojisCollectionViewCell.swift in Sources */,
+				E73276C22E06BC1E00180061 /* AlertFactory.swift in Sources */,
 				E7C3A9482DEE30EB00096105 /* CategorySelectionCellModel.swift in Sources */,
 				E73276A42E05801B00180061 /* TrackerEditorViewController.swift in Sources */,
 			);
