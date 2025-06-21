@@ -31,6 +31,8 @@ protocol CategoryStoreProtocol: AnyObject {
     func add(_ category: TrackerCategory) throws
     func indexPath(for category: TrackerCategory) throws -> IndexPath?
     func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory
+    func remove(_ category: TrackerCategory) throws
+    func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) throws
     
 }
 

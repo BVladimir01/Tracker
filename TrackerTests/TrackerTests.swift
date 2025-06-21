@@ -27,6 +27,9 @@ final class TrackerTests: XCTestCase {
             return TrackerCategory(id: UUID(), title: "Some Category")
         }
         
+        func remove(_ category: TrackerCategory) throws { }
+        
+        func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) throws { }
     }
     
     final class TrackerStoreMock: TrackerStoreProtocol {
