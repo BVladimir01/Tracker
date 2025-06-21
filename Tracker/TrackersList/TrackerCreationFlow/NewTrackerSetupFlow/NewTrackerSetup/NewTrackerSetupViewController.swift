@@ -342,8 +342,10 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     private func setCreateButton(enabled: Bool) {
         let color = enabled ? LayoutConstants.Buttons.createButtonBackgroundColor : LayoutConstants.Buttons.createButtonDisabledColor
+        let textColor = enabled ? LayoutConstants.Buttons.createButtonTextColor : LayoutConstants.Buttons.createButtonDisabledTextColor
         createButton.isEnabled = enabled
         createButton.backgroundColor = color
+        createButton.setTitleColor(textColor, for: .normal)
     }
     
     // MARK: - Private Methods - Intentions
