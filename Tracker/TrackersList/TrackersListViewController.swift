@@ -438,8 +438,8 @@ extension TrackersListViewController {
     enum Strings {
         static let title = NSLocalizedString("trackersListTab.nav_title", comment: "")
         static let stubViewTitle = NSLocalizedString("trackersListTab.stub_title", comment: "")
-        static let irregularTrackerIsDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_is_done", comment: "")
-        static let irregularTrackerNotDone = NSLocalizedString("trackersListTab.cell.irregular_tracker_not_done", comment: "")
+        static let irregularTrackerIsDone = NSLocalizedString("trackerCell.irregular_tracker_is_done", comment: "")
+        static let irregularTrackerNotDone = NSLocalizedString("trackerCell.irregular_tracker_not_done", comment: "")
         static let daysDone = NSLocalizedString("days", comment: "")
         static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
         static let filters = NSLocalizedString("trackerFilter.filters", comment: "")

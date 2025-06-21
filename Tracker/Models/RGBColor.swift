@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RGBColor: Codable {
+struct RGBColor: Codable, Equatable {
     
     let red: Double
     let green: Double

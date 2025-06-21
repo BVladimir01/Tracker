@@ -30,8 +30,8 @@
 // MARK: - Trackers List Tab
 "trackersListTab.nav_title" = "Трекеры";
 "trackersListTab.stub_title" = "Что будем отслеживать?";
-"trackersListTab.cell.irregular_tracker_is_done" = "Выполнен";
-"trackersListTab.cell.irregular_tracker_not_done" = "Не выполнен";
+"trackerCell.irregular_tracker_is_done" = "Выполнен";
+"trackerCell.irregular_tracker_not_done" = "Не выполнен";
 "trackersListTab.search_placeholder" = "Поиск";
 "trackersListTab.pinned" = "Закрепленные";
 // MARK: - Onboarding
@@ -44,3 +44,8 @@
 "trackerFilter.completed" = "Завершенные";
 "trackerFilter.uncompleted" = "Незавершенные";
 "trackerFilter.filters" = "Фильтры";
+// MARK: - Tracker Editor VC
+"TrackerEditorViewController.regular_tracker_view_title" = "Редактирование привычки";
+"TrackerEditorViewController.irregular_tracker_view_title" = "Редактирование нерегулярного события";
+"TrackerEditorViewController.cancelButton_title" = "Отменить";
+"TrackerEditorViewController.saveButton_title" = "Сохранить";

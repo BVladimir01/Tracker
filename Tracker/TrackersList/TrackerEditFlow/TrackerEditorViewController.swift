@@ -66,9 +66,8 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         self.categoryStore = categoryStore
         self.delegate = delegate
         switch oldTracker.schedule {
-        case .regular(let weekdays):
+        case .regular:
             trackerIsRegular = true
-            self.weekdays = weekdays
         case .irregular:
             trackerIsRegular = false
         }
@@ -95,6 +94,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         NSLayoutConstraint.activate(constraints)
         colorsHandler.delegate = self
         emojisHandler.delegate = self
+        initializeViewWithTrackerData()
     }
     
     // MARK: - Interntal Methods
@@ -117,6 +117,47 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     }
     
     // MARK: - Private Methods - Setup
+    
+    private func initializeViewWithTrackerData() {
+        // layout collectionViewsFirst
+        emojisCollectionView.layoutIfNeeded()
+        colorsCollectionView.layoutIfNeeded()
+        
+        trackerCategory = oldTracker.category
+        switch oldTracker.schedule {
+        case .regular(let weekdays):
+            self.weekdays = weekdays
+        case .irregular:
+            break
+        }
+        for emojiIndex in 0..<emojisCollectionView.numberOfItems(inSection: 0) {
+            guard let cell = emojisCollectionView.cellForItem(at: IndexPath(item: emojiIndex, section: 0)) as? EmojisCollectionViewCell else {
+                assertionFailure("TrackerEditorViewController.initializeViewWithTrackerData: failed to typecast EmojisCollectionViewCell")
+                continue
+            }
+            if String(oldTracker.emoji) == cell.emoji {
+                emojisCollectionView.selectItem(at: IndexPath(item: emojiIndex, section: 0),
+                                                animated: true, scrollPosition: .centeredVertically)
+                emoji = cell.emoji
+            }
+            
+        }
+        for colorIndex in 0..<colorsCollectionView.numberOfItems(inSection: 0) {
+            guard let cell = colorsCollectionView.cellForItem(at: IndexPath(item: colorIndex, section: 0)) as? ColorsCollectionViewCell else {
+                assertionFailure("TrackerEditorViewController.initializeViewWithTrackerData: failed to typecast ColorsCollectionViewCell")
+                continue
+            }
+            guard let cellColor = cell.color.rgbColor else {
+                assertionFailure("TrackerEditorViewController.initializeViewWithTrackerData: failed to get rgbColor from UIColor")
+                continue
+            }
+            if oldTracker.color == cellColor {
+                colorsCollectionView.selectItem(at: IndexPath(item: colorIndex, section: 0),
+                                                animated: true, scrollPosition: .centeredVertically)
+                color = cell.color
+            }
+        }
+    }
     
     private func setUpTitleAndScrollView() {
         titleLabel.text = trackerIsRegular ? Strings.regularTitle : Strings.irregularTitle
@@ -155,7 +196,17 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     }
     
     private func setUpDaysDoneLabel() {
-        daysDoneLabel.text = "\(daysDone) days"
+        let text: String
+        if trackerIsRegular {
+            text = String(format: Strings.daysDone, daysDone)
+        } else {
+            if daysDone == 0 {
+                text = Strings.irregularTrackerNotDone
+            } else {
+                text = Strings.irregularTrackerIsDone
+            }
+        }
+        daysDoneLabel.text = text
         daysDoneLabel.textColor = LayoutConstants.DaysDoneLabel.textColor
         daysDoneLabel.font = LayoutConstants.DaysDoneLabel.font
         daysDoneLabel.backgroundColor = .clear
@@ -226,7 +277,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     }
     
     private func setUpSaveButton() {
-        saveButton.setTitle("Save", for: .normal)
+        saveButton.setTitle(Strings.saveButtonTitle, for: .normal)
         saveButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
         saveButton.setTitleColor(LayoutConstants.Buttons.createButtonTextColor, for: .normal)
         saveButton.titleLabel?.font = LayoutConstants.Buttons.font
@@ -542,15 +593,17 @@ extension TrackerEditorViewController {
 // MARK: - Strings
 extension TrackerEditorViewController {
     enum Strings {
-        static let regularTitle = NSLocalizedString("newTrackerSetup.regular_tracker_view_title", comment: "")
-        static let irregularTitle = NSLocalizedString("newTrackerSetup.irregular_tracker_view_title", comment: "")
-        static let cancelButtonTitle = NSLocalizedString("newTrackerSetup.cancelButton_title", comment: "")
-        static let createButtonTitle = NSLocalizedString("newTrackerSetup.createButton_title", comment: "")
+        static let regularTitle = NSLocalizedString("TrackerEditorViewController.regular_tracker_view_title", comment: "")
+        static let irregularTitle = NSLocalizedString("TrackerEditorViewController.irregular_tracker_view_title", comment: "")
+        static let cancelButtonTitle = NSLocalizedString("TrackerEditorViewController.cancelButton_title", comment: "")
+        static let saveButtonTitle = NSLocalizedString("TrackerEditorViewController.saveButton_title", comment: "")
         static let emojiCollectionTitle = NSLocalizedString("newTrackerSetup.emojiCollection_title", comment: "")
         static let colorCollectionTitle = NSLocalizedString("newTrackerSetup.colorCollection_title", comment: "")
         static let scheduleConfigTitle = NSLocalizedString("newTrackerSetup.Schedule_config_title", comment: "")
         static let categoryConfigTitle = NSLocalizedString("newTrackerSetup.Category_config_title", comment: "")
         static let scheduleEveryDay = NSLocalizedString("newTrackerSetup.Schedule_config_description.every_day", comment: "")
-        static let textFieldPlaceholderTitle = NSLocalizedString("newTrackerSetup.textField.placeholder_title", comment: "")
+        static let irregularTrackerIsDone = NSLocalizedString("trackerCell.irregular_tracker_is_done", comment: "")
+        static let irregularTrackerNotDone = NSLocalizedString("trackerCell.irregular_tracker_not_done", comment: "")
+        static let daysDone = NSLocalizedString("days", comment: "")
     }
 }
