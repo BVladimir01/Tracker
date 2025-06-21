@@ -76,7 +76,6 @@ final class ScheduleSelectionViewController: UIViewController {
         doneButton.backgroundColor = LayoutConstants.Button.backgroundColor
         doneButton.layer.cornerRadius = LayoutConstants.Button.cornerRadius
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        if !initialWeekdays.isEmpty { setDoneButton(enabled: true) }
         
         view.addSubview(doneButton)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -114,17 +113,6 @@ final class ScheduleSelectionViewController: UIViewController {
         ])
     }
     
-    // MARK: - Private Methods - Helpers
-    
-    private func updateDoneButtonState() {
-        setDoneButton(enabled: shouldEnableDoneButton)
-    }
-    
-    private func setDoneButton(enabled: Bool) {
-        doneButton.isEnabled = enabled
-        doneButton.backgroundColor = enabled ? LayoutConstants.Button.backgroundColor : LayoutConstants.Button.disabledBackgroundColor
-    }
-    
     // MARK: - Private Methods - Intentions
     
     @objc
@@ -138,11 +126,6 @@ final class ScheduleSelectionViewController: UIViewController {
             }
         }
         delegate?.scheduleSelectionViewController(self, didSelect: selectedWeekdays)
-    }
-    
-    @objc
-    private func switcherToggled(_ sender: UISwitch) {
-        updateDoneButtonState()
     }
 
 }
@@ -177,7 +160,6 @@ extension ScheduleSelectionViewController: UITableViewDataSource {
             switcher.setOn(true, animated: true)
         }
         switcher.onTintColor = LayoutConstants.Table.cellSwitcherOnColor
-        switcher.addTarget(self, action: #selector(switcherToggled(_:)), for: .valueChanged)
         cell.accessoryView = switcher
         return cell
     }
@@ -196,7 +178,6 @@ extension ScheduleSelectionViewController {
         }
         enum Button {
             static let backgroundColor: UIColor = .ypBlack
-            static let disabledBackgroundColor: UIColor = .ypGray
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypWhite
             static let cornerRadius: CGFloat = 16
