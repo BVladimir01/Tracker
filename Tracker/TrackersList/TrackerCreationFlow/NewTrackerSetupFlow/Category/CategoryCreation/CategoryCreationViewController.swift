@@ -131,6 +131,8 @@ final class CategoryCreationViewController: UIViewController {
             doneButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Button.width),
             doneButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Button.height)
         ])
+        
+        updateDoneButtonState()
     }
     
     // MARK: - Private Methods - Helpers
@@ -141,8 +143,10 @@ final class CategoryCreationViewController: UIViewController {
     
     private func setDoneButton(enabled: Bool) {
         let color = enabled ? LayoutConstants.Button.backgroundColor : LayoutConstants.Button.disabledBackgroundColor
+        let textColor = enabled ? LayoutConstants.Button.textColor : LayoutConstants.Button.disabledTextColor
         doneButton.isEnabled = enabled
         doneButton.backgroundColor = color
+        doneButton.setTitleColor(textColor, for: .normal)
     }
     
     // MARK: - Private Methods - Intentions
@@ -199,6 +203,7 @@ extension CategoryCreationViewController {
             static let disabledBackgroundColor: UIColor = .ypGray
             static let font: UIFont = .systemFont(ofSize: 16, weight: .medium)
             static let textColor: UIColor = .ypWhite
+            static let disabledTextColor: UIColor = .white
             static let cornerRadius: CGFloat = 16
             static let spacingToSuperviewBottom: CGFloat = 16
             static let height: CGFloat = 60
