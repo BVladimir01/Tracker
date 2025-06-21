@@ -80,7 +80,6 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
         super.init()
         fetchedResultsController.delegate = self
         try fetchedResultsController.performFetch()
-        addObserver()
     }
     
     // MARK: - Internal Properties
@@ -150,15 +149,11 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
         try context.save()
     }
     
-    // MARK: - Private Methods
-    
-    private func addObserver() {
-        observer = NotificationCenter.default.addObserver(forName: CategoryStore.didChangeCategories,
-                                                          object: nil,
-                                                          queue: .main) { [weak self] _ in
-            try? self?.fetchedResultsController.performFetch()
-        }
+    func reloadData() throws {
+        try fetchedResultsController.performFetch()
     }
+    
+    // MARK: - Private Methods
     
     private func createTrackerEntity(from tracker: Tracker) throws -> TrackerEntity {
         let trackerEntity = TrackerEntity(context: context)

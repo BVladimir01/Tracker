@@ -35,6 +35,7 @@ final class TrackersListViewModel {
     
     // MARK: - Private Properties
     
+    private var observer: NSObjectProtocol?
     private let trackerStore: TrackerStoreProtocol
     private let recordStore: RecordStoreProtocol
     
@@ -57,6 +58,7 @@ final class TrackersListViewModel {
         self.recordStore = recordStore
         trackerStore.delegate = self
         recordStore.delegate = self
+        addObserver()
     }
     
     // MARK: - Internal Methods
@@ -148,6 +150,16 @@ final class TrackersListViewModel {
     }
     
     // MARK: - Private Methods
+    
+    private func addObserver() {
+        observer = NotificationCenter.default.addObserver(forName: CategoryStore.didChangeCategories,
+                                                          object: nil,
+                                                          queue: .main) { [weak self] _ in
+            guard let self, let trackerStore = self.trackerStore as? TrackerStore else { return }
+            try? trackerStore.reloadData()
+            self.updateDisplayedTrackers()
+        }
+    }
     
     private func updateDisplayedTrackers() {
         var newlyDisplayedTrackers: [[Tracker]] = []

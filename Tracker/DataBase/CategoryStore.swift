@@ -147,7 +147,6 @@ extension CategoryStore: NSFetchedResultsControllerDelegate {
         let update = CategoryUpdate(insertedIndices: insertedIndices)
         delegate?.categoryStoreDidUpdate(with: update)
         NotificationCenter.default.post(name: Self.didChangeCategories, object: nil)
-        print("posted")
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
