@@ -119,7 +119,7 @@ final class TrackerStore: NSObject {
         colorEntity.green = tracker.color.green
         colorEntity.alpha = tracker.color.alpha
         trackerEntity.color = colorEntity
-        trackerEntity.category = try fetchCategoryEntity(forCategoryWithID: tracker.categoryID)
+        trackerEntity.category = try fetchCategoryEntity(forCategoryWithID: tracker.category.id)
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
         trackerEntity.title = tracker.title

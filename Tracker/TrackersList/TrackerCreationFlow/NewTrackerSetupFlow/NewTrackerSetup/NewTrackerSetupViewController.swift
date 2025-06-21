@@ -373,7 +373,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
                               color: rgbColor,
                               emoji: Character(emoji),
                               schedule: schedule,
-                              categoryID: trackerCategory.id,
+                              category: trackerCategory,
                               isPinned: false
         )
         delegate?.newTrackerSetupViewController(self, didCreateTracker: tracker)

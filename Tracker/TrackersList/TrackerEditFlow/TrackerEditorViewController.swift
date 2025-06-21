@@ -66,8 +66,9 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         self.categoryStore = categoryStore
         self.delegate = delegate
         switch oldTracker.schedule {
-        case .regular:
+        case .regular(let weekdays):
             trackerIsRegular = true
+            self.weekdays = weekdays
         case .irregular:
             trackerIsRegular = false
         }
@@ -151,7 +152,6 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-        scrollView.alwaysBounceVertical = true
     }
     
     private func setUpDaysDoneLabel() {
@@ -357,7 +357,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
                               color: rgbColor,
                               emoji: Character(emoji),
                               schedule: schedule,
-                              categoryID: trackerCategory.id,
+                              category: trackerCategory,
                               isPinned: false
         )
         delegate?.trackerEditorViewController(self, didChange: oldTracker, to: tracker)
