@@ -32,6 +32,7 @@ final class MyTextFieldView: UIView {
             textField.text = text
         }
     }
+    var textLengthLimit: Int = 38
     
     // MARK: - Private Properties
     
@@ -41,7 +42,7 @@ final class MyTextFieldView: UIView {
     private var bottomConstraint: NSLayoutConstraint?
     
     private var shouldDisplayWarning: Bool {
-        (textField.text?.count ?? 0) > 38
+        (textField.text?.count ?? 0) > textLengthLimit
     }
     
     // MARK: - Initializers
