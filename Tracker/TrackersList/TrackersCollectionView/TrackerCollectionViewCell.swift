@@ -62,7 +62,18 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         super.init(coder: coder)
     }
     
-    // MARK: - InternalMethods
+    // MARK: - LifeCycle
+    
+    override func prepareForReuse() {
+        delegate = nil
+        trackerID = nil
+        emojiLabel.text = ""
+        pinImageView.image = nil
+        titleLabel.text = ""
+        recordLabel.text = ""
+    }
+    
+    // MARK: - Internal Methods
     
     func configure(with viewModel: TrackerCellModel) {
         titleLabel.text = viewModel.title
@@ -135,8 +146,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                                               constant: LayoutConstants.PinIcon.verticalPadding),
             pinImageView.trailingAnchor.constraint(equalTo: trackerMainView.trailingAnchor,
                                                    constant: -LayoutConstants.PinIcon.lateralPadding),
-//            pinImageView.widthAnchor.constraint(equalToConstant: LayoutConstants.PinIcon.width),
-//            pinImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.PinIcon.height)
         ])
     }
     
@@ -219,6 +228,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
 }
 
 
+// MARK: - UIContextMenuInteractionDelegate
 extension TrackerCollectionViewCell: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         delegate?.menuConfiguration(for: self)
@@ -226,7 +236,7 @@ extension TrackerCollectionViewCell: UIContextMenuInteractionDelegate {
 }
 
 
-// MARK: LayoutConstants
+// MARK: - LayoutConstants
 extension TrackerCollectionViewCell {
     private enum LayoutConstants {
         static let trackerMainViewCornerRadius: CGFloat = 16
