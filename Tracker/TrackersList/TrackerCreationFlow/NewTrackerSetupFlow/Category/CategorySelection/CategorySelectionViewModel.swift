@@ -84,6 +84,7 @@ final class CategorySelectionViewModel {
     func remove(_ category: TrackerCategory) {
         do {
             try categoryStore.remove(category)
+            selectedRow = nil
         } catch {
             assertionFailure("CategorySelectionViewModel.remove: error \(error)")
         }

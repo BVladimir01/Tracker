@@ -56,10 +56,7 @@ final class CategorySelectionViewController: UIViewController, CategoryCreationV
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        guard let selectedCategory = viewModel.selectedCategory else {
-            return
-        }
-        delegate?.categorySelectionViewController(self, didDismissWith: selectedCategory)
+        delegate?.categorySelectionViewController(self, didDismissWith: viewModel.selectedCategory)
     }
     
     // MARK: - Internal Methods

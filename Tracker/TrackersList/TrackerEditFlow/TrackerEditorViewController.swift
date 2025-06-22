@@ -29,15 +29,25 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     private var trackerCategory: TrackerCategory? {
         didSet {
             settingsTable.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            updateSaveButtonState()
         }
     }
     private var weekdays: Set<Weekday> = [] {
         didSet {
             settingsTable.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .none)
+            updateSaveButtonState()
         }
     }
-    private var emoji: String?
-    private var color: UIColor?
+    private var emoji: String? {
+        didSet {
+            updateSaveButtonState()
+        }
+    }
+    private var color: UIColor? {
+        didSet {
+            updateSaveButtonState()
+        }
+    }
     
     private let emojisHandler = EmojisHandler()
     private let colorsHandler = ColorsHandler()
@@ -278,8 +288,8 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     
     private func setUpSaveButton() {
         saveButton.setTitle(Strings.saveButtonTitle, for: .normal)
-        saveButton.backgroundColor = LayoutConstants.Buttons.createButtonBackgroundColor
-        saveButton.setTitleColor(LayoutConstants.Buttons.createButtonTextColor, for: .normal)
+        saveButton.backgroundColor = LayoutConstants.Buttons.saveButtonBackgroundColor
+        saveButton.setTitleColor(LayoutConstants.Buttons.saveButtonTextColor, for: .normal)
         saveButton.titleLabel?.font = LayoutConstants.Buttons.font
         saveButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         saveButton.layer.cornerRadius = LayoutConstants.Buttons.cornerRadius
@@ -291,7 +301,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
                                                   constant: -LayoutConstants.Buttons.lateralPadding),
             saveButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                  constant: LayoutConstants.Buttons.bottomPadding),
-            saveButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Buttons.createButtonWidth),
+            saveButton.widthAnchor.constraint(equalToConstant: LayoutConstants.Buttons.saveButtonWidth),
             saveButton.heightAnchor.constraint(equalToConstant: LayoutConstants.Buttons.height)
         ])
     }
@@ -384,6 +394,27 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         colorsCollectionView.dataSource = colorsHandler
     }
     
+    // MARK: - Private Methods - Helpers
+    
+    private func updateSaveButtonState() {
+        let shouldEnableSaveButton: Bool
+        if trackerCategory != nil, color != nil, emoji != nil,
+           !weekdays.isEmpty || !trackerIsRegular {
+            shouldEnableSaveButton = true
+        } else {
+            shouldEnableSaveButton = false
+        }
+        setSaveButton(enabled: shouldEnableSaveButton)
+    }
+    
+    private func setSaveButton(enabled: Bool) {
+        let color = enabled ? LayoutConstants.Buttons.saveButtonBackgroundColor : LayoutConstants.Buttons.saveButtonDisabledColor
+        let textColor = enabled ? LayoutConstants.Buttons.saveButtonTextColor : LayoutConstants.Buttons.saveButtonDisabledTextColor
+        saveButton.isEnabled = enabled
+        saveButton.backgroundColor = color
+        saveButton.setTitleColor(textColor, for: .normal)
+    }
+    
     // MARK: - Private Methods - Intentions
     
     @objc
@@ -429,7 +460,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
         vc.initialWeekdays = weekdays
         present(vc, animated: true)
     }
-
+    
 }
 
 
@@ -546,11 +577,11 @@ extension TrackerEditorViewController {
             static let cancelButtonBorderWidth: CGFloat = 1
             static let cancelButtonWidth: CGFloat = 166
             
-            static let createButtonBackgroundColor: UIColor = .ypBlack
-            static let createButtonTextColor: UIColor = .ypWhite
-            static let createButtonDisabledColor: UIColor = .ypGray
-            static let createButtonDisabledTextColor: UIColor = .white
-            static let createButtonWidth: CGFloat = 161
+            static let saveButtonBackgroundColor: UIColor = .ypBlack
+            static let saveButtonTextColor: UIColor = .ypWhite
+            static let saveButtonDisabledColor: UIColor = .ypGray
+            static let saveButtonDisabledTextColor: UIColor = .white
+            static let saveButtonWidth: CGFloat = 161
             
             static let bottomPadding: CGFloat = 0
             static let lateralPadding: CGFloat = 20
