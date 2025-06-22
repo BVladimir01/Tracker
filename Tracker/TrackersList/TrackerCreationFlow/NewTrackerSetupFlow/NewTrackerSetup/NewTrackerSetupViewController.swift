@@ -119,6 +119,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     
     func categorySelectionViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
         self.trackerCategory = category
+        vc.dismiss(animated: true)
     }
     
     func emojisHandler(_ handler: EmojisHandler, didSelect emoji: String) {

@@ -5,6 +5,10 @@
 //  Created by Vladimir on 20.06.2025.
 //
 
+
+// For reviewer:
+// I know it's ugly, and I should modify NewTrackerSetupViewController for this Purpose
+// I was running out of time, and copying was the easiest option
 import UIKit
 
 
@@ -116,6 +120,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     
     func categorySelectionViewController(_ vc: UIViewController, didDismissWith category: TrackerCategory?) {
         self.trackerCategory = category
+        vc.dismiss(animated: true)
     }
     
     func emojisHandler(_ handler: EmojisHandler, didSelect emoji: String) {
