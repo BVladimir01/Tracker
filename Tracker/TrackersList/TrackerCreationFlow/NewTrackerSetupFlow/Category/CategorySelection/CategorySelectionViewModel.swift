@@ -83,8 +83,11 @@ final class CategorySelectionViewModel {
     
     func remove(_ category: TrackerCategory) {
         do {
+            let latestSelectedCategory = selectedCategory
             try categoryStore.remove(category)
-            selectedRow = nil
+            if let latestSelectedCategory {
+                selectedRow = categories.firstIndex(of: latestSelectedCategory)
+            }
         } catch {
             assertionFailure("CategorySelectionViewModel.remove: error \(error)")
         }
