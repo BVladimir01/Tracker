@@ -73,9 +73,9 @@ final class TrackerTests: XCTestCase {
         
         func set(date: Date) throws { }
         
-        func pinUnpinTracker(_ tracker: TrackerModel) throws { }
+        func set(tracker: TrackerModel, pinned: Bool) throws { }
         
-        }
+    }
     
     final class RecordStoreStub: RecordStoreProtocol {
         
