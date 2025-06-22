@@ -119,10 +119,6 @@ final class CategoryStore: NSObject, CategoryStoreProtocol {
 extension CategoryStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         NotificationCenter.default.post(name: Self.didChangeCategories, object: nil)
-        guard let delegate else {
-            assertionFailure("CategoryStore.controllerDidChangeContent: delegate is nil")
-            return
-        }
-        delegate.categoryStoreDidUpdate()
+        delegate?.categoryStoreDidUpdate()
     }
 }
