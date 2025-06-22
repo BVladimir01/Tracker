@@ -9,15 +9,9 @@
 import CoreData
 
 
-// MARK: - CategoryUpdate
-struct CategoryUpdate {
-    let insertedIndices: IndexSet
-}
-
-
 // MARK: - CategoryStoreDelegate
 protocol CategoryStoreDelegate: AnyObject {
-    func categoryStoreDidUpdate(with update: CategoryUpdate)
+    func categoryStoreDidUpdate()
 }
 
 
@@ -29,7 +23,6 @@ protocol CategoryStoreProtocol: AnyObject {
     var numberOfRows: Int? { get }
     
     func add(_ category: TrackerCategory) throws
-    func indexPath(for category: TrackerCategory) throws -> IndexPath?
     func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory
     func remove(_ category: TrackerCategory) throws
     func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) throws
@@ -49,7 +42,6 @@ final class CategoryStore: NSObject, CategoryStoreProtocol {
     var numberOfRows: Int? {
         fetchedResultsController.sections?.first?.numberOfObjects
     }
-    
     var allTrackerCategories: [TrackerCategory] {
         (fetchedResultsController.fetchedObjects ?? []).compactMap( {try? trackerCategory(from: $0)} )
     }
@@ -58,8 +50,6 @@ final class CategoryStore: NSObject, CategoryStoreProtocol {
     
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<CategoryEntity>
-    
-    private var insertedIndices: IndexSet?
     
     // MARK: - Initializers
     
@@ -98,13 +88,6 @@ final class CategoryStore: NSObject, CategoryStoreProtocol {
         try context.save()
     }
     
-    func indexPath(for category: TrackerCategory) throws -> IndexPath? {
-        guard let entity = try fetchCategoryEntity(forCategoryWithID: category.id) else {
-            return nil
-        }
-        return fetchedResultsController.indexPath(forObject: entity)
-    }
-    
     func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory {
         let categoryEntity = fetchedResultsController.object(at: indexPath)
         return try trackerCategory(from: categoryEntity)
@@ -134,32 +117,12 @@ final class CategoryStore: NSObject, CategoryStoreProtocol {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension CategoryStore: NSFetchedResultsControllerDelegate {
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        insertedIndices = IndexSet()
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        guard let insertedIndices else {
-            assertionFailure("CategoryStore.controllerDidChangeContent: changed indices are nil on update")
+        NotificationCenter.default.post(name: Self.didChangeCategories, object: nil)
+        guard let delegate else {
+            assertionFailure("CategoryStore.controllerDidChangeContent: delegate is nil")
             return
         }
-        let update = CategoryUpdate(insertedIndices: insertedIndices)
-        delegate?.categoryStoreDidUpdate(with: update)
-        NotificationCenter.default.post(name: Self.didChangeCategories, object: nil)
+        delegate.categoryStoreDidUpdate()
     }
-    
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath else {
-                assertionFailure("CategoryStore.controller: Failed to unwrap newIndexPath for insertion")
-                return
-            }
-            insertedIndices?.insert(newIndexPath.item)
-        default:
-            break
-        }
-    }
-    
 }

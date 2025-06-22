@@ -111,7 +111,7 @@ final class CategorySelectionViewModel {
 
 // MARK: - CategoryStoreDelegate
 extension CategorySelectionViewModel: CategoryStoreDelegate {
-    func categoryStoreDidUpdate(with update: CategoryUpdate) {
+    func categoryStoreDidUpdate() {
         categories = categoryStore.allTrackerCategories
     }
 }
