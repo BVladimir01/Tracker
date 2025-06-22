@@ -26,7 +26,7 @@
         <attribute name="title" attributeType="String"/>
         <attribute name="weekdaysMask" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="category" maxCount="1" deletionRule="No Action" destinationEntity="CategoryEntity" inverseName="trackers" inverseEntity="CategoryEntity"/>
-        <relationship name="color" maxCount="1" deletionRule="No Action" destinationEntity="ColorEntity" inverseName="tracker" inverseEntity="ColorEntity"/>
+        <relationship name="color" maxCount="1" deletionRule="Cascade" destinationEntity="ColorEntity" inverseName="tracker" inverseEntity="ColorEntity"/>
         <relationship name="records" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="RecordEntity" inverseName="tracker" inverseEntity="RecordEntity"/>
     </entity>
 </model>
