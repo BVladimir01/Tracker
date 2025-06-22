@@ -1,0 +1,35 @@
+<UIView; frame = (0 0; 402 874); autoresize = W+H; backgroundColor = <UIDynamicCatalogColor; name = YP White>; layer = <CALayer>>
+   | <UIView; frame = (0 54; 402 820); hidden = YES; backgroundColor = <UIDynamicCatalogColor; name = YP White>; layer = <CALayer>>
+   |    | <UIImageView; frame = (161 220; 80 80); opaque = NO; userInteractionEnabled = NO; image = <UIImage CGImage anonymous; (80 80)@3>; layer = <CALayer>>
+   |    | <UILabel; frame = (126 308; 150 14.3333); text = 'Что будем отслеживать?'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   | <UICollectionView; frame = (0 54; 402 820); clipsToBounds = YES; gestureRecognizers = <NSArray>; backgroundColor = <UIDynamicCatalogColor; name = YP White>; layer = <CALayer>; contentOffset: {0, 0}; contentSize: {402, 448}; adjustedContentInset: {0, 0, 0, 0}; layout: <UICollectionViewFlowLayout>; dataSource: <Tracker.TrackersListViewController>>
+   |    | <Tracker.TrackerCollectionViewCell; baseClass = UICollectionViewCell; frame = (16 35; 167 148); layer = <CALayer>>
+   |    |    | <UIView; frame = (0 0; 167 148); gestureRecognizers = <NSArray>; layer = <CALayer>>
+   |    |    |    | <UIView; frame = (0 0; 167 90); clipsToBounds = YES; gestureRecognizers = <NSArray>; backgroundColor = UIExtendedSRGBColorSpace 0 0 1 1; layer = <CALayer>>
+   |    |    |    |    | <UILabel; frame = (12 12; 24 24); text = '🥶'; clipsToBounds = YES; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 0.3; layer = <_UILabelLayer>>
+   |    |    |    |    | <UIImageView; frame = (147 18; 8 12); opaque = NO; userInteractionEnabled = NO; tintColor = UIExtendedGrayColorSpace 1 1; image = <UIImage CGImage anonymous; (8 12)@3>; layer = <CALayer>>
+   |    |    |    |    | <UILabel; frame = (12 63.6667; 143 14.3333); text = 'Tracker 2'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   |    |    |    | <UIView; frame = (0 90; 167 58); layer = <CALayer>>
+   |    |    |    |    | <UILabel; frame = (12 16; 40.6667 18); text = '0 дней'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   |    |    |    |    | <UIButton; frame = (121 -2; 44 44); opaque = NO; gestureRecognizers = <NSArray>; layer = <CALayer>>
+   |    |    |    |    |    | <UIImageView; frame = (5 5; 34 34); clipsToBounds = YES; opaque = NO; userInteractionEnabled = NO; image = <UIImage CGImage anonymous; (34 34)@3>; layer = <CALayer>>
+   |    | <Tracker.TrackerCollectionViewCell; baseClass = UICollectionViewCell; frame = (16 234; 167 198); layer = <CALayer>>
+   |    |    | <UIView; frame = (0 0; 167 198); gestureRecognizers = <NSArray>; layer = <CALayer>>
+   |    |    |    | <UIView; frame = (0 0; 167 90); clipsToBounds = YES; gestureRecognizers = <NSArray>; backgroundColor = UIExtendedSRGBColorSpace 1 0 0 1; layer = <CALayer>>
+   |    |    |    |    | <UILabel; frame = (12 12; 24 24); text = '😎'; clipsToBounds = YES; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 1 0.3; layer = <_UILabelLayer>>
+   |    |    |    |    | <UIImageView; frame = (147 18; 8 12); hidden = YES; opaque = NO; userInteractionEnabled = NO; tintColor = UIExtendedGrayColorSpace 1 1; image = <UIImage CGImage anonymous; (8 12)@3>; layer = <CALayer>>
+   |    |    |    |    | <UILabel; frame = (12 63.6667; 143 14.3333); text = 'Tracker 1'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   |    |    |    | <UIView; frame = (0 90; 167 108); layer = <CALayer>>
+   |    |    |    |    | <UILabel; frame = (12 16; 40.6667 18); text = '0 дней'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   |    |    |    |    | <UIButton; frame = (121 -2; 44 44); opaque = NO; gestureRecognizers = <NSArray>; layer = <CALayer>>
+   |    |    |    |    |    | <UIImageView; frame = (5 5; 34 34); clipsToBounds = YES; opaque = NO; userInteractionEnabled = NO; image = <UIImage CGImage anonymous; (34 34)@3>; layer = <CALayer>>
+   |    | <Tracker.CategoryTitleView; baseClass = UICollectionReusableView; frame = (0 0; 402 23); layer = <CALayer>>
+   |    |    | <UILabel; frame = (28 0; 346 23); text = 'Закрепленные'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   |    | <Tracker.CategoryTitleView; baseClass = UICollectionReusableView; frame = (0 199; 402 23); layer = <CALayer>>
+   |    |    | <UILabel; frame = (28 0; 346 23); text = 'Some category'; userInteractionEnabled = NO; backgroundColor = UIExtendedGrayColorSpace 0 0; layer = <_UILabelLayer>>
+   |    | <_UIScrollViewScrollIndicator; frame = (3 814; 396 3); alpha = 0; autoresize = TM; layer = <CALayer>>
+   |    |    | <UIView; frame = (0 0; 396 3); backgroundColor = UIExtendedGrayColorSpace 1 0.5; layer = <CALayer>>
+   |    | <_UIScrollViewScrollIndicator; frame = (396 375; 3 442); alpha = 0; autoresize = LM; layer = <CALayer>>
+   |    |    | <UIView; frame = (0 0; 3 442); backgroundColor = UIExtendedGrayColorSpace 1 0.5; layer = <CALayer>>
+   | <UIButton; frame = (144 808; 114 50); clipsToBounds = YES; opaque = NO; gestureRecognizers = <NSArray>; backgroundColor = <UIDynamicCatalogColor; name = YP Blue>; layer = <CALayer>>
+   |    | <UIButtonLabel; frame = (21.6667 14.6667; 71 21); text = 'Фильтры'; opaque = NO; userInteractionEnabled = NO; layer = <_UILabelLayer>>

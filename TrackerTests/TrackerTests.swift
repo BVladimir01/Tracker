@@ -98,8 +98,11 @@ final class TrackerTests: XCTestCase {
         let vc = TrackersListViewController(trackerStore: trackerStore,
                                             categoryStore: categoryStore,
                                             recordStore: recordStore)
-        assertSnapshot(of: vc, as: .image, record: false)
-        assertSnapshot(of: vc, as: .recursiveDescription, record: false)
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)), record: false)
+        assertSnapshot(of: vc, as: .recursiveDescription(traits: .init(userInterfaceStyle: .light)), record: false)
+        
+        assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .dark)), record: false)
+        assertSnapshot(of: vc, as: .recursiveDescription(traits: .init(userInterfaceStyle: .dark)), record: false)
     }
 
 }
