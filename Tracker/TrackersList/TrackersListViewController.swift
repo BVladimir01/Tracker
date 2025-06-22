@@ -21,7 +21,7 @@ final class TrackersListViewController: UIViewController {
     private let filterSelectorButton = UIButton(type: .system)
     
     private let categoryStore: CategoryStoreProtocol
-    
+    private let analyticsService = AnalyticsService()
     private let viewModel: TrackersListViewModel
     
     // MARK: - Lifecycle
@@ -44,7 +44,7 @@ final class TrackersListViewController: UIViewController {
         title = Strings.title
         view.backgroundColor = LayoutConstants.backgroundColor
         setUpStubView()
-        setUpDoneButton()
+        setUpAddTrackerButton()
         setUpDatePicker()
         setUpCollectionView()
         setUpSearch()
@@ -52,6 +52,13 @@ final class TrackersListViewController: UIViewController {
         initializeViewModel()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        analyticsService.report(event: .open, item: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: .close, item: nil)
+    }
     
     // MARK: - Private Methods - Views Setup
     
@@ -89,7 +96,7 @@ final class TrackersListViewController: UIViewController {
         ])
     }
     
-    private func setUpDoneButton() {
+    private func setUpAddTrackerButton() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: .addTracker.withTintColor(LayoutConstants.addButtonColor, renderingMode: .alwaysOriginal), 
             style: .plain,
@@ -210,6 +217,7 @@ final class TrackersListViewController: UIViewController {
     // MARK: - Private Methods - User Intentions
 
     @objc private func addTrackerTapped() {
+        analyticsService.report(event: .click, item: .addTrack)
         let creatorVC = NewTrackerViewController(delegate: self, selectedDate: datePicker.date, categoryStore: categoryStore)
         present(creatorVC, animated: true)
     }
@@ -219,6 +227,7 @@ final class TrackersListViewController: UIViewController {
     }
     
     @objc private func filterSelectorTapped() {
+        analyticsService.report(event: .click, item: .filter)
         present(FilterSelectorViewController(delegate: self,
                                              activeFilter: viewModel.selectedFilter),
                 animated: true)
@@ -337,6 +346,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
             return
         }
+        analyticsService.report(event: .click, item: .track)
         viewModel.trackerTapped(at: indexPath)
     }
     
@@ -350,6 +360,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         }
         let editAction = UIAction(title: Strings.contextEdit) { [weak self] _ in
             guard let self else { return }
+            self.analyticsService.report(event: .click, item: .edit)
             let editorVC = TrackerEditorViewController(oldTracker: tracker, daysDone: daysDone, categoryStore: categoryStore, delegate: self)
             present(editorVC, animated: true)
         }
@@ -359,6 +370,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
                                                         cancelTitle: Strings.alertCancel) { [weak self] in
                 self?.viewModel.remove(tracker)
             }
+            self?.analyticsService.report(event: .click, item: .delete)
             self?.present(alert, animated: true)
         }
         return UIContextMenuConfiguration(actionProvider: { _ in
