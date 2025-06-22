@@ -23,7 +23,6 @@ struct AnalyticsService {
         if let item {
             parameters["item"] = item.rawValue
         }
-        print(parameters)
         AppMetrica.reportEvent(name: event.rawValue, parameters: parameters, onFailure: { error in
             print("REPORT ERROR: %@", error.localizedDescription)
         })

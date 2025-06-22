@@ -39,7 +39,7 @@ final class StatsViewController: UIViewController {
         title = Strings.title
         view.backgroundColor = LayoutConstants.backgroundColor
         setUpStub()
-        setUpTrackersDoneView()
+        setUpTrackersDoneCard()
         updateStubViewState()
     }
     
@@ -83,7 +83,7 @@ final class StatsViewController: UIViewController {
         ])
     }
     
-    private func setUpTrackersDoneView() {
+    private func setUpTrackersDoneCard() {
         trackersDoneCard.layer.cornerRadius = LayoutConstants.Card.cornerRadius
         trackersDoneCard.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(trackersDoneCard)
@@ -172,11 +172,11 @@ final class StatsViewController: UIViewController {
         statsObserver = NotificationCenter.default.addObserver(forName: StatsService.statsDidChange,
                                                               object: statsService,
                                                               queue: .main) { [weak self] _ in
-            self?.updateStats()
+            self?.onStatsUpdate()
         }
     }
     
-    private func updateStats() {
+    private func onStatsUpdate() {
         trackersDoneCounter.text = String(statsService.totalTrackersDone)
         updateStubViewState()
     }
@@ -213,7 +213,6 @@ extension StatsViewController {
             static let counterFont: UIFont = .systemFont(ofSize: 34, weight: .bold)
             static let subtitleFont: UIFont = .systemFont(ofSize: 12, weight: .medium)
         }
-        
     }
 }
 
