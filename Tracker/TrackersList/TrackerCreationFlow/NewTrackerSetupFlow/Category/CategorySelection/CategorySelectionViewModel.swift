@@ -99,7 +99,10 @@ final class CategorySelectionViewModel {
     }
     
     func category(at indexPath: IndexPath) -> TrackerCategory? {
-        try? categoryStore.trackerCategory(at: indexPath)
+        guard (0..<categories.count).contains(indexPath.row) else {
+            return nil
+        }
+        return categories[indexPath.row]
     }
     
     func setSelectedCategory(to category: TrackerCategory) {
