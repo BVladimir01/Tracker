@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AF37C05747A2EE66D73186A6 /* Pods_TrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01380A03939F12E354ACB6D9 /* Pods_TrackerTests.framework */; };
 		E6B86C47DEC527718009DC08 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7C73BFB96B1E5FA5AEBF070 /* Pods_Tracker.framework */; };
+		E71CA8732E085B9D000AFDE0 /* MyTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71CA8722E085B8A000AFDE0 /* MyTextFieldView.swift */; };
 		E73276912DFF20CE00180061 /* TrackersListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276902DFF20C800180061 /* TrackersListViewModel.swift */; };
 		E73276932DFF21A200180061 /* TrackersListFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276922DFF219E00180061 /* TrackersListFilter.swift */; };
 		E73276952DFF2C2F00180061 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73276942DFF2C2C00180061 /* Binding.swift */; };
@@ -78,6 +79,7 @@
 		402F975AA033D6F32D81DAE2 /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 		5D85439E7B680F5E07B05711 /* Pods-TrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-TrackerTests/Pods-TrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C7C73BFB96B1E5FA5AEBF070 /* Pods_Tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E71CA8722E085B8A000AFDE0 /* MyTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTextFieldView.swift; sourceTree = "<group>"; };
 		E73276902DFF20C800180061 /* TrackersListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersListViewModel.swift; sourceTree = "<group>"; };
 		E73276922DFF219E00180061 /* TrackersListFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersListFilter.swift; sourceTree = "<group>"; };
 		E73276942DFF2C2C00180061 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 		E73276C02E06BC0200180061 /* UIHelpers */ = {
 			isa = PBXGroup;
 			children = (
+				E71CA8722E085B8A000AFDE0 /* MyTextFieldView.swift */,
 				E73276C12E06BC1200180061 /* AlertFactory.swift */,
 			);
 			path = UIHelpers;
@@ -668,6 +671,7 @@
 				E73710092DF6F4FB0087785E /* CategorySelectionViewModel.swift in Sources */,
 				E73276952DFF2C2F00180061 /* Binding.swift in Sources */,
 				E7D037A02DC8B0F7007819A8 /* Schedule.swift in Sources */,
+				E71CA8732E085B9D000AFDE0 /* MyTextFieldView.swift in Sources */,
 				E7D037132DC3B80E007819A8 /* TabBarController.swift in Sources */,
 				E7D037982DC8AD80007819A8 /* RGBColor.swift in Sources */,
 				E73710132DF76F050087785E /* CategoryCell.swift in Sources */,
