@@ -8,11 +8,13 @@
 import UIKit
 
 
-
+// MARK: - FilterSelectorViewControllerDelegate
 protocol FilterSelectorViewControllerDelegate: AnyObject {
     func filterSelector(_ vc: UIViewController, didSelect filter: TrackersListFilter)
 }
 
+
+// MARK: - FilterSelectorViewController
 final class FilterSelectorViewController: UIViewController {
     
     private weak var delegate: FilterSelectorViewControllerDelegate?
@@ -20,6 +22,7 @@ final class FilterSelectorViewController: UIViewController {
     private let table = UITableView()
     private let titleLabel = UILabel()
     private let cellID = "filterCell"
+    private let filters = TrackersListFilter.allCases
     
     init(delegate: FilterSelectorViewControllerDelegate, activeFilter: TrackersListFilter) {
         self.delegate = delegate
@@ -86,15 +89,16 @@ final class FilterSelectorViewController: UIViewController {
 }
 
 
+// MARK: - UITableViewDataSource
 extension FilterSelectorViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        TrackersListFilter.allCases.count
+        filters.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        let filter = TrackersListFilter.allCases[indexPath.row]
+        let filter = filters[indexPath.row]
         if filter == activeFilter {
             cell.accessoryType = .checkmark
         } else {
@@ -111,13 +115,16 @@ extension FilterSelectorViewController: UITableViewDataSource {
     
 }
 
+
+// MARK: - UITableViewDelegate
 extension FilterSelectorViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.filterSelector(self, didSelect: TrackersListFilter.allCases[indexPath.row])
+        delegate?.filterSelector(self, didSelect: filters[indexPath.row])
     }
 }
 
 
+// MARK: - LayoutConstants
 extension FilterSelectorViewController {
     enum LayoutConstants {
         static let backgroundColor: UIColor = .ypWhite
