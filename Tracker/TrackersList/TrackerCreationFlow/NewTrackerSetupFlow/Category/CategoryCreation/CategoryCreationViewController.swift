@@ -22,11 +22,12 @@ final class CategoryCreationViewController: UIViewController {
     private var categoryStore: CategoryStoreProtocol
     private weak var delegate: CategoryCreationViewControllerDelegate?
     
-    private let textField = UITextField()
+    private let titleLabel = UILabel()
+    private let textField = MyTextFieldView()
     private let doneButton = UIButton(type: .system)
     
     private var shouldEnableDoneButton: Bool {
-        if let text = textField.text {
+        if let text = textField.text, text.count <= LayoutConstants.TextField.maxTextLength {
             !text.isEmpty
         } else {
             false
@@ -63,53 +64,33 @@ final class CategoryCreationViewController: UIViewController {
     // MARK: - Private Methods - Setup
     
     private func setUpTitle() {
-        let title = UILabel()
-        title.text = Strings.title
-        title.font = LayoutConstants.Title.font
-        title.textColor = LayoutConstants.Title.textColor
-        title.textAlignment = .center
+        titleLabel.text = Strings.title
+        titleLabel.font = LayoutConstants.Title.font
+        titleLabel.textColor = LayoutConstants.Title.textColor
+        titleLabel.textAlignment = .center
         
-        view.addSubview(title)
-        title.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                        constant: LayoutConstants.Title.spacingToSuperviewTop)
         ])
     }
     
     private func setUpTextField() {
-        textField.placeholder = LayoutConstants.TextField.placeHolder
-        textField.borderStyle = .none
-        textField.layer.cornerRadius = LayoutConstants.TextField.cornerRadius
-        textField.layer.masksToBounds = true
-        textField.textColor = LayoutConstants.TextField.textColor
-        textField.backgroundColor = LayoutConstants.TextField.backgroundColor
-        textField.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
         textField.delegate = self
-        
-        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0,
-                                                   width: LayoutConstants.TextField.innerLeftPadding,
-                                                   height: LayoutConstants.TextField.height))
-        leftPaddingView.alpha = 0
-        textField.leftView = leftPaddingView
-        textField.leftViewMode = .always
-        
-        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0,
-                                                   width: LayoutConstants.TextField.innerRightPadding,
-                                                   height: LayoutConstants.TextField.height))
-        rightPaddingView.alpha = 0
-        textField.rightView = rightPaddingView
-        textField.rightViewMode = .always
-        
-        view.addSubview(textField)
+        textField.onTextChange = { [weak self] text in
+            self?.updateDoneButtonState()
+        }
+        textField.placeholder = Strings.textFieldPlaceholderTitle
         textField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(textField)
         NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+                                               constant: LayoutConstants.TextField.topPadding),
             textField.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
-                                               constant: LayoutConstants.TextField.spacingToSuperviewTop),
             textField.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.width),
-            textField.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.height)
         ])
     }
     
@@ -187,16 +168,9 @@ extension CategoryCreationViewController {
             static let spacingToSuperviewTop: CGFloat = 27
         }
         enum TextField {
-            static let placeHolder = Strings.textFieldPlaceholderTitle
-            static let backgroundColor: UIColor = .ypBackground
-            static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
-            static let textColor: UIColor = .ypBlack
-            static let cornerRadius: CGFloat = 16
-            static let spacingToSuperviewTop: CGFloat = 87
+            static let topPadding: CGFloat = 38
             static let width: CGFloat = 343
-            static let height: CGFloat = 75
-            static let innerLeftPadding: CGFloat = 16
-            static let innerRightPadding: CGFloat = 41
+            static let maxTextLength = 38
         }
         enum Button {
             static let backgroundColor: UIColor = .ypBlack
