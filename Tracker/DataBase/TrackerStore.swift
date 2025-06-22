@@ -26,7 +26,7 @@ protocol TrackerStoreProtocol: AnyObject {
     func remove(_ tracker: Tracker) throws
     func change(oldTracker: Tracker, to newTracker: Tracker) throws
     func set(date: Date) throws
-    func pinUnpinTracker(_ tracker: Tracker) throws
+    func set(tracker: Tracker, pinned: Bool) throws 
     
 }
 
@@ -120,9 +120,9 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
         try fetchedResultsController.performFetch()
     }
     
-    func pinUnpinTracker(_ tracker: Tracker) throws {
+    func set(tracker: Tracker, pinned: Bool) throws {
         let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id)
-        entity?.isPinned.toggle()
+        entity?.isPinned = pinned
         try context.save()
     }
     

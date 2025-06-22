@@ -121,9 +121,9 @@ final class TrackersListViewModel {
         return (try? recordStore.isCompleted(tracker: tracker, on: selectedDate)) ?? false
     }
     
-    func pinUnpinTracker(at indexPath: IndexPath) {
+    func changePinStatusForTracker(at indexPath: IndexPath) {
         guard let tracker = tracker(at: indexPath) else { return }
-        try? trackerStore.pinUnpinTracker(tracker)
+        try? trackerStore.set(tracker: tracker, pinned: !tracker.isPinned)
     }
 
     func initialize(with closure: @escaping Binding<[[Tracker]]>) {

@@ -356,7 +356,7 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
         let daysDone = viewModel.daysDone(of: tracker)
         let pinUnPinAction = UIAction(title: isPinned ? Strings.contextUnpin : Strings.contextPin) { [weak self] _ in
             guard let self else { return }
-            self.viewModel.pinUnpinTracker(at: indexPath)
+            self.viewModel.changePinStatusForTracker(at: indexPath)
         }
         let editAction = UIAction(title: Strings.contextEdit) { [weak self] _ in
             guard let self else { return }
