@@ -93,7 +93,7 @@ final class MyTextFieldView: UIView {
     }
     
     private func setUpWarning() {
-        warning.text = "Ограничение 38 символов"
+        warning.text = Strings.warning
         warning.font = LayoutConstants.Warning.font
         warning.textColor = LayoutConstants.Warning.textColor
         warning.translatesAutoresizingMaskIntoConstraints = false
@@ -208,6 +208,6 @@ extension MyTextFieldView {
 // MARK: - Strings
 extension MyTextFieldView {
     enum Strings {
-        
+        static let warning = NSLocalizedString("textField.warning", comment: "")
     }
 }

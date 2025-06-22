@@ -64,3 +64,5 @@
 // MARK: - Alert
 "alert.remove" = "Remove";
 "alert.cancel" = "Cancel";
+// MARK: - MyTextFieldView
+"textField.warning" = "The limit is 38 characters";

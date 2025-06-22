@@ -64,3 +64,5 @@
 // MARK: - Alert
 "alert.remove" = "Удалить";
 "alert.cancel" = "Отменить";
+// MARK: - MyTextFieldView
+"textField.warning" = "Ограничение 38 символов";
