@@ -67,7 +67,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private var constraints: [NSLayoutConstraint] = []
     
     private var shouldEnableCreateButton: Bool {
-        if let trackerName = nameTextField.text, !trackerName.isEmpty,
+        if let trackerName = nameTextField.text, trackerName.count <= LayoutConstants.TextField.textLimit, !trackerName.isEmpty,
            trackerCategory != nil, color != nil, emoji != nil,
            !weekdays.isEmpty || !trackerIsRegular {
             return true
@@ -168,24 +168,22 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
-//        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     private func setUpNameTextField() {
         nameTextField.delegate = self
         nameTextField.onTextChange = { [weak self] text in
             self?.updateCreateButtonState()
-            print("updated")
         }
         nameTextField.placeholder = Strings.textFieldPlaceholderTitle
+        nameTextField.textLengthLimit = LayoutConstants.TextField.textLimit
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(nameTextField)
+        contentView.addSubview(nameTextField)
         NSLayoutConstraint.activate([
-            nameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
+            nameTextField.topAnchor.constraint(equalTo: contentView.topAnchor,
                                                constant: LayoutConstants.TextField.topPadding),
             nameTextField.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             nameTextField.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.width),
-//            nameTextField.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
     
@@ -476,8 +474,9 @@ extension NewTrackerSetupViewController {
             static let topPadding: CGFloat = 27
         }
         enum TextField {
-            static let topPadding: CGFloat = 38
+            static let topPadding: CGFloat = 24
             static let width: CGFloat = 343
+            static let textLimit = 38
         }
         enum Buttons {
             static let cancelButtonColor: UIColor = .ypRed
