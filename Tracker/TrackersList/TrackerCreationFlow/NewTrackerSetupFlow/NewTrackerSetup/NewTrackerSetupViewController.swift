@@ -52,6 +52,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private let colorsHandler = ColorsHandler()
     
     private let nameTextField = UITextField()
+    private let xmarkCircle = UIButton(type: .system)
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
     private let contentView = UIView()
@@ -194,6 +195,12 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         nameTextField.rightView = rightPaddingView
         nameTextField.rightViewMode = .always
         
+        xmarkCircle.setImage(LayoutConstants.TextField.xmarkImage, for: .normal)
+        xmarkCircle.tintColor = LayoutConstants.TextField.xmarkColor
+        xmarkCircle.addTarget(self, action: #selector(xmarkCircleTapped), for: .touchUpInside)
+        xmarkCircle.translatesAutoresizingMaskIntoConstraints = false
+        nameTextField.addSubview(xmarkCircle)
+        
         contentView.addSubview(nameTextField)
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
@@ -201,8 +208,14 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
             nameTextField.topAnchor.constraint(equalTo: contentView.topAnchor,
                                                constant: LayoutConstants.TextField.topPadding),
             nameTextField.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.width),
-            nameTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.height)
+            nameTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.height),
+            xmarkCircle.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.xmarkButtonSize),
+            xmarkCircle.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.xmarkButtonSize),
+            xmarkCircle.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor,
+                                                  constant: LayoutConstants.TextField.xmarkRightPadding),
+            xmarkCircle.centerYAnchor.constraint(equalTo: nameTextField.centerYAnchor)
         ])
+        updateXMarkCircleState()
     }
     
     private func setUpCancelButton() {
@@ -341,6 +354,14 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         setCreateButton(enabled: shouldEnableCreateButton)
     }
     
+    private func updateXMarkCircleState() {
+        if let isHidden = nameTextField.text?.isEmpty {
+            xmarkCircle.isHidden = isHidden
+        } else {
+            xmarkCircle.isHidden = true
+        }
+    }
+    
     private func setCreateButton(enabled: Bool) {
         let color = enabled ? LayoutConstants.Buttons.createButtonBackgroundColor : LayoutConstants.Buttons.createButtonDisabledColor
         let textColor = enabled ? LayoutConstants.Buttons.createButtonTextColor : LayoutConstants.Buttons.createButtonDisabledTextColor
@@ -350,6 +371,13 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     // MARK: - Private Methods - Intentions
+    
+    @objc
+    private func xmarkCircleTapped() {
+        nameTextField.text = nil
+        updateCreateButtonState()
+        updateXMarkCircleState()
+    }
     
     @objc
     private func cancelButtonTapped() {
@@ -403,6 +431,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     @objc
     private func nameTextFieldEditingChange(_ sender: UITextField) {
         updateCreateButtonState()
+        updateXMarkCircleState()
     }
     
 }
@@ -507,6 +536,11 @@ extension NewTrackerSetupViewController {
             static let height: CGFloat = 75
             static let innerLeftPadding: CGFloat = 16
             static let innerRightPadding: CGFloat = 41
+            
+            static let xmarkImage = UIImage(systemName: "xmark.circle.fill")
+            static let xmarkColor: UIColor = .ypGray
+            static let xmarkButtonSize: CGFloat = 44
+            static let xmarkRightPadding: CGFloat = -1.5
         }
         enum Buttons {
             static let cancelButtonColor: UIColor = .ypRed
