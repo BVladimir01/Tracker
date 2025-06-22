@@ -51,7 +51,8 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private let emojisHandler = EmojisHandler()
     private let colorsHandler = ColorsHandler()
     
-    private let nameTextField = UITextField()
+    private let titleLabel = UILabel()
+    private let nameTextField = MyTextFieldView()
     private let xmarkCircle = UIButton(type: .system)
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)
@@ -134,17 +135,16 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     // MARK: - Private Methods - Setup
     
     private func setUpTitleAndScrollView() {
-        let title = UILabel()
-        title.text = trackerIsRegular ? Strings.regularTitle : Strings.irregularTitle
-        title.font = LayoutConstants.Title.font
-        title.textColor = LayoutConstants.Title.textColor
-        title.textAlignment = .center
+        titleLabel.text = trackerIsRegular ? Strings.regularTitle : Strings.irregularTitle
+        titleLabel.font = LayoutConstants.Title.font
+        titleLabel.textColor = LayoutConstants.Title.textColor
+        titleLabel.textAlignment = .center
         
-        view.addSubview(title)
-        title.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
-            title.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            title.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
                                        constant: LayoutConstants.Title.topPadding)
         ])
         
@@ -152,7 +152,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         constraints.append(contentsOf: [
-            scrollView.topAnchor.constraint(equalTo: title.bottomAnchor,
+            scrollView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
                                             constant: LayoutConstants.ScrollView.topSpacing),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -172,50 +172,21 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     private func setUpNameTextField() {
-        nameTextField.placeholder = Strings.textFieldPlaceholderTitle
-        nameTextField.borderStyle = .none
-        nameTextField.layer.cornerRadius = LayoutConstants.TextField.cornerRadius
-        nameTextField.layer.masksToBounds = true
-        nameTextField.textColor = LayoutConstants.TextField.textColor
-        nameTextField.backgroundColor = LayoutConstants.TextField.backgroundColor
-        nameTextField.addTarget(self, action: #selector(nameTextFieldEditingChange(_:)), for: .editingChanged)
         nameTextField.delegate = self
-        
-        let leftPaddingView = UIView(frame: CGRect(x: 0, y: 0,
-                                                   width: LayoutConstants.TextField.innerLeftPadding,
-                                                   height: LayoutConstants.TextField.height))
-        leftPaddingView.alpha = 0
-        nameTextField.leftView = leftPaddingView
-        nameTextField.leftViewMode = .always
-        
-        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0,
-                                                   width: LayoutConstants.TextField.innerRightPadding,
-                                                   height: LayoutConstants.TextField.height))
-        rightPaddingView.alpha = 0
-        nameTextField.rightView = rightPaddingView
-        nameTextField.rightViewMode = .always
-        
-        xmarkCircle.setImage(LayoutConstants.TextField.xmarkImage, for: .normal)
-        xmarkCircle.tintColor = LayoutConstants.TextField.xmarkColor
-        xmarkCircle.addTarget(self, action: #selector(xmarkCircleTapped), for: .touchUpInside)
-        xmarkCircle.translatesAutoresizingMaskIntoConstraints = false
-        nameTextField.addSubview(xmarkCircle)
-        
-        contentView.addSubview(nameTextField)
+        nameTextField.onTextChange = { [weak self] text in
+            self?.updateCreateButtonState()
+            print("updated")
+        }
+        nameTextField.placeholder = Strings.textFieldPlaceholderTitle
         nameTextField.translatesAutoresizingMaskIntoConstraints = false
-        constraints.append(contentsOf: [
-            nameTextField.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            nameTextField.topAnchor.constraint(equalTo: contentView.topAnchor,
+        view.addSubview(nameTextField)
+        NSLayoutConstraint.activate([
+            nameTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
                                                constant: LayoutConstants.TextField.topPadding),
+            nameTextField.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             nameTextField.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.width),
-            nameTextField.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.height),
-            xmarkCircle.widthAnchor.constraint(equalToConstant: LayoutConstants.TextField.xmarkButtonSize),
-            xmarkCircle.heightAnchor.constraint(equalToConstant: LayoutConstants.TextField.xmarkButtonSize),
-            xmarkCircle.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor,
-                                                  constant: LayoutConstants.TextField.xmarkRightPadding),
-            xmarkCircle.centerYAnchor.constraint(equalTo: nameTextField.centerYAnchor)
+//            nameTextField.heightAnchor.constraint(equalToConstant: 200)
         ])
-        updateXMarkCircleState()
     }
     
     private func setUpCancelButton() {
@@ -353,15 +324,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private func updateCreateButtonState() {
         setCreateButton(enabled: shouldEnableCreateButton)
     }
-    
-    private func updateXMarkCircleState() {
-        if let isHidden = nameTextField.text?.isEmpty {
-            xmarkCircle.isHidden = isHidden
-        } else {
-            xmarkCircle.isHidden = true
-        }
-    }
-    
+
     private func setCreateButton(enabled: Bool) {
         let color = enabled ? LayoutConstants.Buttons.createButtonBackgroundColor : LayoutConstants.Buttons.createButtonDisabledColor
         let textColor = enabled ? LayoutConstants.Buttons.createButtonTextColor : LayoutConstants.Buttons.createButtonDisabledTextColor
@@ -371,14 +334,6 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     }
     
     // MARK: - Private Methods - Intentions
-    
-    @objc
-    private func xmarkCircleTapped() {
-        nameTextField.text = nil
-        updateCreateButtonState()
-        updateXMarkCircleState()
-    }
-    
     @objc
     private func cancelButtonTapped() {
         delegate?.newTrackerSetupViewControllerDidCancelCreation(self)
@@ -426,12 +381,6 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         vc.delegate = self
         vc.selectedWeekdays = weekdays
         present(vc, animated: true)
-    }
-    
-    @objc
-    private func nameTextFieldEditingChange(_ sender: UITextField) {
-        updateCreateButtonState()
-        updateXMarkCircleState()
     }
     
 }
@@ -527,20 +476,8 @@ extension NewTrackerSetupViewController {
             static let topPadding: CGFloat = 27
         }
         enum TextField {
-            static let backgroundColor: UIColor = .ypBackground
-            static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
-            static let textColor: UIColor = .ypBlack
-            static let cornerRadius: CGFloat = 16
-            static let topPadding: CGFloat = 24
+            static let topPadding: CGFloat = 38
             static let width: CGFloat = 343
-            static let height: CGFloat = 75
-            static let innerLeftPadding: CGFloat = 16
-            static let innerRightPadding: CGFloat = 41
-            
-            static let xmarkImage = UIImage(systemName: "xmark.circle.fill")
-            static let xmarkColor: UIColor = .ypGray
-            static let xmarkButtonSize: CGFloat = 44
-            static let xmarkRightPadding: CGFloat = -1.5
         }
         enum Buttons {
             static let cancelButtonColor: UIColor = .ypRed
@@ -586,7 +523,6 @@ extension NewTrackerSetupViewController {
         enum ScrollView {
             static let topSpacing: CGFloat = 14
             static let bottomSpacing: CGFloat = 16
-            
         }
     }
 }
