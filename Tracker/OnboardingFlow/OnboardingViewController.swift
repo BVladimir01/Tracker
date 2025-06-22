@@ -140,14 +140,14 @@ extension OnboardingViewController: UIPageViewControllerDataSource, UIPageViewCo
 extension OnboardingViewController {
     enum LayoutConstants {
         enum PageControl {
-            static let currentPageIndicatorTintColor: UIColor = .ypBlack
-            static let pageIndicatorTintColor: UIColor = .ypBlack.withAlphaComponent(0.3)
+            static let currentPageIndicatorTintColor: UIColor = .alwaysBlack
+            static let pageIndicatorTintColor: UIColor = .alwaysBlack.withAlphaComponent(0.3)
             static let spacingToBottomView: CGFloat = 24
         }
         
         enum Button {
-            static let color: UIColor = .ypBlack
-            static let textColor: UIColor = .ypWhite
+            static let color: UIColor = .alwaysBlack
+            static let textColor: UIColor = .alwaysWhite
             static let font = UIFont.systemFont(ofSize: 16, weight: .medium)
             static let cornerRadius: CGFloat = 16
             static let height: CGFloat = 60
