@@ -25,7 +25,12 @@ final class MyTextFieldView: UIView {
     }
     
     var text: String? {
-        textField.text
+        get {
+            textField.text
+        }
+        set {
+            textField.text = text
+        }
     }
     
     // MARK: - Private Properties
