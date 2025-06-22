@@ -7,19 +7,9 @@
 
 import CoreData
 
-
-// MARK: - TrackerStoreUpdate
-struct TrackerStoreUpdate {
-    let insertedItemIndexPaths: Set<IndexPath>
-    let insertedSections: IndexSet
-    let removedItemIndexPaths: Set<IndexPath>
-    let removedSections: IndexSet
-}
-
-
 // MARK: - TrackerStoreDelegate
 protocol TrackerStoreDelegate: AnyObject {
-    func trackerStoreDidUpdate(with update: TrackerStoreUpdate)
+    func trackerStoreDidUpdate()
 }
 
 
@@ -57,12 +47,6 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<TrackerEntity>
     private let transformer = TrackerEntityTransformer()
-    private var observer: NSObjectProtocol?
-    
-    private var insertedSections: IndexSet?
-    private var insertedItemIndexPaths: Set<IndexPath>?
-    private var removedSections: IndexSet?
-    private var removedItemIndexPaths: Set<IndexPath>?
     
     // MARK: - Initializers
     
@@ -135,13 +119,6 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
         fetchedResultsController.fetchRequest.predicate = try fetchRequestPredicate(for: date)
         try fetchedResultsController.performFetch()
     }
-    
-//    func indexPath(for tracker: Tracker) throws -> IndexPath? {
-//        guard let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else {
-//            return nil
-//        }
-//        return fetchedResultsController.indexPath(forObject: entity)
-//    }
     
     func pinUnpinTracker(_ tracker: Tracker) throws {
         let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id)
@@ -233,56 +210,11 @@ final class TrackerStore: NSObject, TrackerStoreProtocol {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackerStore: NSFetchedResultsControllerDelegate {
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        insertedItemIndexPaths = Set()
-        insertedSections = IndexSet()
-        removedSections = IndexSet()
-        removedItemIndexPaths = Set()
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        guard let insertedItemIndexPaths, let insertedSections, let removedSections, let removedItemIndexPaths else {
-            assertionFailure("TrackerStore.controllerDidChangeContent: Changed indices are nil on update")
-            return
-        }
         guard let delegate else {
             assertionFailure("TrackerStore.controllerDidChangeContent: delegate is nil")
             return
         }
-        let update = TrackerStoreUpdate(insertedItemIndexPaths: insertedItemIndexPaths,
-                                        insertedSections: insertedSections,
-                                        removedItemIndexPaths: removedItemIndexPaths,
-                                        removedSections: removedSections)
-        delegate.trackerStoreDidUpdate(with: update)
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange sectionInfo: any NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        switch type {
-        case .insert:
-            insertedSections?.insert(sectionIndex)
-        case .delete:
-            removedSections?.insert(sectionIndex)
-        default:
-            break
-        }
-    }
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath else {
-                assertionFailure("TrackerStore.controller: Failed to get newIndexPath for data change")
-                return
-            }
-            insertedItemIndexPaths?.insert(newIndexPath)
-        case .delete:
-            guard let indexPath else {
-                assertionFailure("TrackerStore.controller: Failed to get indexPath for data change")
-                return
-            }
-            removedItemIndexPaths?.insert(indexPath)
-        default:
-            break
-        }
+        delegate.trackerStoreDidUpdate()
     }
 }

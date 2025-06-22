@@ -222,7 +222,7 @@ final class TrackersListViewModel {
 
 // MARK: - TrackerStoreDelegate
 extension TrackersListViewModel: TrackerStoreDelegate {
-    func trackerStoreDidUpdate(with update: TrackerStoreUpdate) {
+    func trackerStoreDidUpdate() {
         updateDisplayedTrackers()
     }
 }
