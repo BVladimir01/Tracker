@@ -395,7 +395,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
         nameTextField.resignFirstResponder()
         let vc = ScheduleSelectionViewController()
         vc.delegate = self
-        vc.initialWeekdays = weekdays
+        vc.selectedWeekdays = weekdays
         present(vc, animated: true)
     }
     

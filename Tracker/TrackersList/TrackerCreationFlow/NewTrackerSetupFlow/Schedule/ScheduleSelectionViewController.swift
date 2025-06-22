@@ -20,7 +20,7 @@ final class ScheduleSelectionViewController: UIViewController {
     // MARK: - Internal Properties
     
     weak var delegate: ScheduleSelectionViewControllerDelegate?
-    var initialWeekdays: Set<Weekday> = []
+    var selectedWeekdays: Set<Weekday> = []
     
     // MARK: - Private Properties
     
@@ -156,7 +156,7 @@ extension ScheduleSelectionViewController: UITableViewDataSource {
         // This will only be called once when cells are created
         // Cells will not be reused (dequeued)
         let switcher = UISwitch()
-        if initialWeekdays.contains(weekday) {
+        if selectedWeekdays.contains(weekday) {
             switcher.setOn(true, animated: true)
         }
         switcher.onTintColor = LayoutConstants.Table.cellSwitcherOnColor

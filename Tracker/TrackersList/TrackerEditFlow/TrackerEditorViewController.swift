@@ -457,7 +457,7 @@ final class TrackerEditorViewController: UIViewController, EmojisHandlerDelegate
     private func chooseScheduleTapped() {
         let vc = ScheduleSelectionViewController()
         vc.delegate = self
-        vc.initialWeekdays = weekdays
+        vc.selectedWeekdays = weekdays
         present(vc, animated: true)
     }
     
