@@ -7,24 +7,32 @@
 
 import CoreData
 
-
-// MARK: - TrackerStoreUpdate
-struct TrackerStoreUpdate {
-    let insertedItemIndexPaths: Set<IndexPath>
-    let insertedSections: IndexSet
-    let removedItemIndexPaths: Set<IndexPath>
-    let removedSections: IndexSet
+// MARK: - TrackerStoreDelegate
+protocol TrackerStoreDelegate: AnyObject {
+    func trackerStoreDidUpdate()
 }
 
 
-// MARK: - TrackerStoreDelegate
-protocol TrackerStoreDelegate: AnyObject {
-    func trackerStoreDidUpdate(with update: TrackerStoreUpdate)
+// MARK: - TrackerStoreProtocol
+protocol TrackerStoreProtocol: AnyObject {
+    
+    var numberOfSections: Int { get }
+    var delegate: TrackerStoreDelegate? { get set }
+    
+    func numberOfItemsInSection(_ section: Int) -> Int?
+    func sectionTitle(atSectionIndex index: Int) -> String?
+    func tracker(at indexPath: IndexPath) throws -> Tracker
+    func add(_ tracker: Tracker) throws
+    func remove(_ tracker: Tracker) throws
+    func change(oldTracker: Tracker, to newTracker: Tracker) throws
+    func set(date: Date) throws
+    func set(tracker: Tracker, pinned: Bool) throws 
+    
 }
 
 
 // MARK: - TrackerStore
-final class TrackerStore: NSObject {
+final class TrackerStore: NSObject, TrackerStoreProtocol {
     
     // MARK: Internal Properties
     
@@ -40,11 +48,6 @@ final class TrackerStore: NSObject {
     private let fetchedResultsController: NSFetchedResultsController<TrackerEntity>
     private let transformer = TrackerEntityTransformer()
     
-    private var insertedSections: IndexSet?
-    private var insertedItemIndexPaths: Set<IndexPath>?
-    private var removedSections: IndexSet?
-    private var removedItemIndexPaths: Set<IndexPath>?
-    
     // MARK: - Initializers
     
     init(context: NSManagedObjectContext) throws {
@@ -58,7 +61,6 @@ final class TrackerStore: NSObject {
                                                           managedObjectContext: context,
                                                           sectionNameKeyPath: #keyPath(TrackerEntity.category.title),
                                                           cacheName: nil)
-        
         super.init()
         fetchedResultsController.delegate = self
         try fetchedResultsController.performFetch()
@@ -84,19 +86,51 @@ final class TrackerStore: NSObject {
         try context.save()
     }
     
+    func remove(_ tracker: Tracker) throws {
+        guard let removedEntity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else { return }
+        context.delete(removedEntity)
+        try context.save()
+    }
+    
+    func change(oldTracker: Tracker, to newTracker: Tracker) throws {
+        let changedEntity = try fetchTrackerEntity(forTrackerWithID: oldTracker.id)
+        changedEntity?.category = try fetchCategoryEntity(forCategoryWithID: newTracker.category.id)
+        if oldTracker.color != newTracker.color {
+            let newColor = ColorEntity(context: context)
+            newColor.alpha = newTracker.color.alpha
+            newColor.red = newTracker.color.red
+            newColor.green = newTracker.color.green
+            newColor.blue = newTracker.color.blue
+            changedEntity?.color = newColor
+        }
+        switch newTracker.schedule {
+        case .regular(let weekdays):
+            changedEntity?.weekdaysMask = weekdaysMask(from: weekdays)
+            changedEntity?.isRegular = true
+        case .irregular(let date):
+            changedEntity?.date = date
+            changedEntity?.isRegular = false
+        }
+        changedEntity?.emoji = String(newTracker.emoji)
+        try context.save()
+    }
+    
     func set(date: Date) throws {
         fetchedResultsController.fetchRequest.predicate = try fetchRequestPredicate(for: date)
         try fetchedResultsController.performFetch()
     }
     
-    func indexPath(for tracker: Tracker) throws -> IndexPath? {
-        guard let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id) else {
-            return nil
-        }
-        return fetchedResultsController.indexPath(forObject: entity)
+    func set(tracker: Tracker, pinned: Bool) throws {
+        let entity = try fetchTrackerEntity(forTrackerWithID: tracker.id)
+        entity?.isPinned = pinned
+        try context.save()
     }
     
-    // MARK: - Private Properties
+    func reloadData() throws {
+        try fetchedResultsController.performFetch()
+    }
+    
+    // MARK: - Private Methods
     
     private func createTrackerEntity(from tracker: Tracker) throws -> TrackerEntity {
         let trackerEntity = TrackerEntity(context: context)
@@ -106,10 +140,11 @@ final class TrackerStore: NSObject {
         colorEntity.green = tracker.color.green
         colorEntity.alpha = tracker.color.alpha
         trackerEntity.color = colorEntity
-        trackerEntity.category = try fetchCategoryEntity(forCategoryWithID: tracker.categoryID)
+        trackerEntity.category = try fetchCategoryEntity(forCategoryWithID: tracker.category.id)
         trackerEntity.emoji = String(tracker.emoji)
         trackerEntity.id = tracker.id
         trackerEntity.title = tracker.title
+        trackerEntity.isPinned = tracker.isPinned
         switch tracker.schedule {
         case .irregular(let date):
             trackerEntity.isRegular = false
@@ -175,56 +210,11 @@ final class TrackerStore: NSObject {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackerStore: NSFetchedResultsControllerDelegate {
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        insertedItemIndexPaths = Set()
-        insertedSections = IndexSet()
-        removedSections = IndexSet()
-        removedItemIndexPaths = Set()
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        guard let insertedItemIndexPaths, let insertedSections, let removedSections, let removedItemIndexPaths else {
-            assertionFailure("TrackerStore.controllerDidChangeContent: Changed indices are nil on update")
-            return
-        }
         guard let delegate else {
             assertionFailure("TrackerStore.controllerDidChangeContent: delegate is nil")
             return
         }
-        let update = TrackerStoreUpdate(insertedItemIndexPaths: insertedItemIndexPaths,
-                                        insertedSections: insertedSections,
-                                        removedItemIndexPaths: removedItemIndexPaths,
-                                        removedSections: removedSections)
-        delegate.trackerStoreDidUpdate(with: update)
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange sectionInfo: any NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        switch type {
-        case .insert:
-            insertedSections?.insert(sectionIndex)
-        case .delete:
-            removedSections?.insert(sectionIndex)
-        default:
-            break
-        }
-    }
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath else {
-                assertionFailure("TrackerStore.controller: Failed to get newIndexPath for data change")
-                return
-            }
-            insertedItemIndexPaths?.insert(newIndexPath)
-        case .delete:
-            guard let indexPath else {
-                assertionFailure("TrackerStore.controller: Failed to get indexPath for data change")
-                return
-            }
-            removedItemIndexPaths?.insert(indexPath)
-        default:
-            break
-        }
+        delegate.trackerStoreDidUpdate()
     }
 }

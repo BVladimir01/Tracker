@@ -1,0 +1,68 @@
+// MARK: - Stats Tab
+"statsTab.nav_title" = "Статистика";
+"statsTab.stub_title" = "Анализировать пока нечего";
+"statsTab.trackersDone" = "Трекеров завершено ";
+// MARK: - Tracker Creation VC
+"trackerCreation.regular_tracker_title" = "Привычка";
+"trackerCreation.irregular_tracker_title" = "Нерегулярное событие";
+"trackerCreation.view_title" = "Создание трекера";
+// MARK: - New Tracker Setup VC
+"newTrackerSetup.regular_tracker_view_title" = "Новая привычка";
+"newTrackerSetup.irregular_tracker_view_title" = "Новое нерегулярное событие";
+"newTrackerSetup.cancelButton_title" = "Отмена";
+"newTrackerSetup.createButton_title" = "Создать";
+"newTrackerSetup.emojiCollection_title" = "Emoji";
+"newTrackerSetup.colorCollection_title" = "Цвет";
+"newTrackerSetup.Schedule_config_title" = "Расписание";
+"newTrackerSetup.Category_config_title" = "Категория";
+"newTrackerSetup.Schedule_config_description.every_day" = "Каждый день";
+"newTrackerSetup.textField.placeholder_title" = "Введите название трекера";
+// MARK: - Schedule Selection VC
+"scheduleSelection.view_title" = "Расписание";
+"scheduleSelection.doneButton_title" = "Готово";
+// MARK: - Category Selection VC
+"categorySelection.view_title" = "Категория";
+"categorySelection.stub_title" = "Привычки и события можно объединять по смыслу";
+"categorySelection.newCategoryButton_title" = "Добавить категорию";
+// MARK: - Category Creation VC
+"categoryCreation.view_title" = "Новая категория";
+"categoryCreation.doneButton_title" = "Готово";
+"categoryCreation.textField.placeholder_title" = "Введите название категории";
+// MARK: - Trackers List Tab
+"trackersListTab.nav_title" = "Трекеры";
+"trackersListTab.stub_title" = "Что будем отслеживать?";
+"trackerCell.irregular_tracker_is_done" = "Выполнен";
+"trackerCell.irregular_tracker_not_done" = "Не выполнен";
+"trackersListTab.search_placeholder" = "Поиск";
+"trackersListTab.pinned" = "Закрепленные";
+"trackersListTab.alert_title" = "Уверены, что хотите удалить трекер?";
+// MARK: - Onboarding
+"onboarding.page1_title" = "Отслеживайте только то, что хотите";
+"onboarding.page2_title" = "Даже если это не литры воды и йога";
+"onboarding.button_title" = "Вот это технологии!";
+// MARK: - Trackers Filters
+"trackerFilter.all" = "Все трекеры";
+"trackerFilter.today" = "Трекеры на сегодня";
+"trackerFilter.completed" = "Завершенные";
+"trackerFilter.uncompleted" = "Незавершенные";
+"trackerFilter.filters" = "Фильтры";
+// MARK: - Tracker Editor VC
+"TrackerEditorViewController.regular_tracker_view_title" = "Редактирование привычки";
+"TrackerEditorViewController.irregular_tracker_view_title" = "Редактирование нерегулярного события";
+"TrackerEditorViewController.cancelButton_title" = "Отменить";
+"TrackerEditorViewController.saveButton_title" = "Сохранить";
+// MARK: - Tracker Context Menu
+"contextMenu.pin" = "Закрепить";
+"contextMenu.unpin" = "Открепить";
+"contextMenu.edit" = "Редактировать";
+"contextMenu.remove" = "Удалить";
+// MARK: - Category Editor VC
+"CategoryEditorViewController.view_title" = "Редактирование категории";
+"CategoryEditorViewController.doneButton_title" = "Готово";
+"CategoryEditorViewController.textField.placeholder_title" = "Введите новое название";
+"CategoryEditorViewController.alert_title" = "Эта категория точно не нужна?";
+// MARK: - Alert
+"alert.remove" = "Удалить";
+"alert.cancel" = "Отменить";
+// MARK: - MyTextFieldView
+"textField.warning" = "Ограничение 38 символов";

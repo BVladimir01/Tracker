@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Tracker/Resources/Localization/en.lproj/Localizable.strings" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.3" build-num="16E140"/>
+    </header>
+    <body>
+      <trans-unit id="categoryCreation.doneButton_title" xml:space="preserve">
+        <source>Done</source>
+        <target>Готово</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="categoryCreation.textField.placeholder_title" xml:space="preserve">
+        <source>Enter category title</source>
+        <target>Введите название категории</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="categoryCreation.view_title" xml:space="preserve">
+        <source>New category</source>
+        <target>Новая категория</target>
+        <note>MARK: Category Creation VC</note>
+      </trans-unit>
+      <trans-unit id="categorySelection.newCategoryButton_title" xml:space="preserve">
+        <source>Add category</source>
+        <target>Добавить категорию</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="categorySelection.stub_title" xml:space="preserve">
+        <source>Habits and events can be grouped</source>
+        <target>Привычки и события можно объединять по смыслу</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="categorySelection.view_title" xml:space="preserve">
+        <source>Category</source>
+        <target>Категория</target>
+        <note>MARK: Category Selection VC</note>
+      </trans-unit>
+      <trans-unit id="days" translate="no" xml:space="preserve">
+        <source>days</source>
+        <note>No comment provided by engineer. (Key in .stringsdict)</note>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.Category_config_title" xml:space="preserve">
+        <source>Category</source>
+        <target>Категория</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.Schedule_config_description.every_day" xml:space="preserve">
+        <source>Every day</source>
+        <target>Каждый день</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.Schedule_config_title" xml:space="preserve">
+        <source>Schedule</source>
+        <target>Расписание</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.cancelButton_title" xml:space="preserve">
+        <source>Cancel</source>
+        <target>Отмена</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.colorCollection_title" xml:space="preserve">
+        <source>Color</source>
+        <target>Цвет</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.createButton_title" xml:space="preserve">
+        <source>Create</source>
+        <target>Создать</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.emojiCollection_title" xml:space="preserve">
+        <source>Emoji</source>
+        <target>Emoji</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.irregular_tracker_view_title" xml:space="preserve">
+        <source>New occasional event</source>
+        <target>Новое нерегулярное событие</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.regular_tracker_view_title" xml:space="preserve">
+        <source>New habit</source>
+        <target>Новая привычка</target>
+        <note>MARK: - New Tracker Setup VC</note>
+      </trans-unit>
+      <trans-unit id="newTrackerSetup.textField.placeholder_title" xml:space="preserve">
+        <source>Enter tracker title</source>
+        <target>Введите название трекера</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="onboarding.button_title" xml:space="preserve">
+        <source>Jump in!</source>
+        <target>Вот это технологии!</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="onboarding.page1_title" xml:space="preserve">
+        <source>Track just what you want</source>
+        <target>Отслеживайте только то, что хотите</target>
+        <note>MARK: - Onboarding</note>
+      </trans-unit>
+      <trans-unit id="onboarding.page2_title" xml:space="preserve">
+        <source>Even if that is not water intake and yoga</source>
+        <target>Даже если это не литры воды и йога</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="scheduleSelection.doneButton_title" xml:space="preserve">
+        <source>Done</source>
+        <target>Готово</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="scheduleSelection.view_title" xml:space="preserve">
+        <source>Schedule</source>
+        <target>Расписание</target>
+        <note>MARK: Schedule Selection VC</note>
+      </trans-unit>
+      <trans-unit id="statsTab.nav_title" xml:space="preserve">
+        <source>Stats</source>
+        <target>Статистика</target>
+        <note>MARK: - Stats Tab</note>
+      </trans-unit>
+      <trans-unit id="statsTab.stub_title" xml:space="preserve">
+        <source>Nothing to analyze yet</source>
+        <target>Анализировать пока нечего</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="trackerCreation.irregular_tracker_title" xml:space="preserve">
+        <source>Occasional event</source>
+        <target>Нерегулярное событие</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="trackerCreation.regular_tracker_title" xml:space="preserve">
+        <source>Habit</source>
+        <target>Привычка</target>
+        <note>MARK: - New Tracker VC</note>
+      </trans-unit>
+      <trans-unit id="trackerCreation.view_title" xml:space="preserve">
+        <source>Tracker creation</source>
+        <target>Создание трекера</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="trackersListTab.cell.irregular_tracker_is_done" xml:space="preserve">
+        <source>Done</source>
+        <target>Выполнен</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="trackersListTab.cell.irregular_tracker_not_done" xml:space="preserve">
+        <source>Not done</source>
+        <target>Не выполнен</target>
+        <note/>
+      </trans-unit>
+      <trans-unit id="trackersListTab.nav_title" xml:space="preserve">
+        <source>Trackers</source>
+        <target>Трекеры</target>
+        <note>MARK: Trackers List Tab</note>
+      </trans-unit>
+      <trans-unit id="trackersListTab.stub_title" xml:space="preserve">
+        <source>What would you like to track?</source>
+        <target>Что будем отслеживать?</target>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Tracker/Resources/Localization/en.lproj/Localizable.stringsdict" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.3" build-num="16E140"/>
+    </header>
+    <body>
+      <trans-unit id="/days:dict/NSStringLocalizedFormatKey:dict/:string" xml:space="preserve">
+        <source>%#@days@</source>
+        <target>%#@days@</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/days:dict/days:dict/few:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d дня</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/days:dict/days:dict/many:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d дней</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/days:dict/days:dict/one:dict/:string" xml:space="preserve">
+        <source>%d day</source>
+        <target>%d день</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/days:dict/days:dict/other:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d дней</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="/days:dict/days:dict/zero:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d дней</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Tracker/Resources/Localization/InfoPlist.xcstrings" source-language="en" target-language="ru" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="16.3" build-num="16E140"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Tracker</source>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

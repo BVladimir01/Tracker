@@ -13,7 +13,10 @@ struct TrackerEntityTransformer {
               let title = trackerEntity.title,
               let colorEntity = trackerEntity.color,
               let emoji = trackerEntity.emoji,
-              let categoryID = trackerEntity.category?.id else {
+              let categoryEntity = trackerEntity.category,
+              let categoryTitle = categoryEntity.title,
+              let categoryID = categoryEntity.id
+        else {
             throw TrackerDataStoresError.trackerPropertiesNotInitialized(forObjectID: trackerEntity.objectID)
         }
         let rgbColor = RGBColor(red: colorEntity.red,
@@ -21,12 +24,14 @@ struct TrackerEntityTransformer {
                               blue: colorEntity.blue,
                               alpha: colorEntity.alpha)
         let schedule = try schedule(of: trackerEntity)
+        let category = TrackerCategory(id: categoryID, title: categoryTitle)
         return Tracker(id: id,
                        title: title,
                        color: rgbColor,
                        emoji: Character(emoji),
                        schedule: schedule,
-                       categoryID: categoryID)
+                       category: category,
+                       isPinned: trackerEntity.isPinned)
     }
     
     private func schedule(of trackerEntity: TrackerEntity) throws -> Schedule {

@@ -9,29 +9,39 @@
 import CoreData
 
 
-// MARK: - CategoryUpdate
-struct CategoryUpdate {
-    let insertedIndices: IndexSet
+// MARK: - CategoryStoreDelegate
+protocol CategoryStoreDelegate: AnyObject {
+    func categoryStoreDidUpdate()
 }
 
 
-// MARK: - CategoryStoreDelegate
-protocol CategoryStoreDelegate: AnyObject {
-    func categoryStoreDidUpdate(with update: CategoryUpdate)
+// MARK: CategoryStoreProtocol
+protocol CategoryStoreProtocol: AnyObject {
+    
+    var delegate: CategoryStoreDelegate? { get set }
+    var allTrackerCategories: [TrackerCategory] { get }
+    var numberOfRows: Int? { get }
+    
+    func add(_ category: TrackerCategory) throws
+    func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory
+    func remove(_ category: TrackerCategory) throws
+    func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) throws
+    
 }
 
 
 // MARK: - CategoryStore
-final class CategoryStore: NSObject {
+final class CategoryStore: NSObject, CategoryStoreProtocol {
     
     // MARK: - Internal Properties
+    
+    static let didChangeCategories = Notification.Name("TrackerCategoriesDidChange")
     
     weak var delegate: CategoryStoreDelegate?
     
     var numberOfRows: Int? {
         fetchedResultsController.sections?.first?.numberOfObjects
     }
-    
     var allTrackerCategories: [TrackerCategory] {
         (fetchedResultsController.fetchedObjects ?? []).compactMap( {try? trackerCategory(from: $0)} )
     }
@@ -40,8 +50,6 @@ final class CategoryStore: NSObject {
     
     private let context: NSManagedObjectContext
     private let fetchedResultsController: NSFetchedResultsController<CategoryEntity>
-    
-    private var insertedIndices: IndexSet?
     
     // MARK: - Initializers
     
@@ -68,11 +76,16 @@ final class CategoryStore: NSObject {
         try context.save()
     }
     
-    func indexPath(for category: TrackerCategory) throws -> IndexPath? {
-        guard let entity = try fetchCategoryEntity(forCategoryWithID: category.id) else {
-            return nil
-        }
-        return fetchedResultsController.indexPath(forObject: entity)
+    func remove(_ category: TrackerCategory) throws {
+        guard let entity = try fetchCategoryEntity(forCategoryWithID: category.id) else { return }
+        context.delete(entity)
+        try context.save()
+    }
+    
+    func change(oldCategory: TrackerCategory, to newCategory: TrackerCategory) throws {
+        let changedEntity = try fetchCategoryEntity(forCategoryWithID: oldCategory.id)
+        changedEntity?.title = newCategory.title
+        try context.save()
     }
     
     func trackerCategory(at indexPath: IndexPath) throws -> TrackerCategory {
@@ -104,31 +117,8 @@ final class CategoryStore: NSObject {
 
 // MARK: - NSFetchedResultsControllerDelegate
 extension CategoryStore: NSFetchedResultsControllerDelegate {
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        insertedIndices = IndexSet()
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        guard let insertedIndices else {
-            assertionFailure("CategoryStore.controllerDidChangeContent: changed indices are nil on update")
-            return
-        }
-        let update = CategoryUpdate(insertedIndices: insertedIndices)
-        delegate?.categoryStoreDidUpdate(with: update)
+        NotificationCenter.default.post(name: Self.didChangeCategories, object: nil)
+        delegate?.categoryStoreDidUpdate()
     }
-    
-    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath else {
-                assertionFailure("CategoryStore.controller: Failed to unwrap newIndexPath for insertion")
-                return
-            }
-            insertedIndices?.insert(newIndexPath.item)
-        default:
-            break
-        }
-    }
-    
 }

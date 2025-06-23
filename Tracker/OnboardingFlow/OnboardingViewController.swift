@@ -140,14 +140,14 @@ extension OnboardingViewController: UIPageViewControllerDataSource, UIPageViewCo
 extension OnboardingViewController {
     enum LayoutConstants {
         enum PageControl {
-            static let currentPageIndicatorTintColor: UIColor = .ypBlack
-            static let pageIndicatorTintColor: UIColor = .ypBlack.withAlphaComponent(0.3)
+            static let currentPageIndicatorTintColor: UIColor = .alwaysBlack
+            static let pageIndicatorTintColor: UIColor = .alwaysBlack.withAlphaComponent(0.3)
             static let spacingToBottomView: CGFloat = 24
         }
         
         enum Button {
-            static let color: UIColor = .ypBlack
-            static let textColor: UIColor = .ypWhite
+            static let color: UIColor = .alwaysBlack
+            static let textColor: UIColor = .alwaysWhite
             static let font = UIFont.systemFont(ofSize: 16, weight: .medium)
             static let cornerRadius: CGFloat = 16
             static let height: CGFloat = 60
@@ -155,9 +155,14 @@ extension OnboardingViewController {
             static let spacingToBottomView: CGFloat = 69
         }
     }
+}
+
+
+// MARK: - Strings {
+extension OnboardingViewController {
     enum Strings {
-        static let onboardingTitle1 = "Отслеживайте только то, что хотите"
-        static let onboardingTitle2 = "Даже если это не литры воды и йога"
-        static let transitionButtonTitle = "Вот это технологии!"
+        static let onboardingTitle1 = NSLocalizedString("onboarding.page1_title", comment: "")
+        static let onboardingTitle2 = NSLocalizedString("onboarding.page2_title", comment: "")
+        static let transitionButtonTitle = NSLocalizedString("onboarding.button_title", comment: "")
     }
 }

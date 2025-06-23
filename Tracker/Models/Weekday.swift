@@ -7,8 +7,15 @@
 
 import Foundation
 
+
+// MARK: - Weekday
 enum Weekday: Int, CaseIterable, Equatable, Comparable, Codable {
+    
+    // MARK: - Cases
+    
     case monday = 0, tuesday, wednesday, thursday, friday, saturday, sunday
+    
+    // MARK: - Internal Methods
     
     static func fromCalendarComponent(_ index: Int) -> Weekday? {
         let gregorianOrdered: [Weekday?] = [nil, .sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
@@ -25,22 +32,8 @@ enum Weekday: Int, CaseIterable, Equatable, Comparable, Codable {
     }
     
     func asString(short: Bool) -> String {
-        switch self {
-        case .sunday:
-            short ? "Вс" : "Воскресенье"
-        case .monday:
-            short ? "Пн" : "Понедельник"
-        case .tuesday:
-            short ? "Вт" : "Вторник"
-        case .wednesday:
-            short ? "Ср" : "Среда"
-        case .thursday:
-            short ? "Чт" : "Четверг"
-        case .friday:
-            short ? "Пт" : "Пятница"
-        case .saturday:
-            short ? "Сб" : "Суббота"
-        }
+        let gregorianIndex = (rawValue + 1) % 7
+        return short ? Calendar.current.shortWeekdaySymbols[gregorianIndex] : Calendar.current.weekdaySymbols[gregorianIndex]
     }
     
 }

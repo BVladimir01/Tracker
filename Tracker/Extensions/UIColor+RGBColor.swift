@@ -24,4 +24,26 @@ extension UIColor {
         }
     }
     
+    static let alwaysBlack = UIColor(dynamicProvider: { traitCollection in
+        switch traitCollection.userInterfaceStyle {
+        case .light:
+            return .ypBlack
+        case .dark:
+            return .ypWhite
+        default:
+            return .ypBlack
+        }
+    })
+    
+    static let alwaysWhite = UIColor(dynamicProvider: { traitCollection in
+            switch traitCollection.userInterfaceStyle {
+            case .light:
+                return .ypWhite
+            case .dark:
+                return .ypBlack
+            default:
+                return .ypWhite
+            }
+        })
+    
 }

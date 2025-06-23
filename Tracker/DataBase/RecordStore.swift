@@ -14,8 +14,21 @@ protocol RecordStoreDelegate: AnyObject {
 }
 
 
+// MARK: - RecordStoreProtocol
+protocol RecordStoreProtocol: AnyObject {
+    
+    var delegate: RecordStoreDelegate? { get set }
+    
+    func add(_ record: TrackerRecord) throws
+    func removeRecord(from tracker: Tracker, on date: Date) throws
+    func daysDone(of tracker: Tracker) throws -> Int
+    func isCompleted(tracker: Tracker, on date: Date) throws -> Bool
+    
+}
+
+
 // MARK: - RecordStore
-final class RecordStore {
+final class RecordStore: RecordStoreProtocol{
     
     // MARK: - Internal Properties
     
@@ -23,12 +36,14 @@ final class RecordStore {
     
     // MARK: - Private Properties
     
-    private var context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
+    private let statsService: StatsService
     
     // MARK: - Initializers
     
-    init(context: NSManagedObjectContext) {
+    init(context: NSManagedObjectContext, statsService: StatsService = .shared) {
         self.context = context
+        self.statsService = statsService
     }
     
     // MARK: - Internal Methods
@@ -49,6 +64,7 @@ final class RecordStore {
         try context.save()
         let tracker = try TrackerEntityTransformer().tracker(from: trackerEntity)
         delegate.recordStoreDidChangeRecordForTracker(tracker)
+        statsService.totalTrackersDone += 1
     }
     
     func removeRecord(from tracker: Tracker, on date: Date) throws {
@@ -62,6 +78,7 @@ final class RecordStore {
         context.delete(recordEntity)
         try context.save()
         delegate.recordStoreDidChangeRecordForTracker(tracker)
+        statsService.totalTrackersDone -= 1
     }
     
     func daysDone(of tracker: Tracker) throws -> Int {
