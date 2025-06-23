@@ -9,7 +9,7 @@ import AppMetricaCore
 
 struct AnalyticsService {
     static func activate() {
-        guard let configuration = AppMetricaConfiguration(apiKey: "") else {
+        guard let configuration = AppMetricaConfiguration(apiKey: "1979b2c1-bf2a-4756-86b0-7cfe5345d4a3") else {
             assertionFailure("AnalyticsService.activate: failed to get configuration")
             return
         }
