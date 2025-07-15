@@ -112,7 +112,6 @@ extension FilterSelectorViewController: UITableViewDataSource {
         return cell
     }
     
-    
 }
 
 

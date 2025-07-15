@@ -217,6 +217,7 @@ extension StatsViewController {
 }
 
 
+// MARK: - Strings
 extension StatsViewController {
     enum Strings {
         static let title = NSLocalizedString("statsTab.nav_title", comment: "")

@@ -22,7 +22,7 @@ final class CategoryEditorViewController: UIViewController {
     private weak var delegate: CategoryEditorViewControllerDelegate?
     
     private let titleLabel = UILabel()
-    private let textField = MyTextFieldView()
+    private let textField = TrackerTextFieldView()
     private let doneButton = UIButton(type: .system)
     private let oldCategory: TrackerCategory
     

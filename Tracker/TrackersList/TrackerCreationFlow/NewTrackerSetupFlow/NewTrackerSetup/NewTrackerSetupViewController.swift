@@ -52,7 +52,7 @@ final class NewTrackerSetupViewController: UIViewController, ScheduleSelectionVi
     private let colorsHandler = ColorsHandler()
     
     private let titleLabel = UILabel()
-    private let nameTextField = MyTextFieldView()
+    private let nameTextField = TrackerTextFieldView()
     private let xmarkCircle = UIButton(type: .system)
     private let cancelButton = UIButton(type: .system)
     private let createButton = UIButton(type: .system)

@@ -23,7 +23,7 @@ final class CategoryCreationViewController: UIViewController {
     private weak var delegate: CategoryCreationViewControllerDelegate?
     
     private let titleLabel = UILabel()
-    private let textField = MyTextFieldView()
+    private let textField = TrackerTextFieldView()
     private let doneButton = UIButton(type: .system)
     
     private var shouldEnableDoneButton: Bool {

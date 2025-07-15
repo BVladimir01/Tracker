@@ -1,5 +1,5 @@
 //
-//  MyTextFieldView.swift
+//  TrackerTextFieldView.swift
 //  Tracker
 //
 //  Created by Vladimir on 22.06.2025.
@@ -8,7 +8,7 @@
 import UIKit
 
 
-final class MyTextFieldView: UIView {
+final class TrackerTextFieldView: UIView {
     
     // MARK: - Internal Properties
     
@@ -61,9 +61,6 @@ final class MyTextFieldView: UIView {
     required init?(coder: NSCoder) {
         fatalError("not implemented")
     }
-    
-    // MARK: - Lifecycle
-    
     
     // MARK: - Private Methods
     
@@ -155,8 +152,7 @@ final class MyTextFieldView: UIView {
                 warning.centerXAnchor.constraint(equalTo: centerXAnchor)
             ])
         }
-        if !shouldDisplayWarning && subviews.contains(warning)
-        {
+        if !shouldDisplayWarning && subviews.contains(warning) {
             warning.removeFromSuperview()
             if let bottomConstraint {
                 NSLayoutConstraint.activate([
@@ -185,7 +181,7 @@ final class MyTextFieldView: UIView {
 }
 
 // MARK: - LayoutConstants
-extension MyTextFieldView {
+extension TrackerTextFieldView {
     enum LayoutConstants {
         enum TextField {
             static let backgroundColor: UIColor = .ypBackground
@@ -213,7 +209,7 @@ extension MyTextFieldView {
 
 
 // MARK: - Strings
-extension MyTextFieldView {
+extension TrackerTextFieldView {
     enum Strings {
         static let warning = NSLocalizedString("textField.warning", comment: "")
     }
