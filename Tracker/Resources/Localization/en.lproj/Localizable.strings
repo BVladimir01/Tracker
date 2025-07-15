@@ -1,0 +1,68 @@
+// MARK: - Stats Tab
+"statsTab.nav_title" = "Stats";
+"statsTab.stub_title" = "Nothing to analyze yet";
+"statsTab.trackersDone" = "Trackers completed";
+// MARK: - New Tracker VC
+"trackerCreation.regular_tracker_title" = "Habit";
+"trackerCreation.irregular_tracker_title" = "Occasional event";
+"trackerCreation.view_title" = "Tracker creation";
+// MARK: - New Tracker Setup VC
+"newTrackerSetup.regular_tracker_view_title" = "New habit";
+"newTrackerSetup.irregular_tracker_view_title" = "New occasional event";
+"newTrackerSetup.cancelButton_title" = "Cancel";
+"newTrackerSetup.createButton_title" = "Create";
+"newTrackerSetup.emojiCollection_title" = "Emoji";
+"newTrackerSetup.colorCollection_title" = "Color";
+"newTrackerSetup.Schedule_config_title" = "Schedule";
+"newTrackerSetup.Category_config_title" = "Category";
+"newTrackerSetup.Schedule_config_description.every_day" = "Every day";
+"newTrackerSetup.textField.placeholder_title" = "Enter tracker title";
+// MARK: Schedule Selection VC
+"scheduleSelection.view_title" = "Schedule";
+"scheduleSelection.doneButton_title" = "Done";
+// MARK: Category Selection VC
+"categorySelection.view_title" = "Category";
+"categorySelection.stub_title" = "Habits and events can be grouped";
+"categorySelection.newCategoryButton_title" = "Add category";
+// MARK: Category Creation VC
+"categoryCreation.view_title" = "New category";
+"categoryCreation.doneButton_title" = "Done";
+"categoryCreation.textField.placeholder_title" = "Enter category title";
+// MARK: Trackers List Tab
+"trackersListTab.nav_title" = "Trackers";
+"trackersListTab.stub_title" = "What would you like to track?";
+"trackerCell.irregular_tracker_is_done" = "Done";
+"trackerCell.irregular_tracker_not_done" = "Not done";
+"trackersListTab.search_placeholder" = "Search";
+"trackersListTab.pinned" = "Pinned";
+"trackersListTab.alert_title" = "Do you really want to remove this tracker?";
+// MARK: - Onboarding
+"onboarding.page1_title" = "Track just what you want";
+"onboarding.page2_title" = "Even if that is not water intake and yoga";
+"onboarding.button_title" = "Jump in!";
+// MARK: - Trackers Filters
+"trackerFilter.all" = "All";
+"trackerFilter.today" = "Today";
+"trackerFilter.completed" = "Completed";
+"trackerFilter.uncompleted" = "Uncompleted";
+"trackerFilter.filters" = "Filters";
+// MARK: - Tracker Editor VC
+"TrackerEditorViewController.regular_tracker_view_title" = "Edit habit";
+"TrackerEditorViewController.irregular_tracker_view_title" = "Edit occasional event";
+"TrackerEditorViewController.cancelButton_title" = "Cancel";
+"TrackerEditorViewController.saveButton_title" = "Save";
+// MARK: - Context Menu
+"contextMenu.pin" = "Pin";
+"contextMenu.unpin" = "Unpin";
+"contextMenu.edit" = "Edit";
+"contextMenu.remove" = "Remove";
+// MARK: - Category Editor VC
+"CategoryEditorViewController.view_title" = "Edit of category";
+"CategoryEditorViewController.doneButton_title" = "Done";
+"CategoryEditorViewController.textField.placeholder_title" = "Enter new title";
+"CategoryEditorViewController.alert_title" = "Do you really want to remove this category?";
+// MARK: - Alert
+"alert.remove" = "Remove";
+"alert.cancel" = "Cancel";
+// MARK: - MyTextFieldView
+"textField.warning" = "The limit is 38 characters";

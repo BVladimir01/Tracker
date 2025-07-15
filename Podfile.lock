@@ -1,0 +1,94 @@
+PODS:
+  - AppMetricaCore (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaEncodingUtils (= 5.11.1)
+    - AppMetricaFMDB (= 5.11.1)
+    - AppMetricaHostState (= 5.11.1)
+    - AppMetricaIdentifiers (= 5.11.1)
+    - AppMetricaKeychain (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+    - AppMetricaNetwork (= 5.11.1)
+    - AppMetricaPlatform (= 5.11.1)
+    - AppMetricaProtobuf (= 5.11.1)
+    - AppMetricaProtobufUtils (= 5.11.1)
+    - AppMetricaStorageUtils (= 5.11.1)
+  - AppMetricaCoreUtils (5.11.1):
+    - AppMetricaLog (= 5.11.1)
+  - AppMetricaEncodingUtils (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+    - AppMetricaPlatform (= 5.11.1)
+  - AppMetricaFMDB (5.11.1)
+  - AppMetricaHostState (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+  - AppMetricaIdentifiers (5.11.1):
+    - AppMetricaKeychain (= 5.11.1)
+    - AppMetricaLogSwift (= 5.11.1)
+    - AppMetricaPlatform (= 5.11.1)
+    - AppMetricaStorageUtils (= 5.11.1)
+    - AppMetricaSynchronization (= 5.11.1)
+  - AppMetricaKeychain (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+    - AppMetricaStorageUtils (= 5.11.1)
+  - AppMetricaLog (5.11.1)
+  - AppMetricaLogSwift (5.11.1):
+    - AppMetricaLog (= 5.11.1)
+  - AppMetricaNetwork (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+    - AppMetricaPlatform (= 5.11.1)
+  - AppMetricaPlatform (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+  - AppMetricaProtobuf (5.11.1)
+  - AppMetricaProtobufUtils (5.11.1):
+    - AppMetricaProtobuf (= 5.11.1)
+  - AppMetricaStorageUtils (5.11.1):
+    - AppMetricaCoreUtils (= 5.11.1)
+    - AppMetricaLog (= 5.11.1)
+  - AppMetricaSynchronization (5.11.1):
+    - AppMetricaLogSwift (= 5.11.1)
+
+DEPENDENCIES:
+  - AppMetricaCore (~> 5.11.0)
+
+SPEC REPOS:
+  trunk:
+    - AppMetricaCore
+    - AppMetricaCoreUtils
+    - AppMetricaEncodingUtils
+    - AppMetricaFMDB
+    - AppMetricaHostState
+    - AppMetricaIdentifiers
+    - AppMetricaKeychain
+    - AppMetricaLog
+    - AppMetricaLogSwift
+    - AppMetricaNetwork
+    - AppMetricaPlatform
+    - AppMetricaProtobuf
+    - AppMetricaProtobufUtils
+    - AppMetricaStorageUtils
+    - AppMetricaSynchronization
+
+SPEC CHECKSUMS:
+  AppMetricaCore: 6ad500da8cf891cf1ae4dadb8593dc127cd28c95
+  AppMetricaCoreUtils: ad4c88c5338e3aa6668f1f0de282d97306487c79
+  AppMetricaEncodingUtils: f282281e52824b5584a9994946b6f6f9725970c3
+  AppMetricaFMDB: 7f13f0ddc2203ac593db96baa807783956904efc
+  AppMetricaHostState: 0638b8433d70d001b47a44fade6b51e465fc9626
+  AppMetricaIdentifiers: e75d45cbb3b422531aa15a01e34fa8b7a0a1ec37
+  AppMetricaKeychain: 260ca4557d917a4b238b753ec7e07a82946eedbf
+  AppMetricaLog: bd20a91993f0faa4f506c71e77df941225ae2114
+  AppMetricaLogSwift: 778a1d0d50b9230393d2224cf923d6171dcfc1ba
+  AppMetricaNetwork: 74d5c233a26a5938f25f074103b781599535be7e
+  AppMetricaPlatform: a55be9f074688addfdbea57f64287286651e6158
+  AppMetricaProtobuf: c3d320e26751c1d324009a93d7fd6336e5125e08
+  AppMetricaProtobufUtils: f02b5e26d31b20407b5a9834f00502e65e6bee20
+  AppMetricaStorageUtils: d9402ed21182a084b7904e30e5ced73214fe6780
+  AppMetricaSynchronization: 032608cc112d218c249835f6555879797e9f8381
+
+PODFILE CHECKSUM: 63fefb7d7daadc8bbf2d78dd0ddca5fd57680572
+
+COCOAPODS: 1.16.2

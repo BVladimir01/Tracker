@@ -39,10 +39,14 @@ final class TabBarController: UITabBarController {
     }
     
     private func setUpAndReturnTrackerNavStack() -> UIViewController {
-        let trackersVC = TrackersListViewController(trackerDataStores: stores)
+        let trackersVC = TrackersListViewController(trackerStore: stores.trackerStore,
+                                                    categoryStore: stores.categoryStore,
+                                                    recordStore: stores.recordStore)
         let trackerNavController = UINavigationController(rootViewController: trackersVC)
         trackerNavController.navigationBar.prefersLargeTitles = true
-        trackerNavController.tabBarItem = UITabBarItem(title: "Трекеры", image: .tabBarTrackerItem.withTintColor(.ypBlue), selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
+        trackerNavController.tabBarItem = UITabBarItem(title: Strings.trackersTitle,
+                                                       image: .tabBarTrackerItem.withTintColor(.ypBlue),
+                                                       selectedImage: .tabBarTrackerItem.withTintColor(.ypGray))
         return trackerNavController
     }
     
@@ -50,7 +54,9 @@ final class TabBarController: UITabBarController {
         let statsVC = StatsViewController()
         let statsNavController = UINavigationController(rootViewController: statsVC)
         statsNavController.navigationBar.prefersLargeTitles = true
-        statsNavController.tabBarItem = UITabBarItem(title: "Статистика", image: .tabBarStatsItem.withTintColor(.ypBlue), selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
+        statsNavController.tabBarItem = UITabBarItem(title: Strings.statsTitle,
+                                                     image: .tabBarStatsItem.withTintColor(.ypBlue),
+                                                     selectedImage: .tabBarStatsItem.withTintColor(.ypGray))
         return statsNavController
     }
 
@@ -74,3 +80,11 @@ final class TabBarController: UITabBarController {
 
 }
 
+
+// MARK: - Strings
+extension TabBarController {
+    enum Strings {
+        static let trackersTitle = NSLocalizedString("trackersListTab.nav_title", comment: "")
+        static let statsTitle = NSLocalizedString("statsTab.nav_title", comment: "")
+    }
+}

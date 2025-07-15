@@ -82,7 +82,7 @@ extension OnboardingPageViewController {
         enum Title {
             static let spacingToTopView: CGFloat = 388
             static let font = UIFont.systemFont(ofSize: 32, weight: .bold)
-            static let textColor: UIColor = .ypBlack
+            static let textColor: UIColor = .alwaysBlack
             static let width: CGFloat = 343
             static let numberOfLines = 2
         }

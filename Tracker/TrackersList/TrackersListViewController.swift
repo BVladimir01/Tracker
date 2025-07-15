@@ -17,33 +17,22 @@ final class TrackersListViewController: UIViewController {
                                                   collectionViewLayout: UICollectionViewFlowLayout())
     private let stubView = UIView()
     private let datePicker = UIDatePicker()
+    private let searchController = UISearchController(searchResultsController: nil)
+    private let filterSelectorButton = UIButton(type: .system)
     
-    private let trackerStore: TrackerStore
-    private let categoryStore: CategoryStore
-    private let recordStore: RecordStore
-    
-    private var shouldShowStubView: Bool {
-        trackerStore.numberOfSections == 0
-    }
-    
-    private var selectedDate: Date {
-        datePicker.date
-    }
+    private let categoryStore: CategoryStoreProtocol
+    private let analyticsService = AnalyticsService()
+    private let viewModel: TrackersListViewModel
     
     // MARK: - Lifecycle
     
-    init(trackerDataStores: TrackerDataStores) {
-        self.trackerStore = trackerDataStores.trackerStore
-        self.categoryStore = trackerDataStores.categoryStore
-        self.recordStore = trackerDataStores.recordStore
+    init(trackerStore: TrackerStoreProtocol,
+         categoryStore: CategoryStoreProtocol,
+         recordStore: RecordStoreProtocol) {
+        self.categoryStore = categoryStore
+        self.viewModel = TrackersListViewModel(trackerStore: trackerStore,
+                                               recordStore: recordStore)
         super.init(nibName: nil, bundle: nil)
-        recordStore.delegate = self
-        trackerStore.delegate = self
-        do {
-            try trackerStore.set(date: datePicker.date)
-        } catch {
-            assertionFailure("TrackersListViewController.init: error \(error)")
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -52,15 +41,24 @@ final class TrackersListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Трекеры"
+        title = Strings.title
         view.backgroundColor = LayoutConstants.backgroundColor
         setUpStubView()
-        setUpDoneButton()
+        setUpAddTrackerButton()
         setUpDatePicker()
         setUpCollectionView()
-        updateStubViewState()
+        setUpSearch()
+        setUpFilterSelectorButton()
+        initializeViewModel()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        analyticsService.report(event: .open, item: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.report(event: .close, item: nil)
+    }
     
     // MARK: - Private Methods - Views Setup
     
@@ -77,7 +75,7 @@ final class TrackersListViewController: UIViewController {
         ])
         
         let label = UILabel()
-        label.text = "Что будем отслеживать?"
+        label.text = Strings.stubViewTitle
         label.font = LayoutConstants.Stub.labelFont
         label.textColor = LayoutConstants.Stub.textColor
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -98,7 +96,7 @@ final class TrackersListViewController: UIViewController {
         ])
     }
     
-    private func setUpDoneButton() {
+    private func setUpAddTrackerButton() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             image: .addTracker.withTintColor(LayoutConstants.addButtonColor, renderingMode: .alwaysOriginal), 
             style: .plain,
@@ -131,11 +129,50 @@ final class TrackersListViewController: UIViewController {
         ])
     }
     
-    // MARK: - Private Methods - Helpers
-    
-    private func updateStubViewState() {
-        setStubView(visible: shouldShowStubView)
+    private func setUpSearch() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = Strings.searchControllerPlaceholder
+        navigationItem.searchController = searchController
     }
+    
+    private func setUpFilterSelectorButton() {
+        filterSelectorButton.setTitle(Strings.filters, for: .normal)
+        filterSelectorButton.setTitleColor(.white, for: .normal)
+        filterSelectorButton.titleLabel?.font = LayoutConstants.FilterSelectorButton.font
+        filterSelectorButton.backgroundColor = LayoutConstants.FilterSelectorButton.backgroundColor
+        filterSelectorButton.layer.cornerRadius = LayoutConstants.FilterSelectorButton.cornerRadius
+        filterSelectorButton.layer.masksToBounds = true
+        
+        filterSelectorButton.addTarget(self,
+                                       action: #selector(filterSelectorTapped),
+                                       for: .touchUpInside)
+        
+        view.bringSubviewToFront(filterSelectorButton)
+        
+        view.addSubview(filterSelectorButton)
+        filterSelectorButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            filterSelectorButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            filterSelectorButton.widthAnchor.constraint(equalToConstant: LayoutConstants.FilterSelectorButton.width),
+            filterSelectorButton.heightAnchor.constraint(equalToConstant: LayoutConstants.FilterSelectorButton.height),
+            filterSelectorButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                         constant: -LayoutConstants.FilterSelectorButton.spacingToBottomView)
+        ])
+    }
+    
+    private func initializeViewModel() {
+        viewModel.set(date: datePicker.date)
+        viewModel.initialize(with: { [weak self] _ in
+            guard let self else { return }
+            self.collectionView.reloadData()
+            self.datePicker.date = self.viewModel.selectedDate
+            self.setStubView(visible: self.viewModel.shouldDisplayStub)
+            self.setFilterSelectorButton(visible: self.viewModel.shouldEnableFilterSelection)
+        })
+    }
+    
+    // MARK: - Private Methods - Helpers
     
     private func setStubView(visible: Bool) {
         stubView.isHidden = !visible
@@ -146,61 +183,54 @@ final class TrackersListViewController: UIViewController {
         }
     }
     
-    private func trackerCellViewModel(from tracker: Tracker) -> TrackerCellViewModel {
-        let recordText: String
-        let daysEnding = ["дней", "день", "дня", "дня", "дня",
-                          "дней", "дней", "дней", "дней", "дней"]
-        let daysDone: Int
-        do {
-            daysDone = try recordStore.daysDone(of: tracker)
-        } catch {
-            assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
-            daysDone = 0
+    private func setFilterSelectorButton(visible: Bool) {
+        filterSelectorButton.isHidden = !visible
+        if visible {
+            view.bringSubviewToFront(filterSelectorButton)
+        } else {
+            view.sendSubviewToBack(filterSelectorButton)
         }
+    }
+    
+    private func trackerCellModel(from tracker: Tracker) -> TrackerCellModel {
+        let recordText: String
+        let daysDone = viewModel.daysDone(of: tracker)
         switch tracker.schedule {
         case .regular:
-            if (10..<20).contains(daysDone) {
-                recordText = "\(daysDone) дней"
-                break
-            }
-            let lastDigit = daysDone % 10
-            recordText = "\(daysDone) \(daysEnding[lastDigit])"
+            recordText = String(format: Strings.daysDone, daysDone)
         case .irregular:
             if daysDone == 0 {
-                recordText = "Не выполнен"
+                recordText = Strings.irregularTrackerNotDone
             } else {
-                recordText = "Выполнен"
+                recordText = Strings.irregularTrackerIsDone
             }
         }
-        let isCompleted: Bool
-        do {
-            isCompleted = try recordStore.isCompleted(tracker: tracker, on: selectedDate)
-        } catch {
-            assertionFailure("TrackersListViewController.trackerCellViewModel: error \(error)")
-            isCompleted = false
-        }
-        return TrackerCellViewModel(title: tracker.title,
-                                    color: UIColor.from(RGBColor: tracker.color),
-                                    emoji: tracker.emoji,
-                                    recordText: recordText, 
-                                    isCompleted: isCompleted)
+        let isCompleted = viewModel.isCompleted(tracker: tracker)
+        return TrackerCellModel(title: tracker.title,
+                                color: UIColor.from(RGBColor: tracker.color),
+                                emoji: tracker.emoji,
+                                recordText: recordText, 
+                                isCompleted: isCompleted,
+                                isPinned: tracker.isPinned)
     }
     
     // MARK: - Private Methods - User Intentions
 
     @objc private func addTrackerTapped() {
-        let creatorVC = NewTrackerViewController(delegate: self, selectedDate: selectedDate, categoryStore: categoryStore)
+        analyticsService.report(event: .click, item: .addTrack)
+        let creatorVC = NewTrackerViewController(delegate: self, selectedDate: datePicker.date, categoryStore: categoryStore)
         present(creatorVC, animated: true)
     }
     
     @objc private func dateChanged() {
-        do {
-            try trackerStore.set(date: selectedDate)
-        } catch {
-            assertionFailure("TrackersListViewController.dateChanged: error \(error)")
-        }
-        collectionView.reloadData()
-        updateStubViewState()
+        viewModel.set(date: datePicker.date)
+    }
+    
+    @objc private func filterSelectorTapped() {
+        analyticsService.report(event: .click, item: .filter)
+        present(FilterSelectorViewController(delegate: self,
+                                             activeFilter: viewModel.selectedFilter),
+                animated: true)
     }
     
 }
@@ -210,11 +240,11 @@ final class TrackersListViewController: UIViewController {
 extension TrackersListViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        trackerStore.numberOfSections
+        viewModel.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return trackerStore.numberOfItemsInSection(section) ?? 0
+        return viewModel.numberOfItemsInSection(section) ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, 
@@ -223,18 +253,15 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue or typecast cell")
             return UICollectionViewCell()
         }
-        let buttonEnabled = !(selectedDate > Date())
-        do {
-            let tracker = try trackerStore.tracker(at: indexPath)
-            cell.configure(with: trackerCellViewModel(from: tracker))
-            cell.setTrackerID(tracker.id)
-            cell.setRecordButton(enabled: buttonEnabled)
-            cell.delegate = self
-            return cell
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
+        guard let tracker = viewModel.tracker(at: indexPath) else {
+            assertionFailure("TrackerViewController.collectionView: Failed to get tracker for indexPath")
             return UICollectionViewCell()
         }
+        let buttonEnabled = !(datePicker.date > Date())
+        cell.configure(with: trackerCellModel(from: tracker))
+        cell.setRecordButton(enabled: buttonEnabled)
+        cell.delegate = self
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -242,7 +269,7 @@ extension TrackersListViewController: UICollectionViewDataSource {
             assertionFailure("TrackerViewController.collectionView: Failed to dequeue supplementary view")
             return UICollectionReusableView()
         }
-        let title = trackerStore.sectionTitle(atSectionIndex: indexPath.section)
+        let title = viewModel.sectionTitle(at: indexPath.section)
         if title == nil {
             assertionFailure("TrackerViewController.collectionView: Failed to get title for supplementary view at \(indexPath)")
         }
@@ -257,7 +284,16 @@ extension TrackersListViewController: UICollectionViewDataSource {
 extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        LayoutConstants.CollectionView.itemSize
+        let cw = collectionView.frame.width
+        let spacing = LayoutConstants.CollectionView.interItemSpacing
+        let itemWidth = LayoutConstants.CollectionView.itemSize.width
+        let insets = collectionView.contentInset.left + collectionView.contentInset.right
+        let numberOfItemsInOneRow = Int((cw + spacing - insets) / (itemWidth + spacing))
+        let addExtraPadding = (indexPath.section == (collectionView.numberOfSections - 1)
+                               && indexPath.item >= (collectionView.numberOfItems(inSection: indexPath.section) - numberOfItemsInOneRow))
+        var itemSize = LayoutConstants.CollectionView.itemSize
+        itemSize.height += addExtraPadding ? LayoutConstants.CollectionView.extraBottomPadding : 0
+        return itemSize
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -273,7 +309,7 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let title = trackerStore.sectionTitle(atSectionIndex: section)
+        let title = viewModel.sectionTitle(at: section)
         if title == nil {
             assertionFailure("TrackerViewController.collectionView: Failed to get title for supplementary view for section \(section)")
         }
@@ -291,12 +327,7 @@ extension TrackersListViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersListViewController: NewTrackerViewControllerDelegate {
     
     func newTrackerViewController(_ vc: UIViewController, didCreateTracker tracker: Tracker) {
-        do {
-            try trackerStore.add(tracker)
-        } catch {
-            assertionFailure("TrackersListViewController.newTrackerViewController: error \(error)")
-        }
-        updateStubViewState()
+        viewModel.add(tracker)
         vc.dismiss(animated: true)
     }
     
@@ -315,55 +346,72 @@ extension TrackersListViewController: TrackerCollectionViewCellDelegate {
             assertionFailure("TrackerViewController.trackerCellDidTapRecord: Failed to get indexPath of the cell")
             return
         }
-        do {
-            let tracker = try trackerStore.tracker(at: indexPath)
-            let trackerID = tracker.id
-            if try recordStore.isCompleted(tracker: tracker, on: selectedDate) {
-                try recordStore.removeRecord(from: tracker, on: selectedDate)
-            } else {
-                try recordStore.add(TrackerRecord(trackerID: trackerID, date: selectedDate))
-            }
-        } catch {
-            assertionFailure("TrackerViewController.collectionView: error \(error)")
-            return
+        analyticsService.report(event: .click, item: .track)
+        viewModel.trackerTapped(at: indexPath)
+    }
+    
+    func menuConfiguration(for cell: TrackerCollectionViewCell) -> UIContextMenuConfiguration? {
+        guard let indexPath = collectionView.indexPath(for: cell), let tracker = viewModel.tracker(at: indexPath) else { return nil }
+        let isPinned = tracker.isPinned
+        let daysDone = viewModel.daysDone(of: tracker)
+        let pinUnPinAction = UIAction(title: isPinned ? Strings.contextUnpin : Strings.contextPin) { [weak self] _ in
+            guard let self else { return }
+            self.viewModel.changePinStatusForTracker(at: indexPath)
         }
+        let editAction = UIAction(title: Strings.contextEdit) { [weak self] _ in
+            guard let self else { return }
+            self.analyticsService.report(event: .click, item: .edit)
+            let editorVC = TrackerEditorViewController(oldTracker: tracker, daysDone: daysDone, categoryStore: categoryStore, delegate: self)
+            present(editorVC, animated: true)
+        }
+        let removeAction = UIAction(title: Strings.contextRemove, attributes: [.destructive]) { [weak self] _ in
+            let alert = AlertFactory.removeConfirmation(title: Strings.alertTitle,
+                                                        removeTitle: Strings.alertRemove,
+                                                        cancelTitle: Strings.alertCancel) { [weak self] in
+                self?.viewModel.remove(tracker)
+            }
+            self?.analyticsService.report(event: .click, item: .delete)
+            self?.present(alert, animated: true)
+        }
+        return UIContextMenuConfiguration(actionProvider: { _ in
+            UIMenu(children: [pinUnPinAction, editAction, removeAction])
+        })
+    }
+    
+}
+
+
+// MARK: - UISearchResultsUpdating
+extension TrackersListViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        viewModel.searchString = searchController.searchBar.text
     }
 }
 
 
-// MARK: - TrackerStoreDelegate
-extension TrackersListViewController: TrackerStoreDelegate {
-    func trackerStoreDidUpdate(with update: TrackerStoreUpdate) {
-        let insertedItemIndexPaths = update.insertedItemIndexPaths
-        let insertedSections = update.insertedSections
-        let removedSections = update.removedSections
-        let removedItemIndexPaths = update.removedItemIndexPaths
-        collectionView.performBatchUpdates {
-            collectionView.insertSections(insertedSections)
-            collectionView.insertItems(at: Array(insertedItemIndexPaths))
-            collectionView.deleteSections(removedSections)
-            collectionView.deleteItems(at: Array(removedItemIndexPaths))
-        }
+// MARK: - FilterSelectorViewControllerDelegate
+extension TrackersListViewController: FilterSelectorViewControllerDelegate {
+    func filterSelector(_ vc: UIViewController, didSelect filter: TrackersListFilter) {
+        viewModel.set(filter: filter)
+        vc.dismiss(animated: true)
     }
 }
 
 
-// MARK: - RecordStoreDelegate
-extension TrackersListViewController: RecordStoreDelegate {
-    func recordStoreDidChangeRecordForTracker(_ tracker: Tracker) {
-        do {
-            guard let indexPath = try trackerStore.indexPath(for: tracker) else {
-                assertionFailure("TrackersListViewController.trackerRecordStoreDidChangeRecordForTracker: indexPath for \(tracker) is nil")
-                return
-            }
-            UIView.performWithoutAnimation {
-                    collectionView.reloadItems(at: [indexPath])
-            }
-        } catch {
-            assertionFailure("TrackerListViewController.trackerRecordStoreDidChangeRecordForTracker: error \(error)")
-        }
+// MARK: - TrackerEditorViewControllerDelegate
+extension TrackersListViewController: TrackerEditorViewControllerDelegate {
+    
+    func trackerEditorViewControllerDiDCancel(_ vc: UIViewController) {
+        vc.dismiss(animated: true)
     }
+    
+    func trackerEditorViewController(_ vc: UIViewController, didChange oldTracker: Tracker, to newTracker: Tracker) {
+        vc.dismiss(animated: true)
+        viewModel.change(oldTracker: oldTracker, to: newTracker)
+    }
+    
 }
+
 
 // MARK: - LayoutConstants
 extension TrackersListViewController {
@@ -387,6 +435,37 @@ extension TrackersListViewController {
             static let lineSpacing: CGFloat = 0
             static let insets = UIEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
             static let headerLateralPadding: CGFloat = 28
+            static let extraBottomPadding: CGFloat = 50
         }
+        enum FilterSelectorButton {
+            static let spacingToBottomView: CGFloat = 16
+            static let width: CGFloat = 114
+            static let height: CGFloat = 50
+            static let cornerRadius: CGFloat = 16
+            static let backgroundColor: UIColor = .ypBlue
+            static let textColor: UIColor = .white
+            static let font: UIFont = .systemFont(ofSize: 17, weight: .regular)
+        }
+    }
+}
+
+
+// MARK: - Strings
+extension TrackersListViewController {
+    enum Strings {
+        static let title = NSLocalizedString("trackersListTab.nav_title", comment: "")
+        static let stubViewTitle = NSLocalizedString("trackersListTab.stub_title", comment: "")
+        static let irregularTrackerIsDone = NSLocalizedString("trackerCell.irregular_tracker_is_done", comment: "")
+        static let irregularTrackerNotDone = NSLocalizedString("trackerCell.irregular_tracker_not_done", comment: "")
+        static let daysDone = NSLocalizedString("days", comment: "")
+        static let searchControllerPlaceholder = NSLocalizedString("trackersListTab.search_placeholder", comment: "")
+        static let filters = NSLocalizedString("trackerFilter.filters", comment: "")
+        static let contextPin = NSLocalizedString("contextMenu.pin", comment: "")
+        static let contextUnpin = NSLocalizedString("contextMenu.unpin", comment: "")
+        static let contextEdit = NSLocalizedString("contextMenu.edit", comment: "")
+        static let contextRemove = NSLocalizedString("contextMenu.remove", comment: "")
+        static let alertTitle = NSLocalizedString("trackersListTab.alert_title", comment: "")
+        static let alertRemove = NSLocalizedString("alert.remove", comment: "")
+        static let alertCancel = NSLocalizedString("alert.cancel", comment: "")
     }
 }
