@@ -376,16 +376,16 @@
 		E7D0370D2DC3B80E007819A8 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				E73276D62E07011B00180061 /* Services */,
-				E73276C02E06BC0200180061 /* UIHelpers */,
-				E7C3A8E92DE81EEA00096105 /* DataBase */,
-				E7D037942DC8AA93007819A8 /* Extensions */,
-				E7D037912DC8A9A9007819A8 /* Models */,
-				E7370FCA2DF61EED0087785E /* OnboardingFlow */,
-				E7D037242DC3C014007819A8 /* Resources */,
 				E7C3A94C2DEF9BD500096105 /* StartupFlow */,
+				E7370FCA2DF61EED0087785E /* OnboardingFlow */,
 				E7D037A52DCA88AF007819A8 /* TrackersList */,
 				E7D037A62DCA88C2007819A8 /* Stats */,
+				E7C3A8E92DE81EEA00096105 /* DataBase */,
+				E73276C02E06BC0200180061 /* UIHelpers */,
+				E7D037912DC8A9A9007819A8 /* Models */,
+				E73276D62E07011B00180061 /* Services */,
+				E7D037942DC8AA93007819A8 /* Extensions */,
+				E7D037242DC3C014007819A8 /* Resources */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
