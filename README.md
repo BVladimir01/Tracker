@@ -41,17 +41,17 @@ open Tracker.xcworkspace
 ##  Project Structure
 
 **TravelSchedule/** \
-├ **StartupFlow/** *# Top level app files* \
-├ **OnboardingFlow/** *# Onboarding pages* \
-├ **TrackersList/** *# Trackers list tab* \
-├ **Stats/** *# Stats tab* \
-├ **DataBase/** *# Database files* \
-├ **UIHelpers/** *# UI components and helpers* \
-├ **Models/** *# Global models* \
-├ **Services/** *# Global services* \
-├ **Extensions/** *# Extensions for base frameworks* \
-├ **Resources/** *# Images, Localizaiont, plist* \
-**TrackerTests/** *# Snapshot tests*
+├ **StartupFlow/** *Top level app files* \
+├ **OnboardingFlow/** *Onboarding pages* \
+├ **TrackersList/** *Trackers list tab* \
+├ **Stats/** *Stats tab* \
+├ **DataBase/** *Database files* \
+├ **UIHelpers/** *UI components and helpers* \
+├ **Models/** *Global models* \
+├ **Services/** *Global services* \
+├ **Extensions/** *Extensions for base frameworks* \
+├ **Resources/** *Images, Localizaiont, plist* \
+**TrackerTests/** *Snapshot tests*
 
 ## Future plan
 - [ ] Use MVVM throughout
