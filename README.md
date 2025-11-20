@@ -19,7 +19,7 @@ An app for tracking regular habits/activities and occasional events.
 
 ## Installation
 ```bash
-git clone https://github.com/BVladimir01/Tracker
+git clone https://github.com/BVladimir01/Tracker.git
 cd Tracker
 pod install
 open Tracker.xcworkspace
